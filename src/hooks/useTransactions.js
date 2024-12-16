@@ -1,0 +1,30 @@
+import { useCallback } from 'react';
+import { useNotification } from '../context/NotificationContext';
+
+export function useTransactions(account) {
+  const { notify } = useNotification();
+
+  const handleTransaction = useCallback(async (method, options = {}) => {
+    return new Promise((resolve, reject) => {
+      method.send({ from: account, ...options })
+        .on('transactionHash', (hash) => {
+          notify('Transaction submitted...', 'info');
+        })
+        .on('receipt', (receipt) => {
+          if (receipt.status) {
+            notify('Transaction successful!', 'success');
+            resolve(receipt);
+          } else {
+            notify('Transaction failed', 'error');
+            reject(new Error('Transaction failed'));
+          }
+        })
+        .on('error', (error) => {
+          notify(`Transaction failed: ${error.message}`, 'error');
+          reject(error);
+        });
+    });
+  }, [account, notify]);
+
+  return { handleTransaction };
+} 

@@ -1,0 +1,73 @@
+.transaction-history {
+  margin-top: 2rem;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.transaction-item {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.transaction-item.blue { border-left: 4px solid #1D4ED8; }
+.transaction-item.red { border-left: 4px solid #DC2626; }
+.transaction-item.green { border-left: 4px solid #059669; }
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.transaction-type {
+  font-weight: bold;
+  color: #718096;
+}
+
+.transaction-time {
+  font-size: 0.9em;
+  color: #718096;
+}
+
+.transaction-amount {
+  font-size: 1.1em;
+  font-family: monospace;
+  margin-bottom: 0.25rem;
+}
+
+.transaction-sub-amount {
+  font-size: 0.9em;
+  color: #718096;
+  margin-bottom: 0.5rem;
+}
+
+.transaction-hash {
+  font-size: 0.9em;
+  color: #61dafb;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.transaction-hash:hover {
+  color: #4fa8c7;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

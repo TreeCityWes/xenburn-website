@@ -1,0 +1,43 @@
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  border: 3px solid rgba(97, 218, 251, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #61dafb;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-container.small .spinner {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner-container.medium .spinner {
+  width: 30px;
+  height: 30px;
+}
+
+.spinner-container.large .spinner {
+  width: 40px;
+  height: 40px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse animation for buttons */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.button:not(:disabled):hover {
+  animation: pulse 1s infinite;
+} 
