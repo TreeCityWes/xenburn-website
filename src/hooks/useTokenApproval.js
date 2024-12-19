@@ -1,51 +1,36 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import { useTransactionHandler } from './useTransactionHandler';
-import { CONTRACT_CONFIG } from '../config';
 
-export function useTokenApproval(tokenContract) {
+export function useTokenApproval(contract) {
   const [approving, setApproving] = useState(false);
   const [allowance, setAllowance] = useState('0');
   const { notify } = useNotification();
   const { handleTransaction } = useTransactionHandler();
 
-  const checkAllowance = useCallback(async (owner, spender) => {
-    if (!tokenContract) return '0';
-    try {
-      const allowance = await tokenContract.allowance(owner, spender);
-      setAllowance(allowance.toString());
-      return allowance.toString();
-    } catch (error) {
-      console.error('Error checking allowance:', error);
-      return '0';
-    }
-  }, [tokenContract]);
-
-  const approve = async (amount) => {
-    if (!tokenContract) throw new Error('Token contract not initialized');
-    
+  const approve = async (amount, spender) => {
     try {
       setApproving(true);
-      const notificationId = notify('Approval pending...', 'info');
-
-      await handleTransaction(
-        tokenContract.methods.approve(CONTRACT_CONFIG.XEN_BURNER_ADDRESS, amount)
-      );
-
-      await checkAllowance();
-      return true;
+      notify('Approval pending...', 'info');
+      
+      const tx = await contract.approve(spender, amount);
+      await tx.wait();
+      await checkAllowance(spender);
+      
+      notify('Approval successful', 'success');
     } catch (error) {
       notify(`Approval failed: ${error.message}`, 'error');
-      return false;
+      throw error;
     } finally {
       setApproving(false);
     }
   };
 
-  return {
-    approving,
-    allowance,
-    checkAllowance,
-    approve
+  const checkAllowance = async (spender) => {
+    if (!contract) return;
+    const amount = await contract.allowance(spender);
+    setAllowance(amount.toString());
   };
+
+  return { approving, allowance, checkAllowance, approve };
 } 

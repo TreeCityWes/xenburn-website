@@ -1,37 +1,32 @@
 import React, { createContext, useContext } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const NotificationContext = createContext();
 
 export function NotificationProvider({ children }) {
-  const notify = (message, type = 'info') => {
-    return toast[type](message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  };
-
-  const updateNotification = (id, message, type = 'info') => {
-    toast.update(id, {
-      render: message,
-      type,
-      autoClose: 5000
-    });
-  };
-
-  const dismissNotification = (id) => {
-    toast.dismiss(id);
+  const notify = {
+    success: (message) => toast.success(message),
+    error: (message) => toast.error(message),
+    warning: (message) => toast.warning(message),
+    info: (message) => toast.info(message)
   };
 
   return (
-    <NotificationContext.Provider value={{ notify, updateNotification, dismissNotification }}>
+    <NotificationContext.Provider value={notify}>
       {children}
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </NotificationContext.Provider>
   );
 }

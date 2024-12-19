@@ -1,60 +1,41 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
-import { useWeb3 } from '../hooks/useWeb3';
+import React from 'react';
+import { useContractRead } from 'wagmi';
+import { CONTRACT_ADDRESSES } from '../config/contracts';
+import { xburnABI } from '../abis';
+import { formatEther } from 'viem';
 
 export function GlobalStats() {
-  const { contract } = useWeb3();
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { data: stats } = useContractRead({
+    address: CONTRACT_ADDRESSES.XBURN,
+    abi: xburnABI,
+    functionName: 'getGlobalStats',
+    watch: true
+  });
 
-  const fetchGlobalStats = useCallback(async () => {
-    if (!contract) return;
-    
-    try {
-      setLoading(true);
-      const globalStats = await contract.getGlobalStats();
-      setStats({
-        totalXenBurned: ethers.utils.formatEther(globalStats.totalXenBurnedAmount),
-        totalXburnBurned: ethers.utils.formatEther(globalStats.totalXburnBurnedAmount),
-        totalXburnSupply: ethers.utils.formatEther(globalStats.totalXburnSupply),
-        accumulatedXen: ethers.utils.formatEther(globalStats.currentlyAccumulatedXen),
-      });
-    } catch (err) {
-      console.error('Error fetching global stats:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [contract]);
+  const totalBurned = stats ? formatEther(stats[0]) : '0'; // totalXenBurned
+  const totalXburnBurned = stats ? formatEther(stats[1]) : '0'; // totalXburnBurned
 
-  useEffect(() => {
-    if (contract) {
-      fetchGlobalStats();
-    }
-  }, [contract, fetchGlobalStats]);
-
-  if (loading) return <div className="loading">Loading stats...</div>;
-
-  return stats ? (
-    <div className="global-stats">
-      <h2>Global Statistics</h2>
-      <div className="stats-grid">
-        <div className="stat-item">
-          <label>Total XEN Burned:</label>
-          <span>{Number(stats.totalXenBurned).toLocaleString()} XEN</span>
+  return (
+    <div className="stats-section">
+      <div className="stat-card">
+        <div className="stat-label">
+          <span>🔥</span>
+          <span>CBXEN Burned</span>
         </div>
-        <div className="stat-item">
-          <label>Total XBURN Burned:</label>
-          <span>{Number(stats.totalXburnBurned).toLocaleString()} XBURN</span>
+        <div className="stat-value">
+          {Number(totalBurned).toLocaleString()}
         </div>
-        <div className="stat-item">
-          <label>XBURN Supply:</label>
-          <span>{Number(stats.totalXburnSupply).toLocaleString()} XBURN</span>
+      </div>
+      
+      <div className="stat-card">
+        <div className="stat-label">
+          <span>💎</span>
+          <span>XBURN Earned</span>
         </div>
-        <div className="stat-item">
-          <label>Accumulated XEN:</label>
-          <span>{Number(stats.accumulatedXen).toLocaleString()} XEN</span>
+        <div className="stat-value">
+          {Number(totalXburnBurned).toLocaleString()}
         </div>
       </div>
     </div>
-  ) : null;
+  );
 } 

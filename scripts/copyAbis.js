@@ -1,21 +1,24 @@
 const fs = require('fs');
 const path = require('path');
 
-const sourceDir = path.join(__dirname, '../public');
-const targetDir = path.join(__dirname, '../src/abis');
+const abiPath = path.join(__dirname, '../src/abis');
+const publicPath = path.join(__dirname, '../public');
 
-// Create abis directory if it doesn't exist
-if (!fs.existsSync(targetDir)) {
-  fs.mkdirSync(targetDir);
+// Ensure directories exist
+if (!fs.existsSync(abiPath)) {
+  fs.mkdirSync(abiPath, { recursive: true });
 }
 
-// Copy ABI files
-fs.copyFileSync(
-  path.join(sourceDir, 'xenBurnerAbi.json'),
-  path.join(targetDir, 'xenBurnerAbi.json')
-);
+// Copy only the ABIs we need
+const abiFiles = ['xburnabi.json', 'cbXenAbi.json'];
 
-fs.copyFileSync(
-  path.join(sourceDir, 'cbXenAbi.json'),
-  path.join(targetDir, 'cbXenAbi.json')
-); 
+abiFiles.forEach(file => {
+  if (fs.existsSync(path.join(publicPath, file))) {
+    fs.copyFileSync(
+      path.join(publicPath, file),
+      path.join(abiPath, file)
+    );
+  } else {
+    console.error(`Warning: ${file} not found in public directory`);
+  }
+}); 
