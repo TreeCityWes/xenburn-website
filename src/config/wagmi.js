@@ -1,19 +1,37 @@
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { getDefaultWallets, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig } from 'wagmi';
-import { base, baseGoerli } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-import {
-  injectedWallet,
+import { 
   rabbyWallet,
-  phantomWallet,
   metaMaskWallet,
-  walletConnectWallet,
+  phantomWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 
-const projectId = 'YOUR_WALLET_CONNECT_PROJECT_ID';
+// Configure Base mainnet
+const baseMainnet = {
+  ...base,
+  name: 'Base',
+  network: 'base',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ethereum',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://mainnet.base.org'],
+    },
+    public: {
+      http: ['https://mainnet.base.org'],
+    },
+  },
+};
+
+const projectId = 'c852fc82b0c14e6e8756a1532e495efb';
 
 const { chains, publicClient } = configureChains(
-  [base, baseGoerli],
+  [baseMainnet],
   [publicProvider()]
 );
 
@@ -21,21 +39,14 @@ const connectors = connectorsForWallets([
   {
     groupName: 'Popular',
     wallets: [
-      metaMaskWallet({ projectId, chains }),
-      rabbyWallet({ chains }),
-      phantomWallet({ chains }),
-    ],
-  },
-  {
-    groupName: 'Other',
-    wallets: [
-      walletConnectWallet({ projectId, chains }),
-      injectedWallet({ chains }),
+      rabbyWallet({ chains, projectId }),
+      metaMaskWallet({ chains, projectId }),
+      phantomWallet({ chains, projectId }),
     ],
   },
 ]);
 
-export const wagmiConfig = createConfig({
+export const config = createConfig({
   autoConnect: true,
   connectors,
   publicClient,

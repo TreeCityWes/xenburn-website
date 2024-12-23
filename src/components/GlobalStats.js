@@ -8,12 +8,13 @@ export function GlobalStats() {
   const { data: stats } = useContractRead({
     address: CONTRACT_ADDRESSES.XBURN,
     abi: xburnABI,
-    functionName: 'getGlobalStats',
+    functionName: 'getStats',
+    args: ['0x0000000000000000000000000000000000000000'], // Zero address for global stats
     watch: true
   });
 
-  const totalBurned = stats ? formatEther(stats[0]) : '0'; // totalXenBurned
-  const totalXburnBurned = stats ? formatEther(stats[1]) : '0'; // totalXburnBurned
+  const totalBurned = stats ? formatEther(stats[4]) : '0'; // globalXenBurned
+  const totalXburnBurned = stats ? formatEther(stats[5]) : '0'; // globalXburnBurned
 
   return (
     <div className="stats-section">

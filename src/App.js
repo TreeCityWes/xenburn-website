@@ -1,37 +1,40 @@
 import React from 'react';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { WagmiConfig } from 'wagmi';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
-import { wagmiConfig, chains } from './config/wagmi';
-import { NotificationProvider } from './context/NotificationContext';
-import { AppContent } from './components/AppContent';
+import { config, chains } from './config/wagmi';
 import { Header } from './components/Header';
+import { AppContent } from './components/AppContent';
 import { Footer } from './components/Footer';
 import '@rainbow-me/rainbowkit/styles.css';
-import './AppStyles.css';
+import './styles/theme.css';
 
-function App() {
+export function App() {
   return (
-    <ErrorBoundary>
-      <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider 
-          chains={chains} 
-          theme={darkTheme({
-            accentColor: '#FF3D00',
-            borderRadius: 'small'
-          })}
-        >
-          <NotificationProvider>
-            <div className="App">
-              <Header />
-              <AppContent />
-              <Footer />
-            </div>
-          </NotificationProvider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </ErrorBoundary>
+    <WagmiConfig config={config}>
+      <RainbowKitProvider
+        chains={chains}
+        theme={darkTheme({
+          accentColor: '#FF3D00',
+          accentColorForeground: 'white',
+          borderRadius: 'large',
+          fontStack: 'system',
+          overlayBlur: 'small',
+          modalBackground: '#0D0E13',
+          modalBackdropBackground: 'rgba(0, 0, 0, 0.5)',
+          modalBorderRadius: '16px',
+        })}
+        appInfo={{
+          appName: 'XENBURNER',
+          learnMoreUrl: 'https://docs.xenburner.com',
+        }}
+        showRecentTransactions={true}
+      >
+        <div className="app">
+          <Header />
+          <AppContent />
+          <Footer />
+        </div>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }
-
-export default App;

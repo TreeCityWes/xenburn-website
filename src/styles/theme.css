@@ -1,0 +1,193 @@
+:root {
+  /* Colors */
+  --primary: #8B1E00;
+  --primary-dark: #6B1700;
+  --primary-light: rgba(139, 30, 0, 0.1);
+  --primary-glow: rgba(139, 30, 0, 0.15);
+  
+  /* Fire Theme Colors */
+  --fire-orange: #FF3D00;
+  --fire-yellow: #FFB800;
+  --fire-red: #8B1E00;
+  
+  /* Background Colors */
+  --background: #0D0E13;
+  --surface-0: rgba(13, 14, 19, 0.95);
+  --surface-1: rgba(19, 20, 28, 0.95);
+  --surface-2: rgba(26, 27, 37, 0.95);
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Border Colors */
+  --border-light: rgba(255, 255, 255, 0.05);
+  --border-hover: rgba(255, 255, 255, 0.1);
+  
+  /* Gradients */
+  --gradient-surface: linear-gradient(180deg, var(--surface-0) 0%, var(--background) 100%);
+  --gradient-button: linear-gradient(180deg, var(--fire-orange) 0%, var(--primary) 100%);
+  --gradient-fire: linear-gradient(180deg, var(--fire-orange) 0%, var(--fire-red) 100%);
+  --gradient-fire-horizontal: linear-gradient(90deg, var(--fire-orange) 0%, var(--fire-red) 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, var(--primary-glow), transparent 70%);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  
+  /* Layout */
+  --container-width: 1200px;
+  --container-padding: var(--space-6);
+  --header-height: 72px;
+
+  /* Borders */
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+
+  /* Z-index */
+  --z-header: 100;
+  
+  /* Transitions */
+  --transition-all: all 0.2s ease;
+  --transition-glow: all 0.3s ease-in-out;
+
+  /* Shadows */
+  --shadow-fire: 0 0 20px rgba(255, 61, 0, 0.2);
+  --shadow-button: 0 4px 12px rgba(255, 61, 0, 0.25);
+}
+
+html {
+  height: 100%;
+  background: var(--background);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 50% 0%, var(--primary-glow), transparent 70%),
+    radial-gradient(circle at 0% 50%, rgba(255, 31, 31, 0.1), transparent 50%),
+    radial-gradient(circle at 100% 50%, rgba(255, 184, 0, 0.1), transparent 50%);
+  background-repeat: no-repeat;
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* Fire Theme Specific Classes */
+.fire-glow {
+  position: relative;
+}
+
+.fire-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-fire);
+  opacity: 0;
+  transition: var(--transition-glow);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.fire-glow:hover::after {
+  opacity: 0.15;
+}
+
+.fire-text {
+  background: var(--gradient-fire-horizontal);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fire-border {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.fire-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  margin: -1px;
+  border-radius: inherit;
+  background: var(--gradient-fire);
+  opacity: 0.3;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+input {
+  font-family: inherit;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

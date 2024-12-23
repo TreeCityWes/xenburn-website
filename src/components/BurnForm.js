@@ -1,201 +1,174 @@
-import React, { useState, useEffect } from 'react';
-import { useAccount, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi';
-import { formatEther, parseEther, hexToBigInt } from 'viem';
-import { CONTRACT_ADDRESSES } from '../config/contracts';
-import { cbXenABI, xburnABI } from '../abis';
+import React, { useState } from 'react';
+import { useAccount, useContractRead, useContractWrite, useWaitForTransaction, useBalance } from 'wagmi';
+import { formatEther, parseEther } from 'viem';
+import { CBXEN_ADDRESS, XBURN_ADDRESS, XENBURNER_ADDRESS } from '../config/addresses';
+import xenBurnerABI from '../abis/xburnabi.json';
+import erc20ABI from '../abis/erc20abi.json';
 import { BuyAndBurn } from './BuyAndBurn';
-import { BurnXburn } from './BurnXburn';
+import BurnXburn from './BurnXburn';
+import './BurnForm.css';
 
 export function BurnForm() {
-  const [activeTab, setActiveTab] = useState('burn');
-  const { address } = useAccount();
+  const [activeTab, setActiveTab] = useState('burn-cbxen');
   const [amount, setAmount] = useState('');
-  const [needsApproval, setNeedsApproval] = useState(true);
-
-  // Get current allowance
-  const { data: allowance } = useContractRead({
-    address: CONTRACT_ADDRESSES.CBXEN,
-    abi: cbXenABI,
-    functionName: 'allowance',
-    args: [address, CONTRACT_ADDRESSES.XBURN],
-    watch: true
-  });
+  const { address } = useAccount();
 
   // Get CBXEN balance
-  const { data: cbxenBalance } = useContractRead({
-    address: CONTRACT_ADDRESSES.CBXEN,
-    abi: cbXenABI,
-    functionName: 'balanceOf',
-    args: [address],
-    watch: true
+  const { data: cbxenBalance } = useBalance({
+    address,
+    token: CBXEN_ADDRESS,
+    watch: true,
+  });
+
+  // Get CBXEN allowance
+  const { data: cbxenAllowance } = useContractRead({
+    address: CBXEN_ADDRESS,
+    abi: erc20ABI,
+    functionName: 'allowance',
+    args: [address, XENBURNER_ADDRESS],
+    watch: true,
   });
 
   // Approve CBXEN
-  const { write: approve, isLoading: isApproving, data: approveData } = useContractWrite({
-    address: CONTRACT_ADDRESSES.CBXEN,
-    abi: cbXenABI,
-    functionName: 'approve'
+  const { write: approveCbxen, data: approveCbxenData } = useContractWrite({
+    address: CBXEN_ADDRESS,
+    abi: erc20ABI,
+    functionName: 'approve',
   });
 
-  // Wait for approval transaction
-  const { isLoading: isApprovalPending } = useWaitForTransaction({
-    hash: approveData?.hash,
-    onSuccess: () => {
-      checkAllowance();
-    }
+  // Wait for CBXEN approval
+  const { isLoading: isApprovingCbxen } = useWaitForTransaction({
+    hash: approveCbxenData?.hash,
   });
 
   // Burn CBXEN
-  const { write: burn, isLoading: isBurning } = useContractWrite({
-    address: CONTRACT_ADDRESSES.XBURN,
-    abi: xburnABI,
-    functionName: 'burnXEN'
+  const { write: burnCbxen, data: burnCbxenData } = useContractWrite({
+    address: XENBURNER_ADDRESS,
+    abi: xenBurnerABI,
+    functionName: 'burnXen',
   });
 
-  // Check if approval is needed
-  useEffect(() => {
-    if (allowance && amount) {
-      checkAllowance();
-    }
-  }, [allowance, amount]);
+  // Wait for CBXEN burn
+  const { isLoading: isBurningCbxen } = useWaitForTransaction({
+    hash: burnCbxenData?.hash,
+  });
 
-  useEffect(() => {
-    if (allowance) {
-      console.log('Current allowance:', formatEther(allowance));
-    }
-  }, [allowance]);
-
-  const checkAllowance = () => {
-    if (!allowance || !amount) {
-      setNeedsApproval(true);
-      return;
-    }
-    
-    try {
-      const currentAllowance = hexToBigInt(allowance);
-      const requiredAmount = hexToBigInt(parseEther(amount));
-      setNeedsApproval(currentAllowance < requiredAmount);
-    } catch (error) {
-      console.error('Error checking allowance:', error);
-      setNeedsApproval(true);
-    }
-  };
-
-  const handleAmountChange = (e) => {
-    setAmount(e.target.value);
-  };
-
-  const handleApprove = () => {
+  const handleApprove = async () => {
     if (!amount) return;
-    approve({ 
-      args: [CONTRACT_ADDRESSES.XBURN, parseEther(amount)] 
+    const parsedAmount = parseEther(amount);
+    approveCbxen({
+      args: [XENBURNER_ADDRESS, parsedAmount],
     });
   };
 
-  const handleBurn = () => {
+  const handleBurn = async () => {
     if (!amount) return;
-    burn({ 
-      args: [parseEther(amount)] 
+    const parsedAmount = parseEther(amount);
+    burnCbxen({
+      args: [parsedAmount],
     });
+  };
+
+  const handleMax = () => {
+    if (cbxenBalance) {
+      setAmount(formatEther(cbxenBalance.value));
+    }
+  };
+
+  const currentAllowance = cbxenAllowance ? formatEther(cbxenAllowance) : '0';
+  const hasApproval = Number(currentAllowance) >= (amount ? Number(amount) : 0);
+
+  const renderBurnCBXENContent = () => (
+    <div className="burn-content">
+      <h2 className="burn-title">Burn CBXEN</h2>
+      <p className="burn-description">Burn your CBXEN tokens to earn XBURN rewards!</p>
+
+      <div className="balance-info">
+        <span className="balance-label">Available Balance:</span>
+        <div className="balance-amount">
+          <span className="balance-value">
+            {cbxenBalance ? Math.floor(Number(formatEther(cbxenBalance.value))).toLocaleString() : '0'} CBXEN
+          </span>
+          <button className="max-button" onClick={handleMax}>
+            MAX
+          </button>
+        </div>
+      </div>
+
+      <div className="input-wrapper">
+        <input
+          type="text"
+          className="burn-input"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="0.0"
+        />
+        <span className="token-suffix">CBXEN</span>
+      </div>
+
+      <div className="approval-info">
+        Currently Approved: {Math.floor(Number(currentAllowance)).toLocaleString()} CBXEN
+      </div>
+
+      <div className="button-container">
+        {!hasApproval && (
+          <button
+            className="approve-button"
+            onClick={handleApprove}
+            disabled={isApprovingCbxen || !amount}
+          >
+            {isApprovingCbxen ? 'Approving...' : 'Approve'}
+          </button>
+        )}
+        <button
+          className="burn-button"
+          onClick={handleBurn}
+          disabled={isBurningCbxen || !amount || !hasApproval}
+          style={{ gridColumn: hasApproval ? '1 / -1' : 'auto' }}
+        >
+          {isBurningCbxen ? 'Burning...' : 'Burn CBXEN'}
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'burn-cbxen':
+        return renderBurnCBXENContent();
+      case 'burn-xburn':
+        return <BurnXburn />;
+      case 'swap-burn':
+        return <BuyAndBurn />;
+      default:
+        return renderBurnCBXENContent();
+    }
   };
 
   return (
     <div className="burn-form">
-      <div className="tab-buttons">
+      <div className="burn-tabs">
         <button 
-          className={`tab-button ${activeTab === 'burn' ? 'active' : ''}`}
-          onClick={() => setActiveTab('burn')}
+          className={`tab-button ${activeTab === 'burn-cbxen' ? 'active' : ''}`}
+          onClick={() => setActiveTab('burn-cbxen')}
         >
           Burn CBXEN
         </button>
         <button 
-          className={`tab-button ${activeTab === 'buyburn' ? 'active' : ''}`}
-          onClick={() => setActiveTab('buyburn')}
-        >
-          Buy & Burn
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'xburn' ? 'active' : ''}`}
-          onClick={() => setActiveTab('xburn')}
+          className={`tab-button ${activeTab === 'burn-xburn' ? 'active' : ''}`}
+          onClick={() => setActiveTab('burn-xburn')}
         >
           Burn XBURN
         </button>
+        <button 
+          className={`tab-button ${activeTab === 'swap-burn' ? 'active' : ''}`}
+          onClick={() => setActiveTab('swap-burn')}
+        >
+          Swap & Burn
+        </button>
       </div>
 
-      {activeTab === 'burn' && (
-        <div className="burn-content">
-          <h2 className="burn-title">Burn CBXEN for XBURN Rewards</h2>
-          <p className="burn-description">Burn your CBXEN tokens and earn XBURN tokens!</p>
-
-          <div className="conversion-box">
-            <div className="conversion-rate">1 XBURN = 1,000,000 CBXEN</div>
-          </div>
-
-          <div className="input-group">
-            <div className="balance-info">
-              <span>Available Balance:</span>
-              <div className="balance-amount">
-                <span>{cbxenBalance ? Number(formatEther(cbxenBalance)).toLocaleString() : '0'} CBXEN</span>
-                <button 
-                  className="max-button"
-                  onClick={() => setAmount(cbxenBalance ? formatEther(cbxenBalance) : '0')}
-                >
-                  MAX
-                </button>
-              </div>
-            </div>
-
-            <div className="input-wrapper">
-              <input
-                type="text"
-                value={amount}
-                onChange={handleAmountChange}
-                className="burn-input"
-              />
-              <span className="input-suffix">CBXEN</span>
-            </div>
-          </div>
-
-          {needsApproval ? (
-            <button 
-              className="action-button approve-button"
-              onClick={handleApprove}
-              disabled={isApproving || isApprovalPending || !amount}
-            >
-              {isApproving || isApprovalPending ? 'Approving...' : 'Approve CBXEN'}
-            </button>
-          ) : (
-            <button 
-              className="action-button burn-button"
-              onClick={handleBurn}
-              disabled={isBurning || !amount}
-            >
-              Burn CBXEN
-            </button>
-          )}
-
-          <div className="approval-status">
-            <div className="approval-label">Currently Approved:</div>
-            <div className="approval-amount">
-              {allowance ? Number(formatEther(allowance)).toLocaleString() : '0'} CBXEN
-            </div>
-          </div>
-
-          <div className="help-section">
-            <div className="help-text">
-              First Time? <span className="help-highlight">Approve CBXEN</span> before burning.
-            </div>
-            <div className="help-links">
-              <a href="#" className="help-link">Read Whitepaper</a>
-              <a href="#" className="help-link">Join Telegram</a>
-              <a href="#" className="help-link">Follow Twitter</a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'buyburn' && <BuyAndBurn />}
-      {activeTab === 'xburn' && <BurnXburn />}
+      {renderContent()}
     </div>
   );
 } 

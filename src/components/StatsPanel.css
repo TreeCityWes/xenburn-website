@@ -1,0 +1,114 @@
+:root {
+  --primary-color: #FF3D00;
+  --primary-dark: #CC3100;
+  --primary-light: rgba(255, 61, 0, 0.1);
+  --background-dark: #13141C;
+  --surface-dark: rgba(20, 21, 26, 0.5);
+  --text-primary: #FFFFFF;
+  --text-secondary: #888888;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.stats-panel {
+  padding: var(--space-6);
+  background: var(--surface-1);
+  border-radius: var(--border-radius-lg);
+  backdrop-filter: blur(12px);
+}
+
+.stats-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.stat-box {
+  padding: var(--space-3);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Stat box colors */
+.stat-box.balance {
+  background: rgba(16, 185, 129, 0.1);
+}
+.stat-box.balance .stat-value {
+  color: #10B981;
+}
+
+.stat-box.allowance {
+  background: rgba(59, 130, 246, 0.1);
+}
+.stat-box.allowance .stat-value {
+  color: #3B82F6;
+}
+
+.stat-box.burned {
+  background: rgba(239, 68, 68, 0.1);
+}
+.stat-box.burned .stat-value {
+  color: #EF4444;
+}
+
+.stat-box.rewards {
+  background: rgba(249, 115, 22, 0.1);
+}
+.stat-box.rewards .stat-value {
+  color: #F97316;
+}
+
+.stat-box.claimed {
+  background: rgba(139, 92, 246, 0.1);
+}
+.stat-box.claimed .stat-value {
+  color: #8B5CF6;
+}
+
+.stat-box.pending {
+  background: rgba(234, 179, 8, 0.1);
+}
+.stat-box.pending .stat-value {
+  color: #EAB308;
+}
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-panel {
+    padding: var(--space-4);
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+} 
