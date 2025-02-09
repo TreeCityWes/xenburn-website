@@ -12,7 +12,7 @@ export function Footer() {
           <a href="https://t.me/xenburner" target="_blank" rel="noopener noreferrer" className="footer-link">
             Telegram
           </a>
-          <a href="https://gitbook.burnxen.com" target="_blank" rel="noopener noreferrer" className="footer-link">
+          <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="footer-link">
             Docs
           </a>
           <a href="mailto:wes@burnxen.com" className="footer-link">
