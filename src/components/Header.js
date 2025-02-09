@@ -21,7 +21,7 @@ export function Header() {
       <div className="ticker-separator">•</div>
       <div className="ticker-item">
         <span className="ticker-label">Docs</span>
-        <a href="https://gitbook.burnxen.com" target="_blank" rel="noopener noreferrer" className="ticker-link">gitbook.burnxen.com</a>
+        <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="ticker-link">xenburner.gitbook.io</a>
       </div>
     </>
   );
