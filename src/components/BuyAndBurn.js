@@ -1,78 +1,74 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
-import { useWeb3 } from '../hooks/useWeb3';
-import { useNotification } from '../context/NotificationContext';
+import React, { useState } from 'react';
+import { useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { XBURN_ADDRESS } from '../config/addresses';
+import { xburnABI } from '../abis';
+import { parseEther, formatEther } from 'viem';
 
 export function BuyAndBurn() {
-  const { contract } = useWeb3();
-  const { notify, updateNotification } = useNotification();
-  const [loading, setLoading] = useState(false);
-  const [accumulatedXen, setAccumulatedXen] = useState('0');
-  const [canBuyAndBurn, setCanBuyAndBurn] = useState(false);
+  const [minReceived, setMinReceived] = useState('0');
 
-  const fetchAccumulatedXen = useCallback(async () => {
-    try {
-      const accumulated = await contract.accumulatedXen();
-      setAccumulatedXen(accumulated.toString());
-      setCanBuyAndBurn(accumulated.gte(ethers.utils.parseEther('1000000000'))); // 1B threshold
-    } catch (err) {
-      console.error('Error fetching accumulated XEN:', err);
-    }
-  }, [contract]);
+  // Get accumulated XEN
+  const { data: accumulatedXen } = useContractRead({
+    address: XBURN_ADDRESS,
+    abi: xburnABI,
+    functionName: 'accumulatedXen',
+    watch: true
+  });
 
-  useEffect(() => {
-    if (contract) {
-      fetchAccumulatedXen();
-    }
-  }, [contract, fetchAccumulatedXen]);
+  // Swap XEN for XBURN
+  const { write: swapXenForXburn, data: swapData } = useContractWrite({
+    address: XBURN_ADDRESS,
+    abi: xburnABI,
+    functionName: 'swapXenForXburn'
+  });
 
-  const handleBuyAndBurn = async () => {
-    if (!contract || !canBuyAndBurn) return;
+  // Wait for swap transaction
+  const { isLoading: isSwapping } = useWaitForTransaction({
+    hash: swapData?.hash,
+  });
 
-    try {
-      setLoading(true);
-      const notificationId = notify('Initiating Buy & Burn...', 'info');
-
-      const tx = await contract.swapXenForXburn(0);
-      updateNotification(notificationId, 'Transaction submitted. Waiting for confirmation...', 'info');
-
-      const receipt = await tx.wait();
-      
-      if (receipt.status === 1) {
-        updateNotification(notificationId, 'Buy & Burn successful!', 'success');
-        await fetchAccumulatedXen();
-      } else {
-        updateNotification(notificationId, 'Buy & Burn failed', 'error');
-      }
-    } catch (err) {
-      notify(`Buy & Burn failed: ${err.message}`, 'error');
-    } finally {
-      setLoading(false);
-    }
+  const handleSwap = () => {
+    if (!minReceived) return;
+    swapXenForXburn({
+      args: [parseEther(minReceived)]
+    });
   };
 
   return (
-    <div className="card green-card">
-      <h2>Buy and Burn CBXEN</h2>
-      <div className="stats-grid">
-        <div className="stats-item">
-          <div className="stats-label">Accumulated CBXEN</div>
-          <div className="stats-value">
-            {ethers.utils.formatEther(accumulatedXen)} CBXEN
+    <div className="burn-content">
+      <h2 className="burn-title">Swap & Burn</h2>
+      <p className="burn-description">Swap accumulated XEN for XBURN and burn it automatically!</p>
+
+      <div className="stats-box">
+        <div className="stat-item">
+          <div className="stat-label">Accumulated XEN</div>
+          <div className="stat-value">
+            {accumulatedXen ? Number(formatEther(accumulatedXen)).toLocaleString() : '0'}
           </div>
         </div>
-        <div className="stats-item">
-          <div className="stats-label">Required for Buy & Burn</div>
-          <div className="stats-value">1B CBXEN</div>
-        </div>
       </div>
-      <button 
-        onClick={handleBuyAndBurn}
-        disabled={loading || !canBuyAndBurn}
-        className="button green-button"
-      >
-        {loading ? 'Processing...' : 'Buy and Burn XBURN'}
-      </button>
+
+      <div className="input-wrapper">
+        <input
+          type="text"
+          value={minReceived}
+          onChange={(e) => setMinReceived(e.target.value)}
+          className="burn-input"
+          placeholder="Minimum XBURN to receive"
+        />
+        <span className="token-suffix">XBURN</span>
+      </div>
+
+      <div className="button-container">
+        <button 
+          className="burn-button"
+          onClick={handleSwap}
+          disabled={isSwapping || !accumulatedXen || accumulatedXen === 0n}
+          style={{ gridColumn: '1 / -1' }}
+        >
+          {isSwapping ? 'Swapping...' : 'Swap & Burn'}
+        </button>
+      </div>
     </div>
   );
 } 

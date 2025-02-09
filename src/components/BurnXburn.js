@@ -1,102 +1,129 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
-import { useWeb3 } from '../hooks/useWeb3';
-import { useNotification } from '../context/NotificationContext';
+import React, { useState } from 'react';
+import { useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { parseEther, formatEther } from 'viem';
+import { XBURN_ADDRESS, XENBURNER_ADDRESS } from '../config/addresses';
+import { xburnABI } from '../abis';
+import erc20ABI from '../abis/erc20abi.json';
 
-export function BurnXburn() {
-  const { contract, account } = useWeb3();
-  const { notify, updateNotification } = useNotification();
+const BurnXburn = () => {
+  const { address } = useAccount();
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({
-    userBurned: '0',
-    totalBurned: '0'
+
+  // Get XBURN balance
+  const { data: xburnBalance } = useBalance({
+    address,
+    token: XBURN_ADDRESS,
+    watch: true,
   });
 
-  const fetchBurnStats = useCallback(async () => {
-    try {
-      const [userStats, globalStats] = await Promise.all([
-        contract.userXburnBurns(account),
-        contract.totalXburnBurned()
-      ]);
-      
-      setStats({
-        userBurned: userStats.toString(),
-        totalBurned: globalStats.toString()
-      });
-    } catch (err) {
-      console.error('Error fetching burn stats:', err);
-    }
-  }, [contract, account]);
+  // Get XBURN allowance
+  const { data: xburnAllowance } = useContractRead({
+    address: XBURN_ADDRESS,
+    abi: erc20ABI,
+    functionName: 'allowance',
+    args: [address, XENBURNER_ADDRESS],
+    watch: true,
+  });
 
-  useEffect(() => {
-    if (contract && account) {
-      fetchBurnStats();
-    }
-  }, [contract, account, fetchBurnStats]);
+  // Approve XBURN
+  const { write: approveXburn, data: approveXburnData } = useContractWrite({
+    address: XBURN_ADDRESS,
+    abi: erc20ABI,
+    functionName: 'approve',
+  });
+
+  // Wait for XBURN approval
+  const { isLoading: isApprovingXburn } = useWaitForTransaction({
+    hash: approveXburnData?.hash,
+  });
+
+  // Burn XBURN
+  const { write: burnXburn, data: burnXburnData } = useContractWrite({
+    address: XENBURNER_ADDRESS,
+    abi: xburnABI,
+    functionName: 'burnXburn',
+  });
+
+  // Wait for XBURN burn
+  const { isLoading: isBurningXburn } = useWaitForTransaction({
+    hash: burnXburnData?.hash,
+  });
+
+  const handleApprove = async () => {
+    if (!amount) return;
+    const parsedAmount = parseEther(amount);
+    approveXburn({
+      args: [XENBURNER_ADDRESS, parsedAmount],
+    });
+  };
 
   const handleBurn = async () => {
-    if (!contract || !amount) return;
+    if (!amount) return;
+    const parsedAmount = parseEther(amount);
+    burnXburn({
+      args: [parsedAmount],
+    });
+  };
 
-    try {
-      setLoading(true);
-      const amountWei = ethers.utils.parseEther(amount);
-      const notificationId = notify('Burning XBURN...', 'info');
-
-      const tx = await contract.burnXburn(amountWei);
-      updateNotification(notificationId, 'Transaction submitted. Waiting for confirmation...', 'info');
-      
-      const receipt = await tx.wait();
-      
-      if (receipt.status === 1) {
-        updateNotification(notificationId, 'XBURN burned successfully!', 'success');
-        setAmount('');
-        await fetchBurnStats();
-      } else {
-        updateNotification(notificationId, 'Burn failed', 'error');
-      }
-    } catch (err) {
-      notify(`Error burning XBURN: ${err.message}`, 'error');
-    } finally {
-      setLoading(false);
+  const handleMax = () => {
+    if (xburnBalance) {
+      setAmount(formatEther(xburnBalance.value));
     }
   };
 
+  const currentAllowance = xburnAllowance ? formatEther(xburnAllowance) : '0';
+  const hasApproval = Number(currentAllowance) >= (amount ? Number(amount) : 0);
+
   return (
-    <div className="card burn-card">
-      <h2>Burn XBURN</h2>
-      <div className="stats-grid">
-        <div className="stats-item">
-          <div className="stats-label">Your Total XBURN Burned</div>
-          <div className="stats-value">
-            {ethers.utils.formatEther(stats.userBurned)} XBURN
-          </div>
-        </div>
-        <div className="stats-item">
-          <div className="stats-label">Global XBURN Burned</div>
-          <div className="stats-value">
-            {ethers.utils.formatEther(stats.totalBurned)} XBURN
+    <div className="burn-content">
+      <h2 className="burn-title">Burn XBURN</h2>
+      <p className="burn-description">Burn your XBURN tokens to increase your share of rewards!</p>
+
+      <div className="stats-box">
+        <div className="stat-item">
+          <div className="stat-label">XBURN Balance</div>
+          <div className="stat-value">
+            {xburnBalance ? formatEther(xburnBalance.value) : '0'}
           </div>
         </div>
       </div>
-      <div className="burn-controls">
+
+      <div className="input-wrapper">
         <input
-          type="number"
+          type="text"
+          className="burn-input"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="Enter XBURN amount"
-          disabled={loading}
-          min="0"
-          step="any"
+          placeholder="0.0"
         />
+        <span className="token-suffix">XBURN</span>
+      </div>
+
+      <div className="approval-info">
+        Currently Approved: {Number(currentAllowance).toLocaleString()} XBURN
+      </div>
+
+      <div className="button-container">
+        {!hasApproval && (
+          <button
+            className="approve-button"
+            onClick={handleApprove}
+            disabled={isApprovingXburn || !amount}
+          >
+            {isApprovingXburn ? 'Approving...' : 'Approve'}
+          </button>
+        )}
         <button
+          className="burn-button"
           onClick={handleBurn}
-          disabled={loading || !amount}
-          className="button red-button"
+          disabled={isBurningXburn || !amount || !hasApproval}
+          style={{ gridColumn: hasApproval ? '1 / -1' : 'auto' }}
         >
-          {loading ? 'Burning...' : 'Burn XBURN'}
+          {isBurningXburn ? 'Burning...' : 'Burn XBURN'}
         </button>
       </div>
     </div>
   );
-} 
+};
+
+export default BurnXburn; 
