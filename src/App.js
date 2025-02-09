@@ -17,7 +17,7 @@ export function App() {
             <div className="docs-cta">
               <h2>Read Our Paper</h2>
               <p>Learn about the innovative burning mechanism and tokenomics</p>
-              <a href="https://gitbook.burnxen.com" target="_blank" rel="noopener noreferrer" className="cta-button">
+              <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="cta-button">
                 Read the Paper →
               </a>
             </div>
