@@ -6,10 +6,10 @@ export function Footer() {
     <footer className="app-footer">
       <div className="footer-content">
         <div className="footer-links">
-          <a href="https://x.com/burnmorexen" target="_blank" rel="noopener noreferrer" className="footer-link">
-            X (Twitter)
+          <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="footer-link">
+            X.com
           </a>
-          <a href="https://t.me/xenburner" target="_blank" rel="noopener noreferrer" className="footer-link">
+          <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="footer-link">
             Telegram
           </a>
           <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="footer-link">

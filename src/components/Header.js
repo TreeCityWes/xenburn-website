@@ -11,8 +11,13 @@ export function Header() {
       </div>
       <div className="ticker-separator">•</div>
       <div className="ticker-item">
-        <span className="ticker-label">Website</span>
-        <a href="https://burnxen.com" target="_blank" rel="noopener noreferrer" className="ticker-link">burnxen.com</a>
+        <span className="ticker-label">Social</span>
+        <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="ticker-link">X.com</a>
+      </div>
+      <div className="ticker-separator">•</div>
+      <div className="ticker-item">
+        <span className="ticker-label">Community</span>
+        <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="ticker-link">Telegram</a>
       </div>
       <div className="ticker-separator">•</div>
       <div className="ticker-item">
@@ -27,16 +32,13 @@ export function Header() {
       <div className="header-content container">
         <div className="brand">
           <span className="brand-text fire-text">XBURN</span>
-          <div className="network-wrapper">
-            <span className="network">on BASE</span>
-          </div>
         </div>
 
         <div className="ticker-wrapper">
           <div className="ticker">
             <div className="ticker-content">
               {tickerContent}
-              <div className="ticker-separator">•</div>
+              {tickerContent}
               {tickerContent}
             </div>
           </div>

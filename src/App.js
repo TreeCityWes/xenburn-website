@@ -12,7 +12,7 @@ export function App() {
         <div className="container">
           <div className="coming-soon-content">
             <img src="/xenburn.png" alt="XENBURN" className="hero-logo" />
-            <p className="coming-soon-subtitle">The Ultimate XEN Burning Experience</p>
+            <p className="coming-soon-subtitle">Burn. More. Xen.</p>
             
             <div className="docs-cta">
               <h2>Read Our Paper</h2>
@@ -23,22 +23,22 @@ export function App() {
             </div>
 
             <div className="stats-grid compact">
-              <div className="stat-box fire-border">
+              <div className="stat-box fire-border gradient-orange">
                 <h4>Total CBXEN Burned</h4>
                 <div className="stat-value fire-text">0</div>
                 <div className="stat-label">CBXEN</div>
               </div>
-              <div className="stat-box fire-border">
+              <div className="stat-box fire-border gradient-red">
                 <h4>Total Value Burned</h4>
                 <div className="stat-value fire-text">$0</div>
                 <div className="stat-label">USD</div>
               </div>
-              <div className="stat-box fire-border">
+              <div className="stat-box fire-border gradient-purple">
                 <h4>XBURN Price</h4>
                 <div className="stat-value fire-text">$0.00</div>
                 <div className="stat-label">USD</div>
               </div>
-              <div className="stat-box fire-border">
+              <div className="stat-box fire-border gradient-blue">
                 <h4>Market Cap</h4>
                 <div className="stat-value fire-text">$0</div>
                 <div className="stat-label">USD</div>
@@ -65,7 +65,7 @@ export function App() {
 
             <div className="launch-info">
               <h2>Launch Coming Soon</h2>
-              <p>Get ready for the hottest burning experience on Base</p>
+              <p>Get ready to Burn More Xen on Base</p>
               <button className="notify-button" disabled>
                 Coming Soon
               </button>

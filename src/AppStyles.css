@@ -315,27 +315,30 @@ body {
 }
 
 .stat-box {
-  background: var(--surface-1);
-  border: 1px solid var(--border-light);
-  border-radius: var(--border-radius-md);
   padding: var(--space-4);
-  transition: var(--transition-all);
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
 }
 
 .stat-box:hover {
-  border-color: var(--border-hover);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.stat-label {
-  font-size: var(--font-size-sm);
+.stat-box h4 {
   color: var(--text-secondary);
   margin-bottom: var(--space-2);
 }
 
-.stat-value {
+.stat-box .stat-value {
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.stat-box .stat-label {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 /* Responsive */
@@ -420,5 +423,104 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Add these gradient classes */
+.gradient-orange {
+  background: linear-gradient(135deg, rgba(255, 98, 0, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
+  border-color: rgba(255, 98, 0, 0.2);
+}
+
+.gradient-red {
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
+  border-color: rgba(255, 0, 0, 0.2);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
+  border-color: rgba(138, 43, 226, 0.2);
+}
+
+.gradient-blue {
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
+  border-color: rgba(0, 123, 255, 0.2);
+}
+
+.flame-equalizer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.15;
+  filter: blur(2px);
+  padding: 0 20px;
+}
+
+.flame-bar {
+  width: 3px;
+  height: 100px;
+  background: linear-gradient(to top, 
+    rgba(255, 61, 0, 0.9) 0%,
+    rgba(255, 144, 0, 0.7) 60%,
+    rgba(255, 237, 0, 0.2) 100%
+  );
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  animation: flameMove var(--flame-duration) ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255, 61, 0, 0.3);
+}
+
+.flame-bar:nth-child(odd) {
+  --flame-duration: 1.2s;
+}
+
+.flame-bar:nth-child(even) {
+  --flame-duration: 1.4s;
+}
+
+.flame-bar:nth-child(3n) {
+  --flame-duration: 1.6s;
+}
+
+.flame-bar:nth-child(3n+1) {
+  --flame-duration: 1.3s;
+}
+
+@keyframes flameMove {
+  0%, 100% {
+    height: 100px;
+    opacity: 0.8;
+  }
+  50% {
+    height: 300px;
+    opacity: 1;
+  }
+}
+
+/* Ensure main content stays above background */
+.app-main {
+  position: relative;
+  z-index: 1;
+}
+
+.app-header {
+  position: fixed;
+  z-index: 2;
+}
+
+.app-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Remove the gradient overlay */
+.app::after {
+  display: none;
 }
   
