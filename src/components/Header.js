@@ -6,7 +6,7 @@ import { FireParticles } from './FireParticles';
 export function Header() {
   const tickerItem = (
     <>
-      <div className="ticker-item">Launch: Q2 2024</div>
+      <div className="ticker-item">Launch: Q2 2025</div>
       <div className="ticker-separator">•</div>
       <div className="ticker-item">X: <a href="https://x.com/BurnMoreXen" className="ticker-link">@BurnMoreXen</a></div>
       <div className="ticker-separator">•</div>
