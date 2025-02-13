@@ -1,53 +1,64 @@
 import React from 'react';
 import './Header.css';
+import { Helmet } from 'react-helmet';
+import { FireParticles } from './FireParticles';
 
 export function Header() {
-  const tickerContent = (
+  const tickerItem = (
     <>
+      <div className="ticker-item">Launch: Q2 2024</div>
       <div className="ticker-separator">•</div>
-      <div className="ticker-item">
-        <span className="ticker-label">Launch Date</span>
-        <span className="ticker-value">Q2 2025</span>
-      </div>
+      <div className="ticker-item">X: <a href="https://x.com/BurnMoreXen" className="ticker-link">@BurnMoreXen</a></div>
       <div className="ticker-separator">•</div>
-      <div className="ticker-item">
-        <span className="ticker-label">Social</span>
-        <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="ticker-link">X.com</a>
-      </div>
+      <div className="ticker-item">TG: <a href="https://t.me/BurnMoreXen" className="ticker-link">BurnMoreXen</a></div>
       <div className="ticker-separator">•</div>
-      <div className="ticker-item">
-        <span className="ticker-label">Community</span>
-        <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="ticker-link">Telegram</a>
-      </div>
-      <div className="ticker-separator">•</div>
-      <div className="ticker-item">
-        <span className="ticker-label">Docs</span>
-        <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="ticker-link">xenburner.gitbook.io</a>
-      </div>
+      <div className="ticker-item">Docs: <a href="https://xenburner.gitbook.io/xenburner" className="ticker-link">GitBook</a></div>
     </>
   );
 
   return (
     <header className="app-header">
+      <div className="header-fire">
+        <FireParticles width={window.innerWidth} height={80} intensity={1.2} isBackground={true} />
+      </div>
       <div className="header-content container">
         <div className="brand">
-          <span className="brand-text fire-text">XBURN</span>
+          <span className="brand-text">XBURN</span>
         </div>
 
         <div className="ticker-wrapper">
           <div className="ticker">
             <div className="ticker-content">
-              {tickerContent}
-              {tickerContent}
-              {tickerContent}
+              {tickerItem}
+              {tickerItem}
+              {tickerItem}
+              {tickerItem}
             </div>
           </div>
         </div>
 
         <button className="connect-button" disabled>
-          Launch Coming Soon
+          Coming Soon
         </button>
       </div>
+      <Helmet>
+        <title>XenBurn - Burn Your Xen</title>
+        <meta name="description" content="XenBurn - A platform to burn your Xen tokens" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.burnxen.com/" />
+        <meta property="og:title" content="XenBurn - Burn Your Xen" />
+        <meta property="og:description" content="XenBurn - A platform to burn your Xen tokens" />
+        <meta property="og:image" content="https://www.burnxen.com/xenburn.png" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.burnxen.com/" />
+        <meta property="twitter:title" content="XenBurn - Burn Your Xen" />
+        <meta property="twitter:description" content="XenBurn - A platform to burn your Xen tokens" />
+        <meta property="twitter:image" content="https://www.burnxen.com/xenburn.png" />
+      </Helmet>
     </header>
   );
 } 

@@ -310,140 +310,59 @@ body {
 /* Stats Grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .stat-box {
-  padding: var(--space-4);
-  border-radius: var(--border-radius-md);
-  transition: all 0.3s ease;
+  background: rgba(20, 21, 26, 0.6);
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
 }
 
 .stat-box:hover {
+  background: linear-gradient(145deg,
+    rgba(20, 21, 26, 0.8) 0%,
+    rgba(255, 69, 0, 0.1) 100%
+  );
+  border-color: rgba(255, 69, 0, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.stat-box h4 {
-  color: var(--text-secondary);
-  margin-bottom: var(--space-2);
 }
 
 .stat-box .stat-value {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  margin-bottom: var(--space-1);
+  background: linear-gradient(90deg, #FF4500, #FF8C00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-box h4 {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 .stat-box .stat-label {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .app-main {
-    padding-top: calc(var(--header-height) + var(--space-4));
-  }
-
-  .burn-section,
-  .stats-section {
-    padding: var(--space-4);
-  }
-
-.stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.burn-button {
-  background: var(--gradient-button);
-  border: none;
-  color: white;
-  box-shadow: var(--shadow-button);
-  transition: var(--transition-all);
-}
-
-.burn-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-fire);
-}
-
-.approve-button {
-  background: rgba(19, 20, 28, 0.6);
-  border: 1px solid var(--border-light);
-  color: var(--text-primary);
-  transition: var(--transition-all);
-}
-
-.approve-button:hover:not(:disabled) {
-  border-color: var(--fire-orange);
-  background: rgba(255, 61, 0, 0.1);
-  box-shadow: var(--shadow-fire);
-}
-
-.stats-box {
-  background: rgba(19, 20, 28, 0.6);
-  border: 1px solid var(--border-light);
-  border-radius: var(--border-radius-md);
-  transition: var(--transition-all);
-}
-
-.stats-box:hover {
-  border-color: var(--fire-orange);
-  box-shadow: var(--shadow-fire);
-}
-
-.burn-input {
-  background: rgba(19, 20, 28, 0.6);
-  border: 1px solid var(--border-light);
-  transition: var(--transition-all);
-}
-
-.burn-input:focus {
-  border-color: var(--fire-orange);
-  box-shadow: var(--shadow-fire);
-}
-
-.max-button {
-  background: rgba(255, 61, 0, 0.1);
-  color: var(--fire-orange);
-  border: 1px solid var(--fire-orange);
-  transition: var(--transition-all);
-}
-
-.max-button:hover {
-  background: rgba(255, 61, 0, 0.2);
-  box-shadow: var(--shadow-fire);
-}
-
-.stat-value {
-  background: var(--gradient-fire-horizontal);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Add these gradient classes */
-.gradient-orange {
-  background: linear-gradient(135deg, rgba(255, 98, 0, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
-  border-color: rgba(255, 98, 0, 0.2);
-}
-
-.gradient-red {
-  background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
-  border-color: rgba(255, 0, 0, 0.2);
-}
-
-.gradient-purple {
-  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
-  border-color: rgba(138, 43, 226, 0.2);
-}
-
+/* Remove all gradients */
+.gradient-orange,
+.gradient-red,
+.gradient-purple,
 .gradient-blue {
-  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 61, 0, 0.1) 100%);
-  border-color: rgba(0, 123, 255, 0.2);
+  background: rgba(20, 21, 26, 0.8);
+  border: 1px solid rgba(255, 61, 0, 0.1);
 }
 
 .flame-equalizer {
@@ -522,5 +441,175 @@ body {
 /* Remove the gradient overlay */
 .app::after {
   display: none;
+}
+
+/* CTA Cards */
+.cta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.cta-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 69, 0, 0.2);
+  border-radius: 12px;
+  padding: 24px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 21, 26, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+/* Remove the duplicate gradient overlay */
+.cta-card::after {
+  display: none;
+}
+
+.cta-card h2,
+.cta-card p,
+.cta-card .cta-button {
+  position: relative;
+  z-index: 3;
+}
+
+.cta-card h2 {
+  color: #FF4500;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.cta-card p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.cta-button {
+  background: linear-gradient(90deg, #FF4500, #FF8C00);
+  border: none;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 10px 20px;
+  transition: all 0.3s;
+  margin-top: auto;
+  text-align: center;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: block;
+  width: 100%;
+}
+
+.cta-button:hover {
+  background: linear-gradient(90deg, #FF5722, #FFA000);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2);
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+}
+
+.glass-effect:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .cta-grid,
+  .stats-grid,
+  .feature-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Update feature list */
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.feature-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(20, 21, 26, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.feature-item h3,
+.feature-item p {
+  position: relative;
+  z-index: 2;
+}
+
+/* Remove any conflicting hover effects */
+.feature-item::before {
+  display: none;
+}
+
+.feature-item h3 {
+  background: linear-gradient(90deg, #FF4500, #FF8C00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.feature-item p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Footer fire effect */
+.app-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-fire {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  opacity: 0.6;
+}
+
+/* Add a subtle gradient overlay to the cards */
+.cta-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 21, 26, 0.4) 0%,
+    rgba(20, 21, 26, 0.2) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cta-card > * {
+  position: relative;
+  z-index: 2;
 }
   

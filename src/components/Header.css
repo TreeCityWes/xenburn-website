@@ -1,16 +1,29 @@
 .app-header {
-  position: fixed;
+  position: relative;
+  overflow: hidden;
   top: 0;
   left: 0;
   right: 0;
   z-index: var(--z-header);
-  background: var(--surface-0);
-  border-bottom: 1px solid var(--border-light);
+  background: rgba(20, 21, 26, 0.4);
+  border-bottom: 1px solid rgba(255, 69, 0, 0.2);
   height: var(--header-height);
   backdrop-filter: blur(12px);
 }
 
+.header-fire {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.8;
+}
+
 .header-content {
+  position: relative;
+  z-index: 1;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -39,8 +52,29 @@
   font-size: var(--font-size-xl);
   font-weight: 800;
   letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
+  background: linear-gradient(to right, 
+    #FF4500 0%, 
+    #FF8C00 30%, 
+    #FFA500 60%, 
+    #FFD700 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
 }
 
 .network-wrapper {
@@ -60,79 +94,42 @@
   flex: 1;
   overflow: hidden;
   margin: 0 var(--space-4);
-  background: var(--surface-1);
-  border: 1px solid var(--border-light);
+  background: rgba(20, 21, 26, 0.8);
+  border: 1px solid rgba(255, 61, 0, 0.1);
   border-radius: var(--border-radius-md);
-  padding: var(--space-2) var(--space-4);
-  height: 36px;
-  display: flex;
-  align-items: center;
+  height: 32px;
 }
 
 .ticker {
-  width: 100%;
   position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  height: 24px;
-  display: flex;
-  align-items: center;
 }
 
 .ticker-content {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-  white-space: nowrap;
   position: absolute;
-  left: 0;
-  animation: ticker 40s linear infinite;
-  will-change: transform;
-  padding-right: var(--space-12);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+  padding: 0 var(--space-4);
 }
 
 .ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: max-content;
-  padding-right: var(--space-2);
-}
-
-.ticker-label {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-  min-width: 80px;
-  text-align: right;
-  opacity: 0.7;
-}
-
-.ticker-value,
-.ticker-link {
-  color: var(--fire-orange);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  text-decoration: none;
-  transition: var(--transition-all);
-}
-
-.ticker-link:hover {
   color: var(--text-primary);
-  text-decoration: underline;
+  padding: 0 var(--space-2);
 }
 
 .ticker-separator {
-  color: var(--text-secondary);
-  opacity: 0.3;
-  margin: 0 var(--space-3);
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0 var(--space-2);
 }
 
-.ticker-link.highlight {
-  color: var(--fire-yellow);
-  font-weight: 600;
-}
-
-.ticker-link.highlight:hover {
-  color: var(--text-primary);
+.ticker-link {
+  color: #FF3D00;
+  text-decoration: none;
+  margin-left: 4px;
 }
 
 @keyframes ticker {
@@ -140,7 +137,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
@@ -170,4 +167,41 @@
   height: 32px;
   width: auto;
   object-fit: contain;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+  padding: var(--space-4);
+  border-radius: var(--border-radius-md);
+}
+
+.stat-box:hover {
+  border-color: rgba(255, 61, 0, 0.2);
+  background: rgba(255, 61, 0, 0.05);
+}
+
+.stat-box h4 {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+}
+
+.stat-box .stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: #FF3D00;
+  margin-bottom: var(--space-1);
+}
+
+.stat-box .stat-label {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+}
+
+.app-main {
+  padding-top: 0;
 } 
