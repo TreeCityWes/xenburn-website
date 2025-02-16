@@ -1,0 +1,173 @@
+.stats-panel {
+  width: 100%;
+}
+
+.stats-panel h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #fff;
+  text-align: left;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.stat-box {
+  background: rgba(30, 31, 41, 0.7);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 68, 0, 0.05);
+}
+
+.stat-content {
+  position: relative;
+  z-index: 1;
+}
+
+.stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(255, 68, 0, 0.1);
+}
+
+/* XEN Stats - White */
+.stat-box.xen {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-box.xen .stat-title {
+  color: #888;
+  font-size: 12px;
+}
+
+.stat-box.xen .stat-value {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.stat-box.xen:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.stat-box.xen:hover .fire-particles {
+  opacity: 0.7;
+}
+
+/* XBURN Stats - Orange */
+.stat-box.xburn {
+  border: 1px solid rgba(255, 68, 0, 0.1);
+}
+
+.stat-box.xburn .stat-title {
+  color: #888;
+  font-size: 12px;
+}
+
+.stat-box.xburn .stat-value {
+  color: #ff4400;
+}
+
+.stat-box.xburn:hover {
+  border-color: rgba(255, 68, 0, 0.3);
+}
+
+.stat-box.xburn:hover .fire-particles {
+  opacity: 0.8;
+}
+
+/* Supply Stats - Yellow */
+.stat-box.supply {
+  border: 1px solid rgba(255, 204, 0, 0.1);
+}
+
+.stat-box.supply .stat-title {
+  color: #888;
+  font-size: 12px;
+}
+
+.stat-box.supply .stat-value {
+  color: #ffcc00;
+}
+
+.stat-box.supply:hover {
+  border-color: rgba(255, 204, 0, 0.3);
+}
+
+.stat-box.supply:hover .fire-particles {
+  opacity: 0.6;
+}
+
+/* Pool Stats - Red */
+.stat-box.pool {
+  border: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+.stat-box.pool .stat-title {
+  color: #888;
+  font-size: 12px;
+}
+
+.stat-box.pool .stat-value {
+  color: #ff0000;
+}
+
+.stat-box.pool:hover {
+  border-color: rgba(255, 0, 0, 0.3);
+}
+
+.stat-box.pool:hover .fire-particles {
+  opacity: 0.7;
+}
+
+.stat-label {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.5px;
+}
+
+.stat-title {
+  color: #888;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.stat-value.link {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.stat-value.link:hover {
+  opacity: 0.8;
+}
+
+/* Color classes with slightly adjusted colors to match screenshot */
+.green .stat-value { color: #4caf50; }
+.blue .stat-value { color: #2196f3; }
+.purple .stat-value { color: #9c27b0; }
+.red .stat-value { color: #f44336; }
+.orange .stat-value { color: #ff9800; }
+.dark-red .stat-value { color: #b71c1c; }
+
+.gold { color: #ffd700; } 
