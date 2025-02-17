@@ -172,6 +172,28 @@
 
 .gold { color: #ffd700; }
 
+/* Global Burn Stats - Purple */
+.stat-box.global {
+  border: 1px solid rgba(128, 0, 128, 0.1);
+}
+
+.stat-box.global .stat-title {
+  color: #888;
+  font-size: 12px;
+}
+
+.stat-box.global .stat-value {
+  color: #9c27b0;
+}
+
+.stat-box.global:hover {
+  border-color: rgba(128, 0, 128, 0.3);
+}
+
+.stat-box.global:hover .fire-particles {
+  opacity: 0.7;
+}
+
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: 1fr;

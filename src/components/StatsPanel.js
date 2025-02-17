@@ -51,7 +51,10 @@ export const StatsPanel = () => {
     xburnSupply: '0',
     xenInPool: '0',
     xburnInPool: '0',
-    ratio: '0'
+    ratio: '0',
+    globalXenBurned: '0',
+    globalXburnBurned: '0',
+    burnRate: '10000'
   });
 
   useEffect(() => {
@@ -84,7 +87,16 @@ export const StatsPanel = () => {
         const [reserve0, reserve1] = await pairContract.getReserves();
         const xenInPool = ethers.utils.formatUnits(reserve0, 18);
         const xburnInPool = ethers.utils.formatUnits(reserve1, 18);
-        const ratio = (parseFloat(xburnInPool) / parseFloat(xenInPool)).toFixed(6);
+        const ratio = (parseFloat(xenInPool) / parseFloat(xburnInPool)).toFixed(6);
+
+        // Fetch global burned totals
+        const globalXenBurned = await burnerContract.totalXenBurned();
+        const globalXburnBurned = await burnerContract.totalXburnBurned();
+        const burnRate = await burnerContract.XEN_TO_XBURN_RATE();
+
+        console.log('Global XEN Burned:', globalXenBurned);
+        console.log('Global XBURN Burned:', globalXburnBurned);
+        console.log('Burn Rate:', burnRate);
 
         setStats({
           xenBalance: ethers.utils.formatUnits(xenBalance, 18),
@@ -97,10 +109,18 @@ export const StatsPanel = () => {
           xburnSupply: ethers.utils.formatUnits(xburnSupply, 18),
           xenInPool,
           xburnInPool,
-          ratio
+          ratio,
+          globalXenBurned: ethers.utils.formatUnits(globalXenBurned, 18),
+          globalXburnBurned: ethers.utils.formatUnits(globalXburnBurned, 18),
+          burnRate: burnRate.toString()
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
+        console.log('Error details:', {
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
       }
     };
 
@@ -115,9 +135,9 @@ export const StatsPanel = () => {
       <div className="stats-grid">
         {/* XEN Stats - White */}
         {[
-          { title: "XEN BALANCE", value: stats.xenBalance, type: "xen" },
-          { title: "XEN APPROVED", value: stats.xenApproved, type: "xen" },
-          { title: "XEN BURNED", value: stats.xenBurned, type: "xen" }
+          { title: "XEN Balance", value: stats.xenBalance, type: "xen" },
+          { title: "XEN Approved", value: stats.xenApproved, type: "xen" },
+          { title: "User Xen 🔥", value: stats.xenBurned, type: "xen" }
         ].map((stat, i) => (
           <div key={i} className={`stat-box ${stat.type}`}>
             <FireParticles width={200} height={100} intensity={0.3} type={stat.type} />
@@ -130,9 +150,9 @@ export const StatsPanel = () => {
 
         {/* XBURN Stats - Orange */}
         {[
-          { title: "XBURN BALANCE", value: stats.xburnBalance, type: "xburn" },
-          { title: "XBURN APPROVED", value: stats.xburnApproved, type: "xburn" },
-          { title: "XBURN BURNED", value: stats.xburnBurned, type: "xburn" }
+          { title: "XBURN Balance", value: stats.xburnBalance, type: "xburn" },
+          { title: "XBURN Approved", value: stats.xburnApproved, type: "xburn" },
+          { title: "User XBurn 🔥", value: stats.xburnBurned, type: "xburn" }
         ].map((stat, i) => (
           <div key={i} className={`stat-box ${stat.type}`}>
             <FireParticles width={200} height={100} intensity={0.3} type={stat.type} />
@@ -175,7 +195,7 @@ export const StatsPanel = () => {
         {[
           { title: "XEN IN POOL", value: stats.xenInPool, type: "pool" },
           { title: "XBURN IN POOL", value: stats.xburnInPool, type: "pool" },
-          { title: "XBURN/XEN RATIO", value: stats.ratio, type: "pool", isRatio: true }
+          { title: "Xen per Xburn", value: stats.ratio, type: "pool", isRatio: true }
         ].map((stat, i) => (
           <div key={i} className={`stat-box ${stat.type}`}>
             <FireParticles width={200} height={100} intensity={0.3} type={stat.type} />
@@ -183,6 +203,23 @@ export const StatsPanel = () => {
               <div className="stat-title">{stat.title}</div>
               <div className="stat-value">
                 {formatDecimals(stat.value, stat.isRatio)}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Global Burn Stats - Purple */}
+        {[
+          { title: "Global Xen 🔥", value: stats.globalXenBurned, type: "global" },
+          { title: "Global XBurn 🔥", value: stats.globalXburnBurned, type: "global" },
+          { title: "Burn Ratio", value: `${stats.burnRate}:1`, type: "global" }
+        ].map((stat, i) => (
+          <div key={i} className={`stat-box ${stat.type}`}>
+            <FireParticles width={200} height={100} intensity={0.3} type={stat.type} />
+            <div className="stat-content">
+              <div className="stat-title">{stat.title}</div>
+              <div className="stat-value">
+                {stat.title.includes("RATIO") ? stat.value : formatDecimals(stat.value)}
               </div>
             </div>
           </div>
