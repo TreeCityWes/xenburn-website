@@ -74,7 +74,6 @@
 .burn-title-icon {
   width: 32px;
   height: 32px;
-  filter: drop-shadow(0 0 8px rgba(255, 68, 0, 0.5));
 }
 
 .burn-subtitle {
@@ -399,4 +398,62 @@
 .info-content {
   position: relative;
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .burn-container {
+    margin: 12px;
+    width: auto;
+  }
+
+  .burn-content {
+    padding: 16px;
+  }
+
+  .burn-title {
+    font-size: 24px;
+  }
+
+  .burn-subtitle {
+    font-size: 13px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-container {
+    padding: 8px;
+  }
+
+  .token-input {
+    font-size: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instructions {
+    padding: 0 12px;
+  }
+
+  .steps {
+    padding: 0;
+  }
+
+  .step {
+    padding: 10px;
+  }
+
+  .step-content p {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 } 

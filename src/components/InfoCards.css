@@ -57,4 +57,34 @@
 
 .info-button:hover {
   background: #ff5500;
+}
+
+@media (max-width: 768px) {
+  .info-cards {
+    padding: 16px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .info-card-content {
+    max-width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .info-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .info-card h3 {
+    font-size: 16px;
+  }
+
+  .info-card p {
+    font-size: 13px;
+  }
 } 

@@ -112,4 +112,41 @@
 
 .connect-wallet:hover {
   background: #ff5500;
+}
+
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 0 12px;
+  }
+
+  .nav-left {
+    gap: 4px;
+  }
+
+  .nav-brand {
+    font-size: 18px;
+  }
+
+  .nav-dot,
+  .nav-text {
+    display: none;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+
+  .nav-balances {
+    display: none;
+  }
+
+  .wallet-address {
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+
+  .connect-wallet {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 } 

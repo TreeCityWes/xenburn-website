@@ -2,7 +2,6 @@ import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { WalletProvider } from './context/WalletContext';
 import { BurnPanel } from './components/BurnPanel';
-import { InfoCards } from './components/InfoCards';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import FireParticles from './components/FireParticles';

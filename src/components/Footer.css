@@ -30,4 +30,20 @@
 
 .footer-link:hover {
   color: #ffcc00;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    height: auto;
+    padding: 16px 12px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-link {
+    font-size: 14px;
+  }
 } 

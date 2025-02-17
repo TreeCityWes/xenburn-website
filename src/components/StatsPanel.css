@@ -170,4 +170,23 @@
 .orange .stat-value { color: #ff9800; }
 .dark-red .stat-value { color: #b71c1c; }
 
-.gold { color: #ffd700; } 
+.gold { color: #ffd700; }
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .stat-box {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .stat-title {
+    font-size: 11px;
+  }
+} 

@@ -687,7 +687,7 @@ export const BurnPanel = () => {
           {activeTab === 'swap' ? (
             <>Swap XBURN for XEN tokens and back!</>
           ) : activeTab === 'burnXen' ? (
-            <>Burn your XEN tokens to earn XBURN rewards!</>
+            <>Burn your XEN to mint XBURN!</>
           ) : activeTab === 'burnXBurn' ? (
             <>Burn your XBURN tokens!</>
           ) : (
@@ -756,7 +756,7 @@ export const BurnPanel = () => {
             <div className="step-number">1</div>
             <div className="step-content">
               <p>
-                Visit a Sepolia faucet like <a href="https://refer.quicknode.com/?via=TreeCityWes" target="_blank" rel="noopener noreferrer">QuickNode</a>
+                Visit a Sepolia faucet like <a href="https://faucet.quicknode.com/ethereum/sepolia/ref?=TreeCityWes" target="_blank" rel="noopener noreferrer">QuickNode</a>
               </p>
             </div>
           </div>

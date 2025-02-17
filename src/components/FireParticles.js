@@ -3,37 +3,37 @@ import React, { useEffect, useRef } from 'react';
 const FireParticles = ({ width, height, intensity = 1, isBackground = false }) => {
   const canvasRef = useRef(null);
   
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      if (isBackground) {
-        this.xs = (Math.random() * 2 - 1) * 0.5;
-        this.ys = -Math.random() * 2 - 1;
-        this.maxLife = 80 + Math.random() * 40;
-        this.size = 25 + Math.random() * 15;
-      } else {
-        this.xs = (Math.random() * 2 - 1) * 1.5;
-        this.ys = -Math.random() * 4 - 2;
-        this.maxLife = 40 + Math.random() * 20;
-        this.size = 15 + Math.random() * 10;
-      }
-      this.life = 0;
-    }
-    
-    update() {
-      this.x += this.xs;
-      this.y += this.ys;
-      this.ys *= 0.99; // Slight deceleration
-      this.life++;
-      this.size *= 0.97; // Shrink over time
-    }
-  }
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const particles = [];
+    
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        if (isBackground) {
+          this.xs = (Math.random() * 2 - 1) * 0.5;
+          this.ys = -Math.random() * 2 - 1;
+          this.maxLife = 80 + Math.random() * 40;
+          this.size = 25 + Math.random() * 15;
+        } else {
+          this.xs = (Math.random() * 2 - 1) * 1.5;
+          this.ys = -Math.random() * 4 - 2;
+          this.maxLife = 40 + Math.random() * 20;
+          this.size = 15 + Math.random() * 10;
+        }
+        this.life = 0;
+      }
+      
+      update() {
+        this.x += this.xs;
+        this.y += this.ys;
+        this.ys *= 0.99;
+        this.life++;
+        this.size *= 0.97;
+      }
+    }
     
     canvas.width = width;
     canvas.height = height;

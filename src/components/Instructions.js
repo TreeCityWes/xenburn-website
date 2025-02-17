@@ -10,8 +10,8 @@ export const Instructions = () => {
           <div className="step-number">1</div>
           <div className="step-content">
             <p>
-              Visit <a href="https://refer.quicknode.com/?via=TreeCityWes" target="_blank" rel="noopener noreferrer">QuickNode</a> to sign up, 
-              then use their <a href="https://faucet.quicknode.com/ethereum/sepolia" target="_blank" rel="noopener noreferrer">Sepolia faucet</a>
+              Visit <a href="https://faucet.quicknode.com/ethereum/sepolia/ref?=TreeCityWes" target="_blank" rel="noopener noreferrer">QuickNode</a> to sign up, 
+              then use their <a href="https://faucet.quicknode.com/ethereum/sepolia/ref?=TreeCityWes" target="_blank" rel="noopener noreferrer">Sepolia faucet</a>
             </p>
           </div>
         </div>
