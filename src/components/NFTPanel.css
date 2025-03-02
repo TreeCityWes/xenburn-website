@@ -1,0 +1,581 @@
+.nft-panel {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 24px;
+  background: rgba(20, 21, 31, 0.7);
+  color: #ededed;
+  position: relative;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 68, 0, 0.2);
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* Add subtle burning embers effect to the panel background */
+.nft-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 68, 0, 0.05), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(255, 120, 0, 0.05), transparent 40%);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nft-panel-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  color: #ff5c00;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.connect-prompt, .loading, .no-nfts {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: #999;
+  background: rgba(20, 10, 10, 0.3);
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 68, 0, 0.2);
+}
+
+.no-nfts p {
+  margin: 1rem 0;
+}
+
+.nft-picker-top {
+  margin-bottom: 16px;
+}
+
+.nft-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: auto;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  overflow: visible;
+}
+
+/* NFT display */
+.nft-image-section {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remove the green lines completely */
+.nft-image-section::before,
+.nft-image-section::after {
+  display: none;
+}
+
+.nft-image-container {
+  width: 100%;
+  /* SVG viewBox dimensions: 350x566 */
+  aspect-ratio: 350/566;
+  height: auto;
+  border-radius: 8px;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.nft-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* NFT Stats */
+.nft-stats-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #1e1f25;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 68, 0, 0.15);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.status-locked {
+  color: #ff5c00;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-ready-to-claim {
+  color: #00ff00;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-claimed {
+  color: #999;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.time-remaining {
+  display: block;
+  margin-bottom: 10px;
+  color: #ff5c00;
+  font-size: 14px;
+  padding: 6px 10px;
+  background: rgba(255, 92, 0, 0.05);
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid rgba(255, 68, 0, 0.1);
+}
+
+.nft-attributes {
+  width: 100%;
+  background: transparent;
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 12px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.attribute {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: nowrap;
+  line-height: 1.4;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.attribute:first-child {
+  padding-top: 0;
+}
+
+.attribute:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.attribute-label {
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: 95px;
+  padding-right: 5px;
+}
+
+.attribute-value {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.nft-controls {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.claim-button {
+  width: 100%;
+  padding: 14px;
+  background: #ff5c00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.claim-button:hover:not(:disabled) {
+  background: #ff7700;
+}
+
+.claim-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #555;
+  border-color: #666;
+}
+
+/* Emergency End Button */
+.emergency-end-button {
+  width: 100%;
+  padding: 14px;
+  background: #bd3c00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  margin-top: 10px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 100, 0, 0.6);
+}
+
+.emergency-end-button:hover:not(:disabled) {
+  background: #e04a00;
+}
+
+.emergency-end-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #555;
+  border-color: #666;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(255, 68, 0, 0.3);
+  border: 2px solid #bd3c00;
+  color: white;
+  position: relative;
+}
+
+.modal-content h3 {
+  color: #ff3b00;
+  text-align: center;
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.warning-details {
+  margin: 20px 0;
+}
+
+.warning-details p {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.warning-details ul {
+  padding-left: 20px;
+}
+
+.warning-details li {
+  margin-bottom: 8px;
+  color: #ff9c7d;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.modal-cancel-button, .modal-confirm-button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.modal-cancel-button {
+  background: #333;
+  color: white;
+}
+
+.modal-cancel-button:hover:not(:disabled) {
+  background: #444;
+}
+
+.modal-confirm-button {
+  background: #bd3c00;
+  color: white;
+}
+
+.modal-confirm-button:hover:not(:disabled) {
+  background: #e04a00;
+}
+
+.modal-cancel-button:disabled,
+.modal-confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nft-selector {
+  width: 100%;
+  padding: 12px;
+  background: rgba(30, 31, 41, 0.7);
+  border: 1px solid #ff5c00;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nft-selector:hover {
+  border-color: #ff7700;
+  background: rgba(30, 31, 41, 0.9);
+}
+
+.nft-selector:focus {
+  border-color: #ff7700;
+  box-shadow: 0 0 0 2px rgba(255, 92, 0, 0.2);
+}
+
+.nft-selector option {
+  background-color: #1a1a1a;
+  color: #ededed;
+  padding: 10px;
+}
+
+/* Simplify the placeholder to be minimal */
+.nft-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: rgba(30, 31, 41, 0.9);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Remove all the decorative elements and complex styling */
+.nft-placeholder::before,
+.nft-placeholder::after,
+.nft-placeholder > div::before {
+  display: none;
+}
+
+.nft-placeholder > div {
+  position: static;
+  background: none;
+  padding: 20px;
+}
+
+.nft-placeholder span.title,
+.nft-placeholder span.subtitle,
+.nft-placeholder .nft-details,
+.nft-placeholder .locked {
+  position: static;
+  z-index: auto;
+}
+
+/* Pagination at the bottom */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 24px;
+}
+
+.pagination-btn {
+  background: transparent;
+  color: #ff5c00;
+  border: 1px solid #ff5c00;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 92, 0, 0.1);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+}
+
+.page-info {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Improved responsive layout */
+@media (max-width: 768px) {
+  .nft-panel {
+    padding: 16px;
+  }
+  
+  .nft-panel-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .nft-attributes {
+    padding: 0;
+  }
+  
+  .attribute {
+    padding: 6px 0;
+  }
+  
+  .attribute-label {
+    font-size: 13px;
+    flex-basis: 100px;
+  }
+
+  .attribute-value {
+    font-size: 13px;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .nft-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .nft-card {
+    padding: 15px;
+  }
+  
+  .nft-details {
+    flex-direction: column;
+  }
+  
+  .nft-detail {
+    margin-bottom: 10px;
+  }
+  
+  .emergency-end-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .confirmation-modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+  }
+  
+  .modal-buttons button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+.nft-error-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  color: #ff5c00;
+  font-size: 1.2rem;
+  font-weight: 500;
+  background: rgba(30, 31, 41, 0.9);
+  border-radius: 8px;
+  text-align: center;
+  border: 1px dashed rgba(255, 92, 0, 0.3);
+}
+
+.nft-error-placeholder p {
+  margin: 0.5rem 0;
+}
+
+.nft-error-placeholder .error-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.nft-error-placeholder .action-button {
+  margin-top: 1rem;
+  background: rgba(255, 92, 0, 0.2);
+  border: 1px solid rgba(255, 92, 0, 0.4);
+  color: #ff5c00;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nft-error-placeholder .action-button:hover {
+  background: rgba(255, 92, 0, 0.3);
+} 

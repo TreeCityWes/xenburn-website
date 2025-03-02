@@ -1,11 +1,12 @@
 .App {
-  background: #13141f;
+  background: linear-gradient(135deg, #0f1019, #181926);
   min-height: 100vh;
   color: white;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   position: relative;
+  font-family: 'Inter', 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .App::before {
@@ -15,111 +16,225 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at top, rgba(255, 68, 0, 0.08), transparent 70%);
+  background: radial-gradient(circle at top, rgba(255, 80, 20, 0.05), transparent 70%);
   pointer-events: none;
+  z-index: 1;
+}
+
+.App::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(15, 16, 25, 0.4) 0%, rgba(15, 16, 25, 0) 25%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app-content-container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .main-content {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 520px;
   margin: 0 auto;
-  padding: 24px 20px 72px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-height: calc(100vh - 120px); /* Account for header + footer */
-}
-
-.hero-image {
-  display: none;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  padding: 10px 0 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  min-height: calc(100vh - 250px);
+  box-sizing: border-box;
 }
 
-.App-link {
-  color: #61dafb;
+/* Set box-sizing for all elements to prevent overflow issues */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Remove the social links section since it's now in the footer */
-.social-links {
+/* Hide these containers since they're integrated in BurnPanel */
+.stats-container, 
+.info-cards-container,
+.social-links-container {
   display: none;
 }
 
+/* Set burn panel width consistently */
+.burn-container {
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: none; /* Remove excess shadow */
+}
+
+/* Logo container styles with improved animation */
 .logo-container {
   width: 100%;
-  max-width: 520px;
-  margin: 48px auto 24px;
-  padding: 0 20px;
+  margin: 40px auto 30px;
   display: flex;
   justify-content: center;
+  position: relative;
+  z-index: 3;
 }
 
 .logo-container img {
   width: 100%;
   height: auto;
   object-fit: contain;
-  max-width: 400px;
+  max-width: 320px;
+  filter: drop-shadow(0 0 25px rgba(255, 80, 20, 0.2));
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Make sure footer stays at bottom */
+.logo-container img:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 30px rgba(255, 80, 20, 0.3));
+}
+
+/* Footer styles */
 .footer {
   margin-top: auto;
   height: 72px;
-  background: rgba(20, 21, 31, 0.95);
-  border-top: 1px solid rgba(255, 68, 0, 0.2);
+  background: linear-gradient(to bottom, rgba(15, 16, 25, 0), rgba(15, 16, 25, 0.95));
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
 }
 
-/* For WebKit browsers (Chrome, Safari) */
+/* Scrollbar styles */
 ::-webkit-scrollbar {
-    width: 12px; /* Width of the scrollbar */
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2); /* Background of the scrollbar track */
+  background: rgba(15, 16, 25, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ff4400, #ffcc00); /* Fire gradient */
-    border-radius: 10px; /* Rounded corners */
+  background: rgba(255, 80, 20, 0.3);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ffcc00, #ff4400); /* Change gradient on hover */
+  background: rgba(255, 80, 20, 0.5);
 }
 
-/* For Firefox */
 * {
-    scrollbar-width: thin; /* Make scrollbar thin */
-    scrollbar-color: #ff4400 rgba(0, 0, 0, 0.2); /* Thumb color and track color */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 80, 20, 0.3) rgba(15, 16, 25, 0.6);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tab Navigation Styles with improved glassmorphism */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 30px;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.tab-button {
+  background: rgba(25, 26, 36, 0.7);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 12px 26px;
+  margin: 0 8px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 80, 20, 0.1);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 rgba(255, 80, 20, 0);
+}
+
+.tab-button:hover {
+  color: #fff;
+  border-color: rgba(255, 80, 20, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 80, 20, 0.1);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, rgba(255, 68, 0, 0.2), rgba(255, 120, 20, 0.15));
+  color: #ff5020;
+  border: 1px solid rgba(255, 80, 20, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 80, 20, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Media queries with refined responsive behavior */
+@media (max-width: 768px) {
+  .app-content-container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+  
+  .logo-container {
+    margin: 30px auto 24px;
+  }
+  
+  .logo-container img {
+    max-width: 260px;
+  }
+  
+  .tab-button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  
+  .tab-navigation {
+    margin: 0 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-content-container {
+    padding: 0 12px;
+  }
+  
+  .logo-container {
+    margin: 24px auto 20px;
+  }
+  
+  .logo-container img {
+    max-width: 220px;
+  }
+  
+  .tab-navigation {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 0 20px;
+  }
+  
+  .tab-button {
+    font-size: 13px;
+    padding: 8px 16px;
+    margin: 4px;
+    flex: 0 0 auto;
+  }
+  
+  .main-content {
+    padding: 0 0 40px;
+  }
 }

@@ -1,43 +1,67 @@
 .stats-panel {
   width: 100%;
+  max-width: 680px;
+  margin: 24px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(20, 21, 31, 0.7);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 68, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(255, 68, 0, 0.05);
+  overflow: hidden;
 }
 
 .stats-panel h3 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   color: #fff;
   text-align: left;
+  background: linear-gradient(to right, #ff4400, #ff8800);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .stat-box {
   background: rgba(30, 31, 41, 0.7);
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   transition: transform 0.2s, border-color 0.2s;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(255, 68, 0, 0.05);
+  box-shadow: 0 0 10px rgba(255, 68, 0, 0.05);
+  width: 100%;
+  height: 70px;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .stat-content {
   position: relative;
   z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .stat-box:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 25px rgba(255, 68, 0, 0.1);
+  box-shadow: 0 0 15px rgba(255, 68, 0, 0.1);
 }
 
 /* XEN Stats - White */
@@ -47,13 +71,19 @@
 
 .stat-box.xen .stat-title {
   color: #888;
-  font-size: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .stat-box.xen .stat-value {
   color: #fff;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-box.xen:hover {
@@ -71,11 +101,19 @@
 
 .stat-box.xburn .stat-title {
   color: #888;
-  font-size: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .stat-box.xburn .stat-value {
   color: #ff4400;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-box.xburn:hover {
@@ -93,11 +131,19 @@
 
 .stat-box.supply .stat-title {
   color: #888;
-  font-size: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .stat-box.supply .stat-value {
   color: #ffcc00;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-box.supply:hover {
@@ -115,11 +161,19 @@
 
 .stat-box.pool .stat-title {
   color: #888;
-  font-size: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .stat-box.pool .stat-value {
   color: #ff0000;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-box.pool:hover {
@@ -130,27 +184,46 @@
   opacity: 0.7;
 }
 
-.stat-label {
-  color: #999;
-  font-size: 13px;
-  margin-bottom: 10px;
+/* Global Burn Stats - Purple */
+.stat-box.global {
+  border: 1px solid rgba(128, 0, 128, 0.1);
+}
+
+.stat-box.global .stat-title {
+  color: #888;
+  font-size: 11px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.stat-box.global .stat-value {
+  color: #9c27b0;
+  font-size: 18px;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: 0.5px;
+}
+
+.stat-box.global:hover {
+  border-color: rgba(128, 0, 128, 0.3);
+}
+
+.stat-box.global:hover .fire-particles {
+  opacity: 0.7;
 }
 
 .stat-title {
-  color: #888;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-value {
-  font-size: 24px;
-  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-value.link {
@@ -162,53 +235,40 @@
   opacity: 0.8;
 }
 
-/* Color classes with slightly adjusted colors to match screenshot */
-.green .stat-value { color: #4caf50; }
-.blue .stat-value { color: #2196f3; }
-.purple .stat-value { color: #9c27b0; }
-.red .stat-value { color: #f44336; }
-.orange .stat-value { color: #ff9800; }
-.dark-red .stat-value { color: #b71c1c; }
-
-.gold { color: #ffd700; }
-
-/* Global Burn Stats - Purple */
-.stat-box.global {
-  border: 1px solid rgba(128, 0, 128, 0.1);
-}
-
-.stat-box.global .stat-title {
-  color: #888;
-  font-size: 12px;
-}
-
-.stat-box.global .stat-value {
-  color: #9c27b0;
-}
-
-.stat-box.global:hover {
-  border-color: rgba(128, 0, 128, 0.3);
-}
-
-.stat-box.global:hover .fire-particles {
-  opacity: 0.7;
-}
-
+/* Media queries for responsiveness */
 @media (max-width: 768px) {
+  .stats-panel {
+    width: 100%;
+    padding: 16px;
+    margin: 20px auto;
+  }
+  
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .stat-box {
+    padding: 10px;
+    height: 65px;
+  }
+  
+  .stat-value {
+    font-size: 16px;
+  }
+  
+  .stat-title {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
-
+  
   .stat-box {
-    padding: 12px;
-  }
-
-  .stat-value {
-    font-size: 20px;
-  }
-
-  .stat-title {
-    font-size: 11px;
+    height: 60px;
   }
 } 

@@ -20,7 +20,7 @@ export const Instructions = () => {
           <div className="step-number">2</div>
           <div className="step-content">
             <p>
-              Visit <a href="https://testnet.xen.network" target="_blank" rel="noopener noreferrer">testnet.xen.network</a> and mint XEN (max term mints within 1 hour)
+              Visit <a href="https://testnet.xen.network" target="_blank" rel="noopener noreferrer">testnet.xen.network</a> and mint XEN
             </p>
           </div>
         </div>

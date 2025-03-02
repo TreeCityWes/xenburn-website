@@ -1,19 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { InjectedConnector } from '@web3-react/injected-connector';
 import toast from 'react-hot-toast';
 import xenAbi from '../contracts/xen.json';
-import xenBurnerAbi from '../contracts/xen_burner.json';
+import xenBurnerAbi from '../contracts/XBurnMinter.json';
+import xburnNftAbi from '../contracts/XBurnNFT.json';
+import {
+  XEN_ADDRESS,
+  XENBURNER_ADDRESS,
+  XBURN_NFT_ADDRESS
+} from '../constants/contracts';
 
 const WalletContext = createContext();
 
-// Contract addresses
-const XEN_ADDRESS = '0xcAe27BE52c003953f0B050ab6a31E5d5F0d52ccB';
-const XENBURNER_ADDRESS = '0xd60483890f9aae31bc19cef2523072151f23c54c';
-
-export const injected = new InjectedConnector({
-  supportedChainIds: [11155111], // Sepolia testnet
-});
+// Remove InjectedConnector dependency which might be causing storage issues
+// export const injected = new InjectedConnector({
+//   supportedChainIds: [11155111], // Sepolia testnet
+// });
 
 export function WalletProvider({ children }) {
   const [account, setAccount] = useState(null);
@@ -22,31 +24,99 @@ export function WalletProvider({ children }) {
   const [ethBalance, setEthBalance] = useState(null);
   const [xenBalance, setXenBalance] = useState(null);
   const [xburnBalance, setXburnBalance] = useState(null);
+  const [nftContract, setNftContract] = useState(null);
+  const [xburnMinterContract, setXburnMinterContract] = useState(null);
+  
+  // Check if already connected on initial load
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        if (typeof window.ethereum !== 'undefined') {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            // User has already authorized this site
+            connect(true); // Pass true to indicate this is an auto-connect
+          }
+        }
+      } catch (error) {
+        console.error("Failed to check initial connection:", error);
+      }
+    };
+    
+    checkConnection();
+  }, []);
 
-  const connect = async () => {
+  const connect = async (isAutoConnect = false) => {
     try {
       if (typeof window.ethereum !== 'undefined') {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const account = await signer.getAddress();
-        const network = await provider.getNetwork();
+        let accounts;
         
-        if (network.chainId !== 11155111) {
-          toast.error('Please connect to Sepolia testnet');
+        if (!isAutoConnect) {
+          // Only request accounts if not auto-connecting
+          accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        } else {
+          accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        }
+        
+        if (!accounts || accounts.length === 0) {
+          if (!isAutoConnect) {
+            toast.error('Please connect to your wallet');
+          }
           return;
         }
+        
+        // First create provider without any storage operations
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        
+        // Check network before doing anything else
+        const network = await provider.getNetwork();
+        if (network.chainId !== 11155111) {
+          try {
+            // Attempt to switch to Sepolia
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0xaa36a7' }], // Sepolia chainId in hex
+            });
+            // Reload the page after network switch
+            window.location.reload();
+            return;
+          } catch (switchError) {
+            // This error code indicates the chain has not been added to MetaMask
+            if (switchError.code === 4902) {
+              toast.error('Please add Sepolia network to your wallet');
+            } else {
+              toast.error('Please connect to Sepolia testnet');
+            }
+            return;
+          }
+        }
 
+        const signer = provider.getSigner();
+        const account = await signer.getAddress();
+
+        // Initialize contract instances with readonly provider first
+        const nftContract = new ethers.Contract(XBURN_NFT_ADDRESS, xburnNftAbi, provider);
+        const minterContract = new ethers.Contract(XENBURNER_ADDRESS, xenBurnerAbi, provider);
+        
         setProvider(provider);
         setSigner(signer);
         setAccount(account);
-        toast.success('Wallet connected!');
+        setNftContract(nftContract);
+        setXburnMinterContract(minterContract);
+        
+        if (!isAutoConnect) {
+          toast.success('Wallet connected!');
+        }
       } else {
-        toast.error('Please install a Web3 wallet like Rabby');
+        if (!isAutoConnect) {
+          toast.error('Please install a Web3 wallet like MetaMask or Rabby');
+        }
       }
     } catch (error) {
-      toast.error('Failed to connect wallet');
-      console.error(error);
+      console.error('Wallet connection error:', error);
+      if (!isAutoConnect) {
+        toast.error(`Failed to connect wallet: ${error.message || 'Unknown error'}`);
+      }
     }
   };
 
@@ -57,19 +127,41 @@ export function WalletProvider({ children }) {
     setEthBalance(null);
     setXenBalance(null);
     setXburnBalance(null);
+    setNftContract(null);
+    setXburnMinterContract(null);
     toast.success('Wallet disconnected');
   };
 
   useEffect(() => {
+    const handleAccountsChanged = (accounts) => {
+      if (accounts.length === 0) {
+        // User disconnected their wallet
+        disconnect();
+      } else if (accounts[0] !== account) {
+        // User switched accounts
+        window.location.reload();
+      }
+    };
+
+    const handleChainChanged = () => {
+      // Always reload on chain change to get the new chain's data
+      window.location.reload();
+    };
+
     if (window.ethereum) {
-      window.ethereum.on('accountsChanged', () => {
-        window.location.reload();
-      });
-      window.ethereum.on('chainChanged', () => {
-        window.location.reload();
-      });
+      // Clean way to add listeners
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+      
+      // Cleanup function
+      return () => {
+        if (window.ethereum.removeListener) {
+          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+          window.ethereum.removeListener('chainChanged', handleChainChanged);
+        }
+      };
     }
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     if (account && provider) {
@@ -88,6 +180,17 @@ export function WalletProvider({ children }) {
           const xburnContract = new ethers.Contract(XENBURNER_ADDRESS, xenBurnerAbi, provider);
           const xburnBal = await xburnContract.balanceOf(account);
           setXburnBalance(ethers.utils.formatUnits(xburnBal, 18));
+          
+          // Initialize contract instances if not already set
+          if (!nftContract) {
+            const nftContract = new ethers.Contract(XBURN_NFT_ADDRESS, xburnNftAbi, provider);
+            setNftContract(nftContract);
+          }
+          
+          if (!xburnMinterContract) {
+            const minterContract = new ethers.Contract(XENBURNER_ADDRESS, xenBurnerAbi, provider);
+            setXburnMinterContract(minterContract);
+          }
         } catch (error) {
           console.error('Error fetching balances:', error);
         }
@@ -97,7 +200,7 @@ export function WalletProvider({ children }) {
       const interval = setInterval(fetchBalances, 15000);
       return () => clearInterval(interval);
     }
-  }, [account, provider]);
+  }, [account, provider, nftContract, xburnMinterContract]);
 
   return (
     <WalletContext.Provider 
@@ -109,7 +212,9 @@ export function WalletProvider({ children }) {
         disconnect, 
         ethBalance, 
         xenBalance, 
-        xburnBalance 
+        xburnBalance,
+        nftContract,
+        xburnMinterContract
       }}
     >
       {children}

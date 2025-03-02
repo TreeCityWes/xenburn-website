@@ -1,90 +1,116 @@
 .info-cards {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
+  gap: 12px;
+  max-width: 680px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(20, 21, 31, 0.7);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 68, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(255, 68, 0, 0.05);
+  overflow: hidden;
 }
 
 .info-card {
-  background: rgba(30, 31, 41, 0.95);
+  background: rgba(30, 31, 41, 0.7);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
+  border: 1px solid rgba(255, 68, 0, 0.1);
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
   display: flex;
-  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between;
-  border: 1px solid rgba(255, 68, 0, 0.15);
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.info-card-content {
-  flex: 1;
-  max-width: 70%;
+.info-card:last-child {
+  margin-bottom: 0;
 }
 
 .info-card h3 {
-  color: #ff4400;
   font-size: 18px;
+  font-weight: 700;
   margin: 0 0 8px 0;
-  font-weight: 600;
+  background: linear-gradient(to right, #ff4400, #ff8800);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .info-card p {
-  color: #888;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: #aaa;
   margin: 0;
 }
 
-.info-button {
-  background: #ff4400;
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 24px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-  width: 110px;
-  margin-left: 24px;
+.info-card-content {
+  width: 70%;
+  padding-right: 20px;
+  overflow: hidden;
 }
 
-.info-button span:last-child {
-  margin-left: 8px;
+.info-button {
+  background: linear-gradient(to right, #ff4400, #ff6600);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 140px;
+  box-shadow: 0 4px 12px rgba(255, 68, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  text-decoration: none;
+  margin-left: auto;
 }
 
 .info-button:hover {
-  background: #ff5500;
+  background: linear-gradient(to right, #ff5500, #ff7700);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
   .info-cards {
+    gap: 10px;
     padding: 16px;
-  }
-
-  .info-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 16px;
-  }
-
-  .info-card-content {
-    max-width: 100%;
-    margin-bottom: 12px;
-  }
-
-  .info-button {
-    margin-left: 0;
     width: 100%;
+    margin: 20px auto;
   }
-
+  
+  .info-card {
+    padding: 14px;
+  }
+  
+  .info-card-content {
+    width: 65%;
+    padding-right: 10px;
+  }
+  
   .info-card h3 {
     font-size: 16px;
   }
-
+  
   .info-card p {
     font-size: 13px;
+  }
+  
+  .info-button {
+    width: 120px;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 38px;
   }
 } 

@@ -4,7 +4,7 @@ Website: BurnXen.com
 The Litpaper: https://xenburner.gitbook.io/xenburner
 
 Sepolia Xen: 0xcAe27BE52c003953f0B050ab6a31E5d5F0d52ccB
-Sepolia Xburn: 0xd60483890f9aae31bc19cef2523072151f23c54c
+Sepolia Xburn: 0x00a99B5cAEdaDFEFd34DD7AF4fec3A909eBa0667
 
 This app interacts with src/contracts Solidity and ABI Json  files. 
 1) Users approve XEN in Xen contract 
@@ -42,7 +42,9 @@ logo192.png and logo512.png can be used for logo / favicon / social media
 ```solidity
 // Main contract address (Sepolia)
 XEN: "0xcAe27BE52c003953f0B050ab6a31E5d5F0d52ccB"
-XenBurner: "0xd60483890f9aae31bc19cef2523072151f23c54c"
+XenBurner: "0x00a99B5cAEdaDFEFd34DD7AF4fec3A909eBa0667"
+XBurnNFT: "0x03dFF2159f297F36f2E93f44014C36544c5Ba53A"
+Liquidity Pair: "0xb14C4707C2d9501e2f2b863A3A050B4D3d179626"
 ```
 
 2. **Key Contract Functions**
@@ -72,5 +74,3 @@ XenBurner: "0xd60483890f9aae31bc19cef2523072151f23c54c"
     uint256 percentage
 )
 ``
-
-The dApp provides a clean, dark-themed interface for interacting with the Xen and XenBurner protocol on Sepolia testnet, with real-time updates of balances and stats, and clear user feedback for all operations.

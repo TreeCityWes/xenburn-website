@@ -12,7 +12,7 @@ export const InfoCards = () => {
           <p>Discover the innovative burning mechanism and tokenomics behind XBURN</p>
         </div>
         <a href="https://xenburner.gitbook.io/xenburner" className="info-button" target="_blank" rel="noopener noreferrer">
-          <span>Docs</span>
+          <span>DOCS</span>
           <span>→</span>
         </a>
       </div>
@@ -24,7 +24,7 @@ export const InfoCards = () => {
           <p>Stay updated with the latest news and announcements</p>
         </div>
         <a href="https://x.com/burnmorexen" className="info-button" target="_blank" rel="noopener noreferrer">
-          <span>X.com</span>
+          <span>X.COM</span>
           <span>→</span>
         </a>
       </div>
@@ -36,7 +36,7 @@ export const InfoCards = () => {
           <p>Connect with other burners and get involved</p>
         </div>
         <a href="https://t.me/burnmorexen" className="info-button" target="_blank" rel="noopener noreferrer">
-          <span>Telegram</span>
+          <span>TELEGRAM</span>
           <span>→</span>
         </a>
       </div>

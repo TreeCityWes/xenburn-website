@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
-const FireParticles = ({ width, height, intensity = 1, isBackground = false }) => {
+const FireParticles = ({ width, height, intensity = 1, isBackground = false, type = "default" }) => {
   const canvasRef = useRef(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     const particles = [];
+    let animationFrame;
     
     class Particle {
       constructor(x, y) {
@@ -35,21 +38,24 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false }) =
       }
     }
     
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width || (canvas.parentElement ? canvas.parentElement.clientWidth : 300);
+    canvas.height = height || (canvas.parentElement ? canvas.parentElement.clientHeight : 200);
     
     ctx.globalCompositeOperation = isBackground ? 'soft-light' : 'screen';
     
     function createParticles() {
-      const particlesPerFrame = isBackground ? 1 : 2;
+      // Reduce the number of particles to prevent overwhelming the UI
+      const particlesPerFrame = isBackground ? 0.5 : 1;
+      
+      // Only create particles some of the time
+      if (Math.random() > particlesPerFrame) return;
+      
       const baseY = isBackground ? height : height;
       const spread = isBackground ? width : width / 4;
       
-      for (let i = 0; i < particlesPerFrame; i++) {
-        const x = isBackground ? Math.random() * width : width/2 + (Math.random() - 0.5) * spread;
-        const particle = new Particle(x, baseY);
-        particles.push(particle);
-      }
+      const x = isBackground ? Math.random() * width : width/2 + (Math.random() - 0.5) * spread;
+      const particle = new Particle(x, baseY);
+      particles.push(particle);
     }
     
     function updateParticles() {
@@ -66,18 +72,38 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false }) =
           continue;
         }
         
-        const alpha = (1 - p.life / p.maxLife) * intensity * (isBackground ? 0.3 : 1);
+        // Reduce the intensity for better visual balance
+        const reducedIntensity = isBackground ? intensity * 0.5 : intensity * 0.7;
+        const alpha = (1 - p.life / p.maxLife) * reducedIntensity * (isBackground ? 0.2 : 0.7);
         
         const gradient = ctx.createRadialGradient(
           p.x, p.y, 0,
           p.x, p.y, p.size
         );
         
-        if (isBackground) {
+        // Customize colors based on type
+        if (type === "xburn") {
           gradient.addColorStop(0, `rgba(255, 100, 0, ${alpha})`);
           gradient.addColorStop(0.4, `rgba(255, 50, 0, ${alpha * 0.5})`);
           gradient.addColorStop(1, `rgba(255, 30, 0, 0)`);
+        } else if (type === "xen") {
+          gradient.addColorStop(0, `rgba(0, 150, 255, ${alpha})`);
+          gradient.addColorStop(0.4, `rgba(0, 100, 200, ${alpha * 0.5})`);
+          gradient.addColorStop(1, `rgba(0, 50, 150, 0)`);
+        } else if (type === "supply") {
+          gradient.addColorStop(0, `rgba(255, 220, 0, ${alpha})`);
+          gradient.addColorStop(0.4, `rgba(255, 180, 0, ${alpha * 0.5})`);
+          gradient.addColorStop(1, `rgba(255, 150, 0, 0)`);
+        } else if (type === "pool") {
+          gradient.addColorStop(0, `rgba(255, 0, 0, ${alpha})`);
+          gradient.addColorStop(0.4, `rgba(200, 0, 0, ${alpha * 0.5})`);
+          gradient.addColorStop(1, `rgba(150, 0, 0, 0)`);
+        } else if (type === "global") {
+          gradient.addColorStop(0, `rgba(128, 0, 255, ${alpha})`);
+          gradient.addColorStop(0.4, `rgba(100, 0, 200, ${alpha * 0.5})`);
+          gradient.addColorStop(1, `rgba(80, 0, 150, 0)`);
         } else {
+          // Default "fire" style
           gradient.addColorStop(0, `rgba(255, 80, 0, ${alpha})`);
           gradient.addColorStop(0.4, `rgba(255, 40, 0, ${alpha * 0.5})`);
           gradient.addColorStop(1, `rgba(255, 20, 0, 0)`);
@@ -89,19 +115,23 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false }) =
         ctx.fill();
       }
       
-      requestAnimationFrame(updateParticles);
+      animationFrame = requestAnimationFrame(updateParticles);
     }
     
     updateParticles();
     
     return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
       particles.length = 0;
     };
-  }, [width, height, intensity, isBackground]);
+  }, [width, height, intensity, isBackground, type]);
 
   return (
     <canvas
       ref={canvasRef}
+      className="fire-particles"
       style={{
         position: 'absolute',
         bottom: 0,
@@ -109,8 +139,10 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false }) =
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        opacity: isBackground ? 0.3 : 0.25,
+        opacity: isBackground ? 0.2 : 0.15,
         mixBlendMode: isBackground ? 'soft-light' : 'screen',
+        zIndex: 0,
+        overflow: 'hidden'
       }}
     />
   );

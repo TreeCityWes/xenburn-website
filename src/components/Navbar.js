@@ -3,7 +3,7 @@ import { useWallet } from '../context/WalletContext';
 import './Navbar.css';
 import FireParticles from './FireParticles';
 
-export const Navbar = () => {
+export const Navbar = ({ onTabChange, activeTab }) => {
   const { account, connect, disconnect, ethBalance, xenBalance, xburnBalance } = useWallet();
 
   const formatBalance = (balance, type) => {
@@ -45,9 +45,25 @@ export const Navbar = () => {
                   <span className="balance-value">{formatBalance(xburnBalance, 'XBURN')}</span> XBURN
                 </span>
               </div>
-              <button className="wallet-address" onClick={disconnect}>
-                {account.slice(0, 6)}...{account.slice(-4)}
-              </button>
+              <div className="nav-actions">
+                <div className="nav-tabs">
+                  <button 
+                    className={`nav-tab ${activeTab === 'burn' ? 'active' : ''}`}
+                    onClick={() => onTabChange('burn')}
+                  >
+                    Burn
+                  </button>
+                  <button 
+                    className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
+                    onClick={() => onTabChange('nfts')}
+                  >
+                    NFTs
+                  </button>
+                </div>
+                <button className="wallet-address" onClick={disconnect}>
+                  {account.slice(0, 6)}...{account.slice(-4)}
+                </button>
+              </div>
             </>
           ) : (
             <button className="connect-wallet" onClick={connect}>
