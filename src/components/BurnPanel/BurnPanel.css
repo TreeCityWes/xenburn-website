@@ -681,4 +681,142 @@
   .term-button-wrapper {
     min-width: calc(50% - 4px);
   }
+}
+
+/* Add styles for the button-loading class */
+.button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-loading .loader {
+  margin: 0;
+}
+
+.button-loading span {
+  white-space: nowrap;
+}
+
+/* Ensure the loader is properly styled */
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Improve the progress bar styling */
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5722, #ff9800);
+  border-radius: 6px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.progress-percent {
+  font-weight: bold;
+  color: #ff5722;
+}
+
+.accumulation-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.accumulation-status svg {
+  color: #ff9800;
+}
+
+/* Style the ready message */
+.ready {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+/* Style the swap-burn-button */
+.swap-burn-button {
+  position: relative;
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background-color: #ff5722;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  z-index: 2;
+}
+
+.swap-burn-button:hover:not(:disabled) {
+  background-color: #ff7043;
+  transform: translateY(-2px);
+}
+
+.swap-burn-button:disabled {
+  background-color: rgba(255, 87, 34, 0.5);
+  cursor: not-allowed;
+}
+
+/* Style the swap-info-note */
+.swap-info-note {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border-left: 4px solid #ff9800;
+}
+
+.swap-info-note p {
+  margin: 8px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.swap-info-note ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.swap-info-note li {
+  margin: 6px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Style the swap-disabled-reason */
+.swap-disabled-reason {
+  margin-top: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
 } 

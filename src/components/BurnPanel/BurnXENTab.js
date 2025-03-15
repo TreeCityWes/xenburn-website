@@ -9,8 +9,7 @@ import { useWallet } from '../../context/WalletContext';
 // Import utility functions
 import { 
   formatDecimals,
-  calculateMultiplier,
-  formatNumber
+  calculateMultiplier
 } from '../../utils/tokenUtils';
 
 // Use public path for XEN logo
@@ -41,6 +40,9 @@ const BurnXENTab = ({
   
   // State for actual XEN approval from contract
   const [actualXenApproval, setActualXenApproval] = useState('0');
+  
+  // Add default value for xenBalance
+  const safeXenBalance = xenBalance || '0';
   
   // Function to fetch XEN approval directly from the contract
   const fetchXenApproval = useCallback(async () => {
@@ -90,8 +92,8 @@ const BurnXENTab = ({
   }, [actualXenApproval, xenApproved]);
 
   const handleMaxClick = () => {
-    if (xenBalance && parseFloat(xenBalance) > 0) {
-      setXenAmount(xenBalance);
+    if (safeXenBalance && parseFloat(safeXenBalance) > 0) {
+      setXenAmount(safeXenBalance);
       setError('');
     }
   };
@@ -138,11 +140,11 @@ const BurnXENTab = ({
   console.log('Rendering with displayApproval:', displayApproval);
 
   return (
-    <div className="burn-tab">
-      <h2 className="burn-title">Burn XEN</h2>
-      <p className="burn-subtitle">Burn your XEN to mint XBURN!</p>
+    <div className="burn-xen-tab">
+      <h2 className="burn-title burnXEN">Burn XEN Tokens</h2>
+      <p className="burn-subtitle">Burn your XEN tokens to mint XBURN!</p>
 
-      <div className="input-section">
+      <div className="burn-form">
         <div className="input-token-container">
           <div className="input-token-header">
             <div className="token-info">
@@ -164,7 +166,7 @@ const BurnXENTab = ({
             <button 
               className="max-button" 
               onClick={handleMaxClick}
-              disabled={!xenBalance || xenBalance === '0'}
+              disabled={!safeXenBalance || safeXenBalance === '0'}
             >
               MAX
             </button>
@@ -173,7 +175,7 @@ const BurnXENTab = ({
           <div className="token-details">
             <div className="balance-info">
               <span className="balance-label">Balance:</span>
-              <span className="balance-value">{formatDecimals(xenBalance)} XEN</span>
+              <span className="balance-value">{formatDecimals(safeXenBalance)} XEN</span>
             </div>
             <div className="approved-info">
               <span className="approved-label">Approved:</span>
@@ -183,148 +185,105 @@ const BurnXENTab = ({
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="term-input-container">
-        <div className="term-input-label">
-          Term Length (Days)
-          <Tooltip content="Longer term lengths provide higher multipliers for your XBURN rewards">
-            <span className="info-icon">i</span>
-          </Tooltip>
-        </div>
-        <div className="term-input-field">
-          <input
-            type="number"
-            value={selectedTerm}
-            onChange={handleTermChange}
-            placeholder="Enter days"
-            min="0"
-            max="3650"
-            className="term-input"
-          />
-          <div className="term-input-note">Max: 3650 days (10 years)</div>
-        </div>
-      </div>
-
-      <div className="button-container">
-        <button
-          className="approve-button"
-          onClick={() => {
-            approveXEN();
-            // Refresh approval after a short delay
-            setTimeout(fetchXenApproval, 1000);
-          }}
-          disabled={isApproveLoading || isBurnLoading || !xenAmount || parseFloat(xenAmount) <= 0 || error}
-        >
-          {isApproveLoading ? (
-            <>
-              <div className="loader"></div>
-              Approving...
-            </>
-          ) : (
-            'Approve XEN (Max)'
-          )}
-        </button>
-        <button
-          className="burn-button"
-          onClick={burnXEN}
-          disabled={
-            isBurnLoading || 
-            isApproveLoading ||
-            !xenAmount || 
-            parseFloat(xenAmount) <= 0 || 
-            parseFloat(displayApproval) < parseFloat(xenAmount || 0) ||
-            error
-          }
-        >
-          {isBurnLoading ? (
-            <>
-              <div className="loader"></div>
-              Burning...
-            </>
-          ) : isApproveLoading ? (
-            <>
-              <div className="loader"></div>
-              Waiting for approval...
-            </>
-          ) : (
-            'Burn XEN'
-          )}
-        </button>
-      </div>
-
-      <div className="conversion-info">
-        <div className="reward-calculation">
-          <div className="reward-header">
-            <span>Reward Calculation</span>
+        <div className="term-input-container">
+          <div className="term-input-label">
+            Term Length (Days)
+            <Tooltip content="Longer term lengths provide higher multipliers for your XBURN rewards">
+              <span className="info-icon">ⓘ</span>
+            </Tooltip>
           </div>
-          
-          <div className="reward-row horizontal">
-            <div className="reward-item">
-              <div className="reward-label">Base Amount</div>
-              <div className="reward-value">
-                {formatDecimals(baseAmount, 2)} XBURN
+          <div className="term-input-field">
+            <input
+              type="number"
+              value={selectedTerm}
+              onChange={handleTermChange}
+              placeholder="Enter days"
+              min="0"
+              max="3650"
+              className="term-input"
+            />
+            <div className="term-input-note">Max: 3650 days (10 years)</div>
+          </div>
+        </div>
+
+        <div className="button-container">
+          <button
+            className="approve-button"
+            onClick={() => {
+              approveXEN();
+              setTimeout(fetchXenApproval, 1000);
+            }}
+            disabled={isApproveLoading || isBurnLoading || !xenAmount || parseFloat(xenAmount) <= 0 || error}
+          >
+            {isApproveLoading ? (
+              <>
+                <div className="loader"></div>
+                Approving...
+              </>
+            ) : (
+              'APPROVE XEN'
+            )}
+          </button>
+          <button
+            className="burn-button"
+            onClick={burnXEN}
+            disabled={
+              isBurnLoading || 
+              isApproveLoading ||
+              !xenAmount || 
+              parseFloat(xenAmount) <= 0 || 
+              parseFloat(displayApproval) < parseFloat(xenAmount || 0) ||
+              error
+            }
+          >
+            {isBurnLoading ? (
+              <>
+                <div className="loader"></div>
+                Burning...
+              </>
+            ) : isApproveLoading ? (
+              <>
+                <div className="loader"></div>
+                Waiting for approval...
+              </>
+            ) : (
+              'BURN XEN NOW'
+            )}
+          </button>
+        </div>
+
+        <div className="section-divider"></div>
+
+        <div className="conversion-info">
+          <div className="reward-calculation">
+            <div className="reward-header">
+              <span>XBURN Reward Calculation</span>
+              <Tooltip content="Your XBURN reward is calculated based on the amount of XEN burned and your chosen term length">
+                <span className="info-icon">ⓘ</span>
+              </Tooltip>
+            </div>
+            
+            <div className="base-amount-display">
+              <div className="base-label">Base Amount</div>
+              <div className="base-result">
+                {formatDecimals(baseAmount, 6)} XBURN
               </div>
             </div>
             
-            <div className="calculation-operator">×</div>
-            
-            <div className="reward-item">
-              <div className="reward-label">Term %</div>
-              <div className="reward-value">
-                {termPercentage.toFixed(2)}%
+            <div className="reward-formula">
+              <div className="formula-label">Term Bonus ({selectedTerm} days)</div>
+              <div className="formula-result">
+                +{formatDecimals(bonus, 6)} XBURN
               </div>
             </div>
             
-            <div className="calculation-operator">×</div>
-            
-            <div className="reward-item">
-              <div className="reward-label">Multiplier</div>
-              <div className="reward-value">
-                {multiplier.toFixed(2)}x
+            <div className="reward-total">
+              <div className="total-label">Total XBURN</div>
+              <div className="total-value">
+                {formatDecimals(total, 6)} XBURN
               </div>
             </div>
-          </div>
-          
-          <div className="base-amount-display">
-            <div className="base-label">Base XBURN</div>
-            <div className="base-result">
-              {formatDecimals(baseAmount, 2)} XBURN
-            </div>
-          </div>
-          
-          <div className="reward-formula">
-            <div className="formula-label">Bonus = Base × Term% × AMP ÷ 10000</div>
-            <div className="formula-result">
-              {formatDecimals(bonus, 2)} XBURN
-            </div>
-          </div>
-          
-          <div className="reward-total">
-            <div className="total-label">Total = Base + Bonus</div>
-            <div className="total-value">
-              {formatDecimals(total, 2)} XBURN
-            </div>
-          </div>
-        </div>
-        
-        <div className="contract-stats">
-          <div className="stats-header">Contract Stats</div>
-          <div className="stats-row">
-            <span className="stats-label">Current AMP:</span>
-            <span className="stats-value">{ampSnapshot}</span>
-          </div>
-          <div className="stats-row">
-            <span className="stats-label">Days Since Launch:</span>
-            <span className="stats-value">{daysSinceLaunch}</span>
-          </div>
-          <div className="stats-row">
-            <span className="stats-label">Total XEN Burned:</span>
-            <span className="stats-value">{formatDecimals(totalBurnedXEN, 2)}</span>
-          </div>
-          <div className="stats-row">
-            <span className="stats-label">Total XBURN Minted:</span>
-            <span className="stats-value">{formatDecimals(totalMintedXBURN, 2)}</span>
           </div>
         </div>
       </div>
@@ -337,7 +296,7 @@ const BurnXENTab = ({
 BurnXENTab.propTypes = {
   xenAmount: PropTypes.string.isRequired,
   setXenAmount: PropTypes.func.isRequired,
-  xenBalance: PropTypes.string.isRequired,
+  xenBalance: PropTypes.string,
   xenApproved: PropTypes.string.isRequired,
   approveXEN: PropTypes.func.isRequired,
   burnXEN: PropTypes.func.isRequired,

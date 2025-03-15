@@ -13,9 +13,9 @@ const Footer = () => {
           <span className="logo-text">XBURN</span>
         </div>
         <div className="footer-links">
-          <a href="https://twitter.com/xenburner" target="_blank" rel="noopener noreferrer">Twitter</a>
-          <a href="https://t.me/xenburner" target="_blank" rel="noopener noreferrer">Telegram</a>
-          <a href="https://github.com/xenburner" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://x.com/burnmorexen" target="_blank" rel="noopener noreferrer">Twitter</a>
+          <a href="https://t.me/burnmorexen" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <a href="https://burnxen.com" target="_blank" rel="noopener noreferrer">Website</a>
         </div>
         <div className="footer-copyright">
           © {new Date().getFullYear()} XENBurner. All rights reserved.

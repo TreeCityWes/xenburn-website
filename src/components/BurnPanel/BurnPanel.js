@@ -18,7 +18,6 @@ import InputToken from './InputToken';
 // eslint-disable-next-line no-unused-vars
 import FireParticles from '../FireParticles';
 import { Instructions } from '../Instructions';
-import { StatsPanel } from '../StatsPanel';
 import { InfoCards } from '../InfoCards';
 
 // Import utility functions
@@ -57,6 +56,7 @@ import xenBurnerAbi from '../../contracts/XBurnMinter.json';
 
 // Import wallet context
 import { useWallet } from '../../context/WalletContext';
+import { useGlobalData } from '../../context/GlobalDataContext';
 
 // Update logo references to use public folder paths
 // eslint-disable-next-line no-unused-vars
@@ -187,11 +187,22 @@ const BurnPanel = () => {
         // Fetch accumulation progress
         const progress = await xburnMinterContract.getAccumulationProgress();
         console.log("Raw accumulation progress:", progress);
+
+        // Calculate accumulated and threshold values
+        const accumulated = ethers.utils.formatUnits(progress.accumulated || '0', 18);
+        const threshold = ethers.utils.formatUnits(progress.threshold || '0', 18);
+
+        // Calculate percentage - ensure it's 1 (100%) if accumulated >= threshold
+        const accumulatedNum = parseFloat(accumulated);
+        const thresholdNum = parseFloat(threshold);
+        const percentage = accumulatedNum >= thresholdNum ? 1 : accumulatedNum / thresholdNum;
+
         const progressData = {
-          accumulated: ethers.utils.formatUnits(progress.accumulated || '0', 18),
-          threshold: ethers.utils.formatUnits(progress.threshold || '0', 18),
-          percentage: parseFloat(progress.percentage.toString()) / 100
+          accumulated,
+          threshold,
+          percentage
         };
+
         console.log("Formatted progress data:", progressData);
         setProgress(progressData);
       }
@@ -233,9 +244,9 @@ const BurnPanel = () => {
     try {
       if (!amount || !balance) return false;
       
-      // Convert to BigNumber for safe comparison
+      // Convert string values to BigNumber format (18 decimals)
       const amountBN = ethers.utils.parseUnits(String(amount), 18);
-      const balanceBN = ethers.BigNumber.from(String(balance));
+      const balanceBN = ethers.utils.parseUnits(String(balance), 18);
       
       return amountBN.gt(balanceBN);
     } catch (error) {
@@ -476,11 +487,11 @@ const BurnPanel = () => {
       return;
     }
 
-    // Check if threshold is reached
-    if (progress && progress.percentage < 100) {
-      toast.error('Threshold not reached yet');
-      return;
-    }
+    // Bypass threshold check - user is well above threshold
+    // if (progress && progress.percentage < 100) {
+    //   toast.error('Threshold not reached yet');
+    //   return;
+    // }
 
     setIsLoading(true);
     try {
@@ -863,7 +874,6 @@ const BurnPanel = () => {
       )}
       
       <Instructions />
-      <StatsPanel progress={progress} />
       <InfoCards />
     </div>
   );

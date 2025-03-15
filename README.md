@@ -3,8 +3,6 @@ T.me Telegram channel:  @BurnMoreXen
 Website: BurnXen.com 
 The Litpaper: https://xenburner.gitbook.io/xenburner
 
-Sepolia Xen: 0xcAe27BE52c003953f0B050ab6a31E5d5F0d52ccB
-Sepolia Xburn: 0x644D5B0fFd68bD3215e3FcD869E23E8b8B0f481d
 
 This app interacts with src/contracts Solidity and ABI Json  files. 
 1) Users approve XEN in Xen contract 

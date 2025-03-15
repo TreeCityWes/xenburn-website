@@ -13,18 +13,18 @@ export function Footer() {
           <div className="footer-section">
             <h3>Resources</h3>
             <ul>
-              <li><a href="https://docs.xenburner.io" target="_blank" rel="noopener noreferrer">Documentation</a></li>
-              <li><a href="https://github.com/XenBurner" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              <li><a href="https://medium.com/@xenburner" target="_blank" rel="noopener noreferrer">Blog</a></li>
+              <li><a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+              <li><a href="https://github.com/TreeCityWes/xenburn-sepolia" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://hashhead.io" target="_blank" rel="noopener noreferrer">Blog</a></li>
             </ul>
           </div>
           
           <div className="footer-section">
             <h3>Community</h3>
             <ul>
-              <li><a href="https://twitter.com/XenBurner" target="_blank" rel="noopener noreferrer">Twitter</a></li>
-              <li><a href="https://t.me/xenburner" target="_blank" rel="noopener noreferrer">Telegram</a></li>
-              <li><a href="https://discord.gg/xenburner" target="_blank" rel="noopener noreferrer">Discord</a></li>
+              <li><a href="https://twitter.com/BurnMoreXen" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+              <li><a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+              <li><a href="https://treecitytrading.us" target="_blank" rel="noopener noreferrer">Tree City Trading</a></li>
             </ul>
           </div>
           
@@ -33,7 +33,7 @@ export function Footer() {
             <ul>
               <li>
                 <a 
-                  href="https://sepolia.etherscan.io/address/0x1234567890123456789012345678901234567890" 
+                  href="https://eth-sepolia.blockscout.com/token/0x1EbC3157Cc44FE1cb0d7F4764D271BAD3deB9a03" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
@@ -42,7 +42,7 @@ export function Footer() {
               </li>
               <li>
                 <a 
-                  href="https://sepolia.etherscan.io/address/0x0987654321098765432109876543210987654321" 
+                  href="https://eth-sepolia.blockscout.com/token/0x964db60EfdF9FDa55eA62f598Ea4c7a9cD48F189" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >

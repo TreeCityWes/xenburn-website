@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWallet } from '../context/WalletContext';
+import { useGlobalData } from '../context/GlobalDataContext';
 import './Navbar.css';
 import FireParticles from './FireParticles';
 
@@ -7,24 +8,27 @@ export const Navbar = ({ onTabChange, activeTab }) => {
   const { 
     account, 
     connect, 
-    disconnect, 
-    ethBalance, 
-    xenBalance, 
-    xburnBalance, 
+    disconnect,
     connecting
   } = useWallet();
   
-  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+  const { balances, xenftBurnContract } = useGlobalData();
+  const [contractReady, setContractReady] = useState(false);
   
-  // Track balance changes to show loading indicator
+  // Check if the contract is ready
   useEffect(() => {
-    if (account && (ethBalance === null || xenBalance === null || xburnBalance === null)) {
-      setIsBalanceLoading(true);
-    } else if (account) {
-      setIsBalanceLoading(false);
-    }
-  }, [account, ethBalance, xenBalance, xburnBalance]);
-
+    const checkContract = async () => {
+      if (account) {
+        const contract = xenftBurnContract();
+        setContractReady(!!contract);
+      } else {
+        setContractReady(false);
+      }
+    };
+    
+    checkContract();
+  }, [account, xenftBurnContract]);
+  
   const formatBalance = (balance, type) => {
     if (!balance) return '0';
     
@@ -74,50 +78,54 @@ export const Navbar = ({ onTabChange, activeTab }) => {
           <span className="nav-text">Launch: Q2 2025</span>
         </div>
 
-        <div className="nav-right">
-          {account ? (
-            <>
-              <div className={`nav-balances ${isBalanceLoading ? 'balances-loading' : ''}`}>
-                <span className="balance-item">
-                  <span className="balance-value">{formatBalance(ethBalance, 'ETH')}</span> ETH
-                </span>
-                <span className="balance-item">
-                  <span className="balance-value">{formatBalance(xenBalance, 'XEN')}</span> XEN
-                </span>
-                <span className="balance-item">
-                  <span className="balance-value">{formatBalance(xburnBalance, 'XBURN')}</span> XBURN
-                </span>
-              </div>
-              <div className="nav-actions">
-                <div className="nav-tabs">
-                  <button 
-                    className={`nav-tab ${activeTab === 'burn' ? 'active' : ''}`}
-                    onClick={() => onTabChange('burn')}
-                  >
-                    Burn
-                  </button>
-                  <button 
-                    className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
-                    onClick={() => onTabChange('nfts')}
-                  >
-                    XLOCK NFTs
-                  </button>
-                </div>
-                <button className="wallet-address" onClick={handleDisconnect} title="Click to disconnect">
-                  {account.slice(0, 6)}...{account.slice(-4)}
+        {account ? (
+          <>
+            <div className={`nav-balances ${!balances ? 'balances-loading' : ''}`}>
+              <span className="balance-item">
+                <span className="balance-value">{formatBalance(balances?.eth, 'ETH')}</span> ETH
+              </span>
+              <span className="balance-item">
+                <span className="balance-value">{formatBalance(balances?.xen, 'XEN')}</span> XEN
+              </span>
+              <span className="balance-item">
+                <span className="balance-value">{formatBalance(balances?.xburn, 'XBURN')}</span> XBURN
+              </span>
+            </div>
+            <div className="nav-actions">
+              <div className="nav-tabs">
+                <button 
+                  className={`nav-tab ${activeTab === 'burn' ? 'active' : ''}`}
+                  onClick={() => onTabChange('burn')}
+                >
+                  Burn
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
+                  onClick={() => onTabChange('nfts')}
+                >
+                  XLOCK NFTs
+                </button>
+                <button 
+                  className={`nav-tab ${activeTab === 'stats' ? 'active' : ''}`}
+                  onClick={() => onTabChange('stats')}
+                >
+                  Stats
                 </button>
               </div>
-            </>
-          ) : (
-            <button 
-              className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
-              onClick={handleConnect}
-              disabled={connecting}
-            >
-              {connecting ? 'Connecting...' : 'Connect Wallet'}
-            </button>
-          )}
-        </div>
+              <button className="wallet-address" onClick={handleDisconnect} title="Click to disconnect">
+                {account.slice(0, 6)}...{account.slice(-4)}
+              </button>
+            </div>
+          </>
+        ) : (
+          <button 
+            className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
+            onClick={handleConnect}
+            disabled={connecting}
+          >
+            {connecting ? 'Connecting...' : 'Connect Wallet'}
+          </button>
+        )}
       </div>
     </nav>
   );

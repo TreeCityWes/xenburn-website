@@ -227,4 +227,43 @@ export const calculateMultiplier = (days, ampStart = 3000, ampSnapshot = 3000) =
   
   // Round to 2 decimal places for display
   return parseFloat(multiplier.toFixed(2));
+};
+
+/**
+ * Format a number with commas and optional decimal places
+ * @param {string|number} value - The number to format
+ * @param {Object} options - Formatting options
+ * @param {number} options.decimals - Number of decimal places (default: 2)
+ * @param {boolean} options.trimZeros - Whether to trim trailing zeros (default: true)
+ * @returns {string} Formatted number string
+ */
+export const formatNumber = (value, options = {}) => {
+  if (!value) return '0';
+  
+  const decimals = options.decimals ?? 2;
+  const trimZeros = options.trimZeros ?? true;
+  
+  try {
+    // Convert to number and handle scientific notation
+    let num = typeof value === 'string' ? parseFloat(value) : value;
+    
+    // Check if the number is valid
+    if (isNaN(num)) return '0';
+    
+    // Format with commas and fixed decimal places
+    let formatted = num.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    
+    // Trim trailing zeros if requested
+    if (trimZeros && formatted.includes('.')) {
+      formatted = formatted.replace(/\.?0+$/, '');
+    }
+    
+    return formatted;
+  } catch (error) {
+    console.error('Error formatting number:', error);
+    return '0';
+  }
 }; 

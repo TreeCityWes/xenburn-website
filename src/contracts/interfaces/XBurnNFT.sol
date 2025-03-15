@@ -26,7 +26,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
     // ------------------------------------------------
     
     uint256 public constant MAX_TERM_DAYS = 3650; // ~10 years
-    uint256 public constant MAX_BATCH_SIZE = 100; // Maximum batch size for loop protection
+    uint256 public constant MAX_BATCH_SIZE = 35; // Reduced from 100 to 35 for gas optimization and reliability
     uint256 public constant BASE_RATIO = 100_000;
     // ------------------------------------------------
     // ================ State Variables ==============
@@ -64,7 +64,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
     error OnlyMinter(address caller, address minter);
     error AlreadyClaimed(uint256 tokenId);
     error NonexistentToken(uint256 tokenId);
-    error LockedToken(uint256 tokenId);
+    error ClaimedTokenNotTransferable(uint256 tokenId);
     error InvalidTermDays(uint256 providedDays, uint256 maxDays);
     error ZeroAddressNotAllowed();
     error NotAuthorized(address caller);
@@ -408,7 +408,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
         uint256 amplifierPercent = lock.ampSnapshot > 0
             ? (lock.ampSnapshot * 100) / 3000
             : 0;
-        string memory amplifier = string(abi.encodePacked(amplifierPercent.toString(), "%"));
+        string memory amplifier = amplifierPercent.toString();
         
         // Format term days
         string memory termDays = lock.termDays.toString();
@@ -459,27 +459,45 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
         if (number >= 1e12) {
             uint256 trillions = number / 1e12;
             uint256 decimal = (number % 1e12) / 1e10;
-            return string(abi.encodePacked(
-                trillions.toString(), 
-                decimal > 0 ? string(abi.encodePacked(".", decimal < 10 ? "0" : "", decimal.toString())) : "", 
-                "T"
-            ));
+            // Only include decimal if it's not zero
+            if (decimal > 0) {
+                return string(abi.encodePacked(
+                    trillions.toString(), 
+                    ".", 
+                    decimal < 10 ? string(abi.encodePacked("0", decimal.toString())) : decimal.toString(), 
+                    "T"
+                ));
+            } else {
+                return string(abi.encodePacked(trillions.toString(), "T"));
+            }
         } else if (number >= 1e9) {
             uint256 billions = number / 1e9;
             uint256 decimal = (number % 1e9) / 1e7;
-            return string(abi.encodePacked(
-                billions.toString(), 
-                decimal > 0 ? string(abi.encodePacked(".", decimal < 10 ? "0" : "", decimal.toString())) : "", 
-                "B"
-            ));
+            // Only include decimal if it's not zero
+            if (decimal > 0) {
+                return string(abi.encodePacked(
+                    billions.toString(), 
+                    ".", 
+                    decimal < 10 ? string(abi.encodePacked("0", decimal.toString())) : decimal.toString(), 
+                    "B"
+                ));
+            } else {
+                return string(abi.encodePacked(billions.toString(), "B"));
+            }
         } else if (number >= 1e6) {
             uint256 millions = number / 1e6;
             uint256 decimal = (number % 1e6) / 1e4;
-            return string(abi.encodePacked(
-                millions.toString(), 
-                decimal > 0 ? string(abi.encodePacked(".", decimal < 10 ? "0" : "", decimal.toString())) : "", 
-                "M"
-            ));
+            // Only include decimal if it's not zero
+            if (decimal > 0) {
+                return string(abi.encodePacked(
+                    millions.toString(), 
+                    ".", 
+                    decimal < 10 ? string(abi.encodePacked("0", decimal.toString())) : decimal.toString(), 
+                    "M"
+                ));
+            } else {
+                return string(abi.encodePacked(millions.toString(), "M"));
+            }
         }
         return number.toString();
     }
@@ -644,7 +662,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
         // Update owner in burnLocks when transferring
         if (from != address(0) && to != address(0)) {
             // Prevent transfer of claimed tokens
-            if (burnLocks[tokenId].claimed) revert LockedToken(tokenId);
+            if (burnLocks[tokenId].claimed) revert ClaimedTokenNotTransferable(tokenId);
             
             // Update ownership record
             burnLocks[tokenId].owner = to;
