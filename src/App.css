@@ -1,7 +1,152 @@
+:root {
+  /* 
+  * ENHANCED COLOR SYSTEM
+  * A refined fire-themed color palette with multiple gradients
+  */
+  
+  /* Primary brand colors - deeper orange-red theme */
+  --color-flame-100: #FFE6E0;
+  --color-flame-200: #FFBFB3;
+  --color-flame-300: #FF8975;
+  --color-flame-400: #FF5544;
+  --color-flame-500: #FF3322; /* primary */
+  --color-flame-600: #E61E00; /* primary-dark */
+  --color-flame-700: #CC1A00;
+  --color-flame-800: #B31600;
+  --color-flame-900: #991200;
+  
+  /* Secondary accent colors - deeper ember tones */
+  --color-ember-400: #FF4136; /* red ember */
+  --color-ember-600: #DC1C13; /* dark red ember */
+  --color-ember-800: #B31C17; /* deep red ember */
+  
+  /* Dark mode surface levels */
+  --surface-0: #000000; /* darkest (background) */
+  --surface-1: rgba(0, 0, 0, 0.95); /* app background */
+  --surface-2: rgba(0, 0, 0, 0.9); /* subtle backgrounds */
+  --surface-3: rgba(0, 0, 0, 0.8); /* cards, containers */
+  --surface-4: rgba(0, 0, 0, 0.7); /* elevated components */
+  --surface-5: rgba(0, 0, 0, 0.6); /* highest elements */
+  
+  /* Status colors */
+  --color-success: #34C759;
+  --color-warning: #FFCC00;
+  --color-error: #FF3B30;
+  --color-info: #5AC8FA;
+  
+  /* Text colors */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-disabled: rgba(255, 255, 255, 0.35);
+  
+  /* Gradients */
+  --gradient-flame: linear-gradient(135deg, #FF3322, #B31600);
+  --gradient-ember: linear-gradient(135deg, #FF4136, #B31C17);
+  --gradient-fire: linear-gradient(135deg, #E61E00, #991200);
+  --gradient-dark: linear-gradient(135deg, var(--surface-1), var(--surface-2));
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  
+  /* Additional gradients for buttons */
+  --gradient-button: linear-gradient(135deg, #FF3322, #B31600);
+  --gradient-button-hover: linear-gradient(135deg, #FF4136, #CC1A00);
+  --gradient-button-active: linear-gradient(135deg, #E61E00, #991200);
+  
+  /* Legacy color variables (for backwards compatibility) */
+  --primary-color: var(--color-flame-600);
+  --primary-light: var(--color-flame-500);
+  --primary-dark: var(--color-flame-700);
+  --bg-dark: var(--surface-1);
+  --bg-card: var(--surface-3);
+  --bg-card-lighter: var(--surface-4);
+  --text-light: var(--text-primary);
+  --text-muted: var(--text-tertiary);
+  
+  /* TYPOGRAPHY SYSTEM */
+  /* Font sizes (in px) */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-normal: 1.5;
+  --leading-loose: 1.8;
+  
+  /* Letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  
+  /* SPACING SYSTEM (in px) */
+  --space-xxxs: 2px;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 40px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  
+  /* BORDER RADIUS */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+  
+  /* SHADOWS */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-flame-sm: 0 0 15px rgba(255, 80, 32, 0.15);
+  --shadow-flame-md: 0 0 25px rgba(255, 80, 32, 0.2);
+  --shadow-flame-lg: 0 0 35px rgba(255, 80, 32, 0.25);
+  
+  /* ANIMATIONS & TRANSITIONS */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --transition-bounce: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  
+  /* Z-INDEX LAYERS */
+  --z-below: -1;
+  --z-normal: 1;
+  --z-above: 10;
+  --z-modal: 100;
+  --z-overlay: 200;
+  --z-max: 999;
+  
+  /* LAYOUT UTILS */
+  --container-width: 680px;
+  --header-height: 64px;
+  --footer-height: 72px;
+  --wrapper-padding: 16px;
+}
+
 .App {
-  background: linear-gradient(135deg, #0f1019, #181926);
+  background: var(--gradient-dark);
   min-height: 100vh;
-  color: white;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -16,7 +161,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at top, rgba(255, 80, 20, 0.05), transparent 70%);
+  background: radial-gradient(circle at top, var(--color-flame-600), transparent 80%);
+  opacity: 0.08;
   pointer-events: none;
   z-index: 1;
 }
@@ -28,7 +174,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(15, 16, 25, 0.4) 0%, rgba(15, 16, 25, 0) 25%);
+  background: linear-gradient(to bottom, var(--surface-0) 0%, transparent 25%);
+  opacity: 0.4;
   pointer-events: none;
   z-index: 1;
 }
@@ -62,8 +209,12 @@
   box-sizing: border-box;
 }
 
+/* Show stats container properly */
+.stats-container {
+  display: block !important;
+}
+
 /* Hide these containers since they're integrated in BurnPanel */
-.stats-container, 
 .info-cards-container,
 .social-links-container {
   display: none;
@@ -103,15 +254,47 @@
 /* Footer styles */
 .footer {
   margin-top: auto;
-  height: 72px;
-  background: linear-gradient(to bottom, rgba(15, 16, 25, 0), rgba(15, 16, 25, 0.95));
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  padding: 20px 0;
+  border-top: 1px solid var(--color-flame-600);
+  opacity: 0.9;
+  min-height: 120px;
   position: relative;
-  z-index: 3;
+  overflow: hidden;
+}
+
+/* Ensure the fire container is positioned correctly */
+.footer-fire-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Ensure the burn panel fire container is positioned correctly */
+.burn-panel-fire-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Ensure the stats panel fire container is positioned correctly */
+.stats-panel-fire-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  z-index: 1;
 }
 
 /* Scrollbar styles */
@@ -152,33 +335,34 @@
 }
 
 .tab-button {
-  background: rgba(25, 26, 36, 0.7);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--text-secondary);
   padding: 12px 26px;
   margin: 0 8px;
-  border-radius: 50px;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  font-size: 15px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 80, 20, 0.1);
+  transition: all var(--transition-normal);
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
-  letter-spacing: 0.3px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 rgba(255, 80, 20, 0);
+  letter-spacing: var(--tracking-wide);
+  box-shadow: var(--shadow-md);
 }
 
 .tab-button:hover {
-  color: #fff;
-  border-color: rgba(255, 80, 20, 0.3);
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 80, 20, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .tab-button.active {
-  background: linear-gradient(135deg, rgba(255, 68, 0, 0.2), rgba(255, 120, 20, 0.15));
-  color: #ff5020;
-  border: 1px solid rgba(255, 80, 20, 0.3);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 80, 20, 0.2);
+  background: var(--gradient-button);
+  color: var(--text-primary);
+  border: 1px solid #FFD700;
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
@@ -237,4 +421,16 @@
   .main-content {
     padding: 0 0 40px;
   }
+}
+
+/* App background with fire particles */
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }

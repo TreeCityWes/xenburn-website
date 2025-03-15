@@ -1,18 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWallet } from '../context/WalletContext';
 import './Navbar.css';
 import FireParticles from './FireParticles';
 
 export const Navbar = ({ onTabChange, activeTab }) => {
-  const { account, connect, disconnect, ethBalance, xenBalance, xburnBalance } = useWallet();
+  const { 
+    account, 
+    connect, 
+    disconnect, 
+    ethBalance, 
+    xenBalance, 
+    xburnBalance, 
+    connecting
+  } = useWallet();
+  
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+  
+  // Track balance changes to show loading indicator
+  useEffect(() => {
+    if (account && (ethBalance === null || xenBalance === null || xburnBalance === null)) {
+      setIsBalanceLoading(true);
+    } else if (account) {
+      setIsBalanceLoading(false);
+    }
+  }, [account, ethBalance, xenBalance, xburnBalance]);
 
   const formatBalance = (balance, type) => {
     if (!balance) return '0';
+    
+    // Convert to number
+    const balanceNum = parseFloat(balance);
+    
+    if (isNaN(balanceNum)) return '0';
+    
     if (type === 'ETH') {
-      return parseFloat(balance).toFixed(4);
+      return balanceNum.toFixed(4);
     }
-    // For XEN and XBURN, show only 2 decimal places
-    return parseFloat(balance).toFixed(2);
+    
+    // For XEN and XBURN with larger values, use K/M formatting
+    if (balanceNum >= 1000000) {
+      return (balanceNum / 1000000).toFixed(2) + 'M';
+    } else if (balanceNum >= 1000) {
+      return (balanceNum / 1000).toFixed(2) + 'K';
+    }
+    
+    // For smaller values, show 2 decimal places
+    return balanceNum.toFixed(2);
+  };
+
+  const handleConnect = () => {
+    console.log('Connect button clicked');
+    connect();
+  };
+  
+  const handleDisconnect = () => {
+    console.log('Disconnect button clicked');
+    disconnect();
   };
 
   return (
@@ -34,7 +77,7 @@ export const Navbar = ({ onTabChange, activeTab }) => {
         <div className="nav-right">
           {account ? (
             <>
-              <div className="nav-balances">
+              <div className={`nav-balances ${isBalanceLoading ? 'balances-loading' : ''}`}>
                 <span className="balance-item">
                   <span className="balance-value">{formatBalance(ethBalance, 'ETH')}</span> ETH
                 </span>
@@ -57,17 +100,21 @@ export const Navbar = ({ onTabChange, activeTab }) => {
                     className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
                     onClick={() => onTabChange('nfts')}
                   >
-                    NFTs
+                    XLOCK NFTs
                   </button>
                 </div>
-                <button className="wallet-address" onClick={disconnect}>
+                <button className="wallet-address" onClick={handleDisconnect} title="Click to disconnect">
                   {account.slice(0, 6)}...{account.slice(-4)}
                 </button>
               </div>
             </>
           ) : (
-            <button className="connect-wallet" onClick={connect}>
-              Connect Wallet
+            <button 
+              className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
+              onClick={handleConnect}
+              disabled={connecting}
+            >
+              {connecting ? 'Connecting...' : 'Connect Wallet'}
             </button>
           )}
         </div>

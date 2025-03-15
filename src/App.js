@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { WalletProvider } from './context/WalletContext';
-import { BurnPanel } from './components/BurnPanel';
+import BurnPanel from './components/BurnPanel';
 import { NFTPanel } from './components/NFTPanel';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { StatsPanel } from './components/StatsPanel';
-import { SocialLinks } from './components/SocialLinks';
-import FireParticles from './components/FireParticles';
+import { BurnPanelProvider } from './components/BurnPanel/BurnPanelContext';
 import './App.css';
 
 function App() {
@@ -20,13 +18,9 @@ function App() {
   return (
     <WalletProvider>
       <div className="App" data-active-tab={activeTab}>
-        <FireParticles 
-          width={window.innerWidth}
-          height={window.innerHeight}
-          intensity={0.3} 
-          isBackground={true} 
-          type="xburn" 
-        />
+        <div className="app-background">
+
+        </div>
         <Toaster position="top-right" />
         <Navbar onTabChange={handleTabChange} activeTab={activeTab} />
         
@@ -46,12 +40,20 @@ function App() {
               className={`tab-button ${activeTab === 'nfts' ? 'active' : ''}`}
               onClick={() => handleTabChange('nfts')}
             >
-              My NFTs
+          XBURN NFTs
             </button>
           </div>
           
           <main className="main-content">
-            {activeTab === 'burn' ? <BurnPanel /> : <NFTPanel />}
+            {activeTab === 'burn' ? (
+              <>
+                <BurnPanelProvider>
+                  <BurnPanel />
+                </BurnPanelProvider>
+              </>
+            ) : (
+              <NFTPanel />
+            )}
           </main>
         </div>
         

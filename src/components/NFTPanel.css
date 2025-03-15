@@ -1,12 +1,12 @@
 .nft-panel {
   width: 100%;
   max-width: 440px;
-  margin: 0 auto 24px;
-  background: rgba(20, 21, 31, 0.7);
+  margin: 0 auto var(--space-lg);
+  background: var(--bg-card);
   color: #ededed;
   position: relative;
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
   border: 1px solid rgba(255, 68, 0, 0.2);
   overflow: visible;
   box-sizing: border-box;
@@ -23,16 +23,16 @@
   background: 
     radial-gradient(circle at 20% 20%, rgba(255, 68, 0, 0.05), transparent 40%),
     radial-gradient(circle at 80% 80%, rgba(255, 120, 0, 0.05), transparent 40%);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   pointer-events: none;
   z-index: 0;
 }
 
 .nft-panel-title {
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: var(--text-xxl);
+  margin-bottom: var(--space-lg);
   line-height: 1.2;
-  color: #ff5c00;
+  color: var(--primary-light);
   font-weight: 700;
   text-align: center;
   position: relative;
@@ -45,7 +45,7 @@
   font-size: 1.2rem;
   color: #999;
   background: rgba(20, 10, 10, 0.3);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px dashed rgba(255, 68, 0, 0.2);
 }
 
@@ -54,13 +54,16 @@
 }
 
 .nft-picker-top {
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .nft-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
   min-height: auto;
   position: relative;
   z-index: 1;
@@ -76,7 +79,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-sm);
   width: 100%;
   box-sizing: border-box;
 }
@@ -92,7 +95,7 @@
   /* SVG viewBox dimensions: 350x566 */
   aspect-ratio: 350/566;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: visible;
   background: transparent;
   border: none;
@@ -119,8 +122,8 @@
   flex-direction: column;
   width: 100%;
   background: #1e1f25;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
   margin: 0 auto;
   border: 1px solid rgba(255, 68, 0, 0.15);
   box-sizing: border-box;
@@ -128,7 +131,7 @@
 }
 
 .status-locked {
-  color: #ff5c00;
+  color: var(--primary-light);
   font-weight: 600;
   display: inline-block;
 }
@@ -147,9 +150,9 @@
 
 .time-remaining {
   display: block;
-  margin-bottom: 10px;
-  color: #ff5c00;
-  font-size: 14px;
+  margin-bottom: var(--space-sm);
+  color: var(--primary-light);
+  font-size: var(--text-sm);
   padding: 6px 10px;
   background: rgba(255, 92, 0, 0.05);
   border-radius: 5px;
@@ -161,9 +164,9 @@
 .nft-attributes {
   width: 100%;
   background: transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-sm);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   box-sizing: border-box;
@@ -192,7 +195,7 @@
 
 .attribute-label {
   color: #999;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 400;
   white-space: nowrap;
   flex-shrink: 0;
@@ -203,7 +206,7 @@
 .attribute-value {
   color: #ffffff;
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--text-sm);
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -213,21 +216,21 @@
 
 .nft-controls {
   display: flex;
-  gap: 16px;
-  margin-top: 8px;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
 }
 
 .claim-button {
   width: 100%;
   padding: 14px;
-  background: #ff5c00;
+  background: var(--primary-light);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) ease;
   text-align: center;
   margin-top: 5px;
   box-sizing: border-box;
@@ -251,13 +254,13 @@
   background: #bd3c00;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) ease;
   text-align: center;
-  margin-top: 10px;
+  margin-top: var(--space-sm);
   box-sizing: border-box;
   border: 1px solid rgba(255, 100, 0, 0.6);
 }
@@ -367,8 +370,10 @@
   cursor: not-allowed;
 }
 
+/* Update NFT selector dropdown styling */
 .nft-selector {
-  width: 100%;
+  flex: 1;
+  max-width: calc(100% - 50px);
   padding: 12px;
   background: rgba(30, 31, 41, 0.7);
   border: 1px solid #ff5c00;
@@ -438,19 +443,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  gap: 24px;
+  margin-top: var(--space-lg);
+  gap: var(--space-lg);
 }
 
 .pagination-btn {
   background: transparent;
-  color: #ff5c00;
-  border: 1px solid #ff5c00;
-  border-radius: 8px;
-  padding: 10px 18px;
-  font-size: 14px;
+  color: var(--primary-light);
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) 18px;
+  font-size: var(--text-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) ease;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -466,18 +471,18 @@
 
 .page-info {
   color: #888;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 /* Improved responsive layout */
 @media (max-width: 768px) {
   .nft-panel {
-    padding: 16px;
+    padding: var(--space-md);
   }
   
   .nft-panel-title {
-    font-size: 24px;
-    margin-bottom: 16px;
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
   }
   
   .nft-attributes {
@@ -499,7 +504,7 @@
   
   .pagination {
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-md);
   }
   
   .nft-grid {
@@ -515,12 +520,12 @@
   }
   
   .nft-detail {
-    margin-bottom: 10px;
+    margin-bottom: var(--space-sm);
   }
   
   .emergency-end-button {
     width: 100%;
-    margin-top: 10px;
+    margin-top: var(--space-sm);
   }
   
   .confirmation-modal-content {
@@ -578,4 +583,180 @@
 
 .nft-error-placeholder .action-button:hover {
   background: rgba(255, 92, 0, 0.3);
+}
+
+/* Update retry button color from purple to orange */
+.retry-button {
+  background-color: #ff5c00;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #ff7700;
+}
+
+.retry-button:active {
+  background-color: #e04a00;
+}
+
+/* Update loading spinner color to orange */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 92, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #ff5c00;
+  animation: spin 1s linear infinite;
+}
+
+/* Update details loading indicator to use orange */
+.details-loading-indicator::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 3px solid rgba(255, 92, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #ff5c00;
+  animation: spin 1s linear infinite;
+}
+
+/* Update refresh indicator to use orange */
+.refresh-indicator {
+  font-size: 14px;
+  color: #ff5c00;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.refresh-indicator::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid rgba(255, 92, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #ff5c00;
+  animation: spin 1s linear infinite;
+}
+
+/* Update refresh button to orange */
+.refresh-button {
+  background-color: #ff5c00;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.refresh-button:hover {
+  background-color: #ff7700;
+  transform: rotate(30deg);
+}
+
+.refresh-button:active {
+  background-color: #e04a00;
+}
+
+/* Improve no-nfts section */
+.no-nfts {
+  text-align: center;
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.no-nfts p:first-child {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.no-nfts .retry-button {
+  margin-top: 20px;
+}
+
+/* Style for the details loading indicator */
+.loading-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.details-loading-indicator {
+  font-size: 1rem;
+  color: #888;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.retry-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Improved loading spinner */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.loading p {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Refresh button in NFT picker */
+.refresh-container {
+  display: flex;
+  align-items: center;
+}
+
+.refresh-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Improve loading-details section */
+.loading-details {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 } 

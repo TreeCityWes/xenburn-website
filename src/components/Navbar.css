@@ -92,26 +92,88 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
 .wallet-address:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.wallet-address:hover:after {
+  content: "Disconnect";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 68, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  font-size: 12px;
+}
+
 .connect-wallet {
-  background: #ff4400;
+  background: var(--primary-dark);
   color: white;
   border: none;
   padding: 8px 20px;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+  text-align: center;
 }
 
-.connect-wallet:hover {
-  background: #ff5500;
+.connect-wallet:hover:not(:disabled) {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.connect-wallet:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.connect-wallet:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.connect-wallet.connecting {
+  background: #888;
+  position: relative;
+}
+
+.connect-wallet.connecting:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1)
+  );
+  animation: connecting-pulse 1.2s infinite;
+}
+
+@keyframes connecting-pulse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 .nav-actions {
@@ -123,14 +185,14 @@
 .nav-tabs {
   display: flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 50px;
   padding: 4px;
 }
 
 .nav-tab {
   border: none;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.8);
   color: #999;
   padding: 5px 12px;
   border-radius: 50px;
@@ -141,6 +203,7 @@
 }
 
 .nav-tab:hover {
+  background: rgba(0, 0, 0, 0.9);
   color: #fff;
 }
 
@@ -207,22 +270,29 @@
     font-size: 18px;
   }
 
-  .nav-dot,
-  .nav-text {
-    display: none;
+  .nav-dot {
+    margin: 0 4px;
   }
-
-  .nav-link {
+  
+  .nav-text, .nav-link {
     font-size: 14px;
   }
-
-  .nav-balances {
-    display: none;
+  
+  .balance-item {
+    font-size: 14px;
+    gap: 2px;
+    margin-right: 8px;
   }
-
+  
   .wallet-address {
     font-size: 14px;
     padding: 4px 8px;
+  }
+  
+  .nav-balances {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
   }
 
   .connect-wallet {
@@ -233,5 +303,101 @@
   .tab-button {
     padding: 8px 16px;
     font-size: 14px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 576px) {
+  .navbar-content {
+    flex-direction: column;
+    height: auto;
+    padding: 8px 12px;
+  }
+  
+  .navbar {
+    height: auto;
+    min-height: 48px;
+  }
+  
+  .nav-left, .nav-right {
+    width: 100%;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  
+  .nav-balances {
+    overflow-x: auto;
+    max-width: 100%;
+    justify-content: flex-start;
+    padding: 0 8px;
+  }
+}
+
+/* Balance loading indicator and refresh button */
+.balances-loading .balance-value {
+  opacity: 0.6;
+  animation: pulse 1.5s infinite;
+}
+
+.refresh-balance-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.refresh-balance-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: rotate(30deg);
+}
+
+.refresh-balance-btn:active {
+  transform: rotate(360deg);
+}
+
+.refresh-balance-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.refresh-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
   }
 } 

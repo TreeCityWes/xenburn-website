@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from '../context/WalletContext';
 import toast from 'react-hot-toast';
@@ -8,10 +8,11 @@ import './NFTPanel.css';
 const PER_PAGE = 10;
 
 export const NFTPanel = () => {
-  // Properly destructure nftContract and xburnMinterContract from useWallet
-  const { account, signer, nftContract, xburnMinterContract } = useWallet();
+  // Add safeRequest to the destructured values
+  const { account, signer, nftContract, xburnMinterContract, safeRequest } = useWallet();
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [detailsLoading, setDetailsLoading] = useState(false); // Separate loading state for details
   const [selectedNft, setSelectedNft] = useState(null);
   const [nftDetails, setNftDetails] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,34 +20,65 @@ export const NFTPanel = () => {
   const [claiming, setClaiming] = useState(false);
   const [endingStake, setEndingStake] = useState(false);
   const [showEndConfirmation, setShowEndConfirmation] = useState(false);
+  // Add ref to track if we're in the middle of an operation
+  const operationInProgress = useRef(false);
+  // Add state to show initial loading only on first load
+  const [initialLoad, setInitialLoad] = useState(true);
+  // Add ref to prevent auto-refresh when user is interacting
+  const userInteracting = useRef(false);
+  // Add ref to track if we've already loaded NFTs
+  const hasLoadedNFTs = useRef(false);
 
-  // Load user's NFTs
-  useEffect(() => {
-    const loadUserNFTs = async () => {
-      if (!account || !nftContract) return;
+  // Load user's NFTs - simplified to only load once
+  const loadUserNFTs = useCallback(async (force = false) => {
+    // If we've already loaded NFTs and this isn't a forced refresh, don't load again
+    if (hasLoadedNFTs.current && !force) {
+      return;
+    }
+    
+    if (!account || !nftContract) return;
+    
+    // Don't refresh if we're in the middle of claiming or ending a stake
+    if (operationInProgress.current && !force) {
+      return;
+    }
 
-      try {
-        setLoading(true);
-        // Fetch the updated list of NFTs
-        const { tokenIds, totalPages: pages } = await nftContract.getAllUserLocks(account, currentPage, PER_PAGE);
-        setTotalPages(pages.toNumber());
-        
-        // If no NFTs left, clear everything
-        if (tokenIds.length === 0) {
-          setNfts([]);
-          setSelectedNft(null);
-          setNftDetails(null);
-          setLoading(false);
-          return;
-        }
-        
-        // Format the NFTs data
-        const formattedNfts = await Promise.all(
-          tokenIds.map(async (tokenId) => {
-            const tokenIdNumber = tokenId.toNumber();
+    try {
+      setLoading(true);
+      
+      // Use safeRequest to fetch NFTs without timeout
+      const userLocks = await safeRequest(
+        () => nftContract.getAllUserLocks(account, currentPage, PER_PAGE),
+        'Error fetching NFT list'
+      );
+      
+      const { tokenIds, totalPages: pages } = userLocks;
+      setTotalPages(pages.toNumber());
+      
+      // If no NFTs left, clear everything
+      if (tokenIds.length === 0) {
+        setNfts([]);
+        setSelectedNft(null);
+        setNftDetails(null);
+        setLoading(false);
+        setInitialLoad(false);
+        hasLoadedNFTs.current = true;
+        return;
+      }
+      
+      // Format the NFTs data with parallel processing to speed up loading
+      const formattedNfts = await Promise.all(
+        tokenIds.map(async (tokenId) => {
+          const tokenIdNumber = tokenId.toNumber();
+          try {
+            // Use safeRequest for token URI without timeout
+            const uri = await safeRequest(
+              () => nftContract.tokenURI(tokenIdNumber),
+              `Error fetching token URI for NFT #${tokenIdNumber}`
+            );
+            
+            // The URI is a base64 encoded JSON string
             try {
-              const uri = await nftContract.tokenURI(tokenIdNumber);
-              // The URI is a base64 encoded JSON string
               const jsonString = atob(uri.substring(29)); // Remove 'data:application/json;base64,'
               const metadata = JSON.parse(jsonString);
               return {
@@ -55,27 +87,52 @@ export const NFTPanel = () => {
                 name: metadata.name || `XBURN Lock Position #${tokenIdNumber}`,
                 attributes: metadata.attributes
               };
-            } catch (error) {
-              console.error(`Error loading NFT ${tokenIdNumber}:`, error);
+            } catch (parseError) {
+              console.error(`Error parsing metadata for NFT ${tokenIdNumber}:`, parseError);
               return {
                 id: tokenIdNumber,
                 image: null,
                 name: `XBURN Lock Position #${tokenIdNumber}`,
-                attributes: []
+                attributes: [],
+                loadFailed: true
               };
             }
-          })
-        );
+          } catch (error) {
+            console.error(`Error loading NFT ${tokenIdNumber}:`, error);
+            return {
+              id: tokenIdNumber,
+              image: null,
+              name: `XBURN Lock Position #${tokenIdNumber}`,
+              attributes: [],
+              loadFailed: true
+            };
+          }
+        })
+      );
+      
+      setNfts(formattedNfts);
+      
+      // Select the first NFT if none is selected and this is initial load
+      if (formattedNfts.length > 0 && (!selectedNft || initialLoad)) {
+        // Find the currently selected NFT in the new list if it exists
+        const currentNft = selectedNft ? formattedNfts.find(nft => nft.id === selectedNft.id) : null;
         
-        setNfts(formattedNfts);
+        // If the current NFT is still in the list, keep it selected
+        // Otherwise select the first NFT
+        const nftToSelect = currentNft || formattedNfts[0];
         
-        // Select the first NFT if none is selected
-        if (formattedNfts.length > 0) {
-          const firstNft = formattedNfts[0];
-          setSelectedNft(firstNft);
+        // Only update if we're changing the selection
+        if (!selectedNft || selectedNft.id !== nftToSelect.id) {
+          setSelectedNft(nftToSelect);
           
+          // Load details for the selected NFT
+          setDetailsLoading(true);
           try {
-            const details = await nftContract.getLockDetails(firstNft.id);
+            // Use safeRequest for lock details without timeout
+            const details = await safeRequest(
+              () => nftContract.getLockDetails(nftToSelect.id),
+              `Error fetching details for NFT #${nftToSelect.id}`
+            );
             
             // Format the details
             const formattedDetails = {
@@ -92,107 +149,38 @@ export const NFTPanel = () => {
             
             setNftDetails(formattedDetails);
           } catch (error) {
-            console.error('Error loading NFT details:', error);
+            console.error('Error loading initial NFT details:', error);
+          } finally {
+            setDetailsLoading(false);
           }
         }
-      } catch (error) {
-        console.error('Error loading NFTs:', error);
-        toast.error('Failed to load your NFTs');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (account && signer) {
-      loadUserNFTs();
-    } else {
-      setNfts([]);
-      setSelectedNft(null);
-    }
-  }, [account, signer, nftContract, currentPage]);
-
-  // Simplify the refreshNFTList function to avoid potential infinite loops
-  const refreshNFTList = useCallback(async () => {
-    if (!account || !nftContract) return;
-    
-    try {
-      setLoading(true);
-      
-      // Fetch the updated list of NFTs
-      const { tokenIds, totalPages: pages } = await nftContract.getAllUserLocks(account, currentPage, PER_PAGE);
-      setTotalPages(pages.toNumber());
-      
-      // If no NFTs left, clear everything
-      if (tokenIds.length === 0) {
-        setNfts([]);
-        setSelectedNft(null);
-        setNftDetails(null);
-        setLoading(false);
-        return;
       }
       
-      // Format the NFTs data
-      const formattedNfts = await Promise.all(
-        tokenIds.map(async (tokenId) => {
-          const tokenIdNumber = tokenId.toNumber();
-          try {
-            const uri = await nftContract.tokenURI(tokenIdNumber);
-            // The URI is a base64 encoded JSON string
-            const jsonString = atob(uri.substring(29)); // Remove 'data:application/json;base64,'
-            const metadata = JSON.parse(jsonString);
-            return {
-              id: tokenIdNumber,
-              image: metadata.image,
-              name: metadata.name || `XBURN Lock Position #${tokenIdNumber}`,
-              attributes: metadata.attributes
-            };
-          } catch (error) {
-            console.error(`Error loading NFT ${tokenIdNumber}:`, error);
-            return {
-              id: tokenIdNumber,
-              image: null,
-              name: `XBURN Lock Position #${tokenIdNumber}`,
-              attributes: []
-            };
-          }
-        })
-      );
-      
-      setNfts(formattedNfts);
-      
-      // Select the first NFT in the updated list
-      if (formattedNfts.length > 0) {
-        const firstNft = formattedNfts[0];
-        setSelectedNft(firstNft);
-        
-        try {
-          const details = await nftContract.getLockDetails(firstNft.id);
-          
-          // Format the details
-          const formattedDetails = {
-            xenAmount: ethers.utils.formatUnits(details.xenAmount, 18),
-            maturityTs: new Date(details.maturityTs.toNumber() * 1000).toLocaleString(),
-            maturityTimestamp: details.maturityTs.toNumber(),
-            ampSnapshot: details.ampSnapshot.toNumber(),
-            termDays: details.termDays.toNumber(),
-            claimed: details.claimed,
-            rewardAmount: ethers.utils.formatUnits(details.rewardAmount, 18),
-            baseMint: ethers.utils.formatUnits(details.baseMint, 18),
-            owner: details.owner
-          };
-          
-          setNftDetails(formattedDetails);
-        } catch (error) {
-          console.error('Error loading NFT details:', error);
-        }
-      }
+      // Mark that we've loaded NFTs
+      hasLoadedNFTs.current = true;
     } catch (error) {
-      console.error('Error refreshing NFTs:', error);
-      toast.error('Failed to update your NFTs list');
+      console.error('Error loading NFTs:', error);
+      if (initialLoad || force) {
+        toast.error('Failed to load your NFTs. Please try again.');
+      }
     } finally {
       setLoading(false);
+      setInitialLoad(false);
     }
-  }, [account, nftContract, currentPage]);
+  }, [account, nftContract, currentPage, safeRequest, selectedNft, initialLoad]);
+
+  // Initial load - only once when component mounts
+  useEffect(() => {
+    if (account && signer && nftContract && !hasLoadedNFTs.current) {
+      // Load immediately without delay
+      loadUserNFTs(true);
+    } else if (!account) {
+      setNfts([]);
+      setSelectedNft(null);
+      setNftDetails(null);
+      hasLoadedNFTs.current = false;
+    }
+  }, [account, signer, nftContract, loadUserNFTs]);
 
   // Format large numbers with commas
   const formatNumber = (num) => {
@@ -202,7 +190,7 @@ export const NFTPanel = () => {
     });
   };
 
-  // Handle claiming rewards
+  // Handle claiming rewards with improved error handling
   const handleClaim = async () => {
     if (!xburnMinterContract || !selectedNft || !signer) return;
     
@@ -213,70 +201,107 @@ export const NFTPanel = () => {
     }
 
     try {
+      // Set operation in progress to prevent auto-refresh
+      operationInProgress.current = true;
+      userInteracting.current = true;
       setClaiming(true);
-      const tx = await xburnMinterContract.connect(signer).claimLockedXBURN(selectedNft.id);
+      
+      const tx = await safeRequest(
+        () => xburnMinterContract.connect(signer).claimLockedXBURN(selectedNft.id),
+        'Error claiming rewards'
+      );
       
       // Display a message explaining that the NFT will be burned
       toast.success('Transaction submitted! Your NFT will be burned when claimed.', { duration: 5000 });
       
       await tx.wait();
       
-      // Clear selectedNft before refreshing to prevent flickering
-      setSelectedNft(null);
-      setNftDetails(null);
-      
-      // Show success message and add a delay before refresh
+      // Show success message
       toast.success('Successfully claimed rewards! Your NFT has been burned.', { duration: 5000 });
       
-      // Delay refresh to allow user to see the message
-      setTimeout(() => {
-        refreshNFTList();
-      }, 1000);
+      // Remove this NFT from the list without full refresh
+      setNfts(prevNfts => prevNfts.filter(nft => nft.id !== selectedNft.id));
+      
+      // Select another NFT if available
+      const remainingNfts = nfts.filter(nft => nft.id !== selectedNft.id);
+      if (remainingNfts.length > 0) {
+        await handleSelectNft(remainingNfts[0]);
+      } else {
+        setSelectedNft(null);
+        setNftDetails(null);
+        // Only refresh the list if we have no NFTs left
+        setTimeout(() => {
+          loadUserNFTs(true);
+        }, 500);
+      }
     } catch (error) {
       console.error('Error claiming rewards:', error);
       toast.error(error.reason || 'Failed to claim rewards');
     } finally {
       setClaiming(false);
+      // Reset operation in progress
+      operationInProgress.current = false;
+      // Reset user interacting after a delay
+      setTimeout(() => {
+        userInteracting.current = false;
+      }, 1000);
     }
   };
 
   // Handle pagination with simpler implementation
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) {
+      // Set user interacting to true when changing pages
+      userInteracting.current = true;
       setCurrentPage(prevPage => prevPage + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 0) {
+      // Set user interacting to true when changing pages
+      userInteracting.current = true;
       setCurrentPage(prevPage => prevPage - 1);
     }
   };
 
-  // When the page changes, refresh the NFT list
-  useEffect(() => {
-    if (account && nftContract) {
-      refreshNFTList();
-    }
-  }, [currentPage, refreshNFTList, account, nftContract]);
-
-  // Handle NFT selection
+  // Handle NFT selection with improved error handling - no timeouts
   const handleSelectNft = async (nft) => {
+    if (!nft) return;
+    
+    userInteracting.current = true;
     setSelectedNft(nft);
-    setLoading(true);
+    setDetailsLoading(true);
     
     try {
-      // First, check if the NFT still exists by checking if it has an owner
-      try {
-        await nftContract.ownerOf(nft.id);
-      } catch (error) {
+      // Check if the NFT still exists
+      await safeRequest(
+        () => nftContract.ownerOf(nft.id),
+        `Error checking ownership of NFT #${nft.id}`
+      ).catch(async () => {
         // If ownerOf throws an error, the NFT doesn't exist anymore
-        console.log(`NFT ${nft.id} no longer exists, refreshing list`);
-        await refreshNFTList();
-        return;
-      }
+        console.log(`NFT ${nft.id} no longer exists, removing from list`);
+        setNfts(prevNfts => prevNfts.filter(n => n.id !== nft.id));
+        
+        // Select another NFT if available
+        const remainingNfts = nfts.filter(n => n.id !== nft.id);
+        if (remainingNfts.length > 0) {
+          setSelectedNft(remainingNfts[0]);
+          return handleSelectNft(remainingNfts[0]);
+        } else {
+          setSelectedNft(null);
+          setNftDetails(null);
+          setDetailsLoading(false);
+          userInteracting.current = false;
+          return;
+        }
+      });
       
-      const details = await nftContract.getLockDetails(nft.id);
+      // Fetch the NFT details
+      const details = await safeRequest(
+        () => nftContract.getLockDetails(nft.id),
+        `Error fetching details for NFT #${nft.id}`
+      );
       
       // Format the details
       const formattedDetails = {
@@ -295,14 +320,12 @@ export const NFTPanel = () => {
     } catch (error) {
       console.error('Error loading NFT details:', error);
       // Only show toast if it's not a "non-existent token" error
-      if (!error.message.includes("nonexistent token")) {
-        toast.error('Failed to load NFT details');
-      } else {
-        // If it's a nonexistent token error, refresh the NFT list
-        await refreshNFTList();
+      if (!error.message?.includes("nonexistent token")) {
+        toast.error('Failed to load NFT details. Please try again.');
       }
     } finally {
-      setLoading(false);
+      setDetailsLoading(false);
+      userInteracting.current = false;
     }
   };
 
@@ -350,41 +373,61 @@ export const NFTPanel = () => {
     );
   };
 
-  // Handle emergency stake end
+  // Handle emergency stake end with improved error handling
   const handleEmergencyEnd = async () => {
     if (!xburnMinterContract || !selectedNft || !signer) return;
     
     try {
+      // Set operation in progress to prevent auto-refresh
+      operationInProgress.current = true;
+      userInteracting.current = true;
       setEndingStake(true);
-      const tx = await xburnMinterContract.connect(signer).emergencyEnd(selectedNft.id);
+      
+      const tx = await safeRequest(
+        () => xburnMinterContract.connect(signer).emergencyEnd(selectedNft.id),
+        'Error ending stake'
+      );
       
       // Display a message explaining that the NFT will be burned
       toast.success('Transaction submitted! Your NFT will be burned when ended.', { duration: 5000 });
       
       await tx.wait();
       
-      // Clear selectedNft before refreshing to prevent flickering
-      setSelectedNft(null);
-      setNftDetails(null);
-      
-      // Show success message and add a delay before refresh
+      // Show success message
       toast.success('Successfully ended stake! You received base XBURN without amplifier bonus. Your NFT has been burned.', { duration: 5000 });
       
-      // Delay refresh to allow user to see the message
-      setTimeout(() => {
-        refreshNFTList();
-      }, 1000);
+      // Remove this NFT from the list without full refresh
+      setNfts(prevNfts => prevNfts.filter(nft => nft.id !== selectedNft.id));
+      
+      // Select another NFT if available
+      const remainingNfts = nfts.filter(nft => nft.id !== selectedNft.id);
+      if (remainingNfts.length > 0) {
+        await handleSelectNft(remainingNfts[0]);
+      } else {
+        setSelectedNft(null);
+        setNftDetails(null);
+        // Only refresh the list if we have no NFTs left
+        setTimeout(() => {
+          loadUserNFTs(true);
+        }, 500);
+      }
     } catch (error) {
       console.error('Error ending stake:', error);
       toast.error(error.reason || 'Failed to end stake');
     } finally {
       setEndingStake(false);
       setShowEndConfirmation(false);
+      // Reset operation in progress
+      operationInProgress.current = false;
+      // Reset user interacting after a delay
+      setTimeout(() => {
+        userInteracting.current = false;
+      }, 1000);
     }
   };
 
   // Update the paginationInfo string to use PER_PAGE
-  const paginationInfo = `Showing ${currentPage > 0 ? currentPage * PER_PAGE + 1 : 0} - ${Math.min((currentPage + 1) * PER_PAGE, nfts.length)} of ${nfts.length} NFTs`;
+  const paginationInfo = `Showing ${currentPage > 0 ? currentPage * PER_PAGE + 1 : nfts.length > 0 ? 1 : 0} - ${Math.min((currentPage + 1) * PER_PAGE, nfts.length)} of ${nfts.length} NFTs`;
 
   return (
     <div className="nft-panel">
@@ -392,8 +435,20 @@ export const NFTPanel = () => {
         <div className="connect-prompt">
           <p>Please connect your wallet to view your NFTs</p>
         </div>
-      ) : loading ? (
-        <div className="loading">Loading your NFTs...</div>
+      ) : loading && initialLoad ? (
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <p>Loading your NFTs...</p>
+          <button 
+            className="retry-button"
+            onClick={() => {
+              setInitialLoad(true);
+              loadUserNFTs(true);
+            }}
+          >
+            Retry Loading NFTs
+          </button>
+        </div>
       ) : nfts.length === 0 ? (
         <div className="no-nfts">
           <p>No XBURN NFTs in Your Collection</p>
@@ -409,7 +464,10 @@ export const NFTPanel = () => {
               onChange={(e) => {
                 const selectedId = parseInt(e.target.value);
                 const nft = nfts.find(n => n.id === selectedId);
-                if (nft) handleSelectNft(nft);
+                if (nft) {
+                  userInteracting.current = true;
+                  handleSelectNft(nft);
+                }
               }}
             >
               <option value="" disabled={selectedNft !== null}>Select NFT</option>
@@ -438,48 +496,33 @@ export const NFTPanel = () => {
                     }}
                     onError={(e) => {
                       e.target.onerror = null;
-                      // Hide the image on error
                       e.target.style.display = 'none';
-                      
-                      // If we get an error loading the image, check if the NFT still exists
-                      if (nftContract && selectedNft) {
-                        nftContract.ownerOf(selectedNft.id)
-                          .then(owner => {
-                            // NFT still exists but image is broken, show fallback
-                            console.log('NFT exists but image is broken, showing fallback');
-                            e.target.src = '/xenburn.png';
-                            e.target.style.display = 'block';
-                          })
-                          .catch(error => {
-                            // NFT no longer exists, trigger a refresh
-                            console.log(`NFT ${selectedNft.id} no longer exists, refreshing list`);
-                            setTimeout(() => refreshNFTList(), 500);
-                          });
-                      }
+                      e.target.src = '/xenburn.png';
+                      e.target.style.display = 'block';
                     }}
                   />
+                ) : selectedNft && selectedNft.loadFailed ? (
+                  <div className="nft-error-placeholder">
+                    <span className="error-icon">⚠️</span>
+                    <p>Failed to load NFT image</p>
+                    <p>Please reload the page to try again</p>
+                  </div>
                 ) : (
                   <div className="nft-error-placeholder">
                     <span className="error-icon">⚠️</span>
                     <p>NFT may have been burned or claimed</p>
                     <p>This happens when rewards are claimed</p>
-                    <button 
-                      className="action-button" 
-                      onClick={() => {
-                        setLoading(true);
-                        setTimeout(() => refreshNFTList(), 100);
-                      }}
-                      disabled={loading}
-                    >
-                      {loading ? 'Refreshing...' : 'Refresh NFT List'}
-                    </button>
                   </div>
                 )}
               </div>
             </div>
 
             {/* NFT Stats */}
-            {selectedNft && nftDetails && (
+            {selectedNft && (detailsLoading ? (
+              <div className="nft-stats-section loading-details">
+                <div className="details-loading-indicator">Loading NFT details...</div>
+              </div>
+            ) : nftDetails ? (
               <div className="nft-stats-section">
                 {renderTimeRemaining()}
                 
@@ -522,7 +565,10 @@ export const NFTPanel = () => {
                 {isNftClaimable() && (
                   <button 
                     className="claim-button" 
-                    onClick={handleClaim}
+                    onClick={() => {
+                      userInteracting.current = true;
+                      handleClaim();
+                    }}
                     disabled={claiming || endingStake}
                   >
                     {claiming ? 'Claiming...' : 'Claim Rewards'}
@@ -533,14 +579,21 @@ export const NFTPanel = () => {
                 {nftDetails && !nftDetails.claimed && (
                   <button 
                     className="emergency-end-button" 
-                    onClick={() => setShowEndConfirmation(true)}
+                    onClick={() => {
+                      userInteracting.current = true;
+                      setShowEndConfirmation(true);
+                    }}
                     disabled={claiming || endingStake}
                   >
                     {endingStake ? 'Processing...' : 'End Stake Early'}
                   </button>
                 )}
               </div>
-            )}
+            ) : (
+              <div className="nft-stats-section">
+                <p>No details available for this NFT</p>
+              </div>
+            ))}
           </div>
 
           {/* Confirmation Modal for Emergency End */}
@@ -560,7 +613,10 @@ export const NFTPanel = () => {
                 <div className="modal-actions">
                   <button 
                     className="modal-cancel-button" 
-                    onClick={() => setShowEndConfirmation(false)}
+                    onClick={() => {
+                      setShowEndConfirmation(false);
+                      userInteracting.current = false;
+                    }}
                     disabled={endingStake}
                   >
                     Cancel
@@ -581,7 +637,7 @@ export const NFTPanel = () => {
             <div className="pagination">
               <button 
                 onClick={handlePrevPage}
-                disabled={currentPage === 0}
+                disabled={currentPage === 0 || loading}
                 className="pagination-btn"
               >
                 Previous
@@ -591,7 +647,7 @@ export const NFTPanel = () => {
               </span>
               <button 
                 onClick={handleNextPage}
-                disabled={currentPage >= totalPages - 1}
+                disabled={currentPage >= totalPages - 1 || loading}
                 className="pagination-btn"
               >
                 Next

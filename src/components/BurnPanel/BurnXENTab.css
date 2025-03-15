@@ -1,0 +1,141 @@
+.reward-calculation {
+  background-color: rgba(15, 15, 20, 0.9);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 68, 0, 0.2);
+}
+
+.reward-header {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ff6600;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 68, 0, 0.2);
+  padding-bottom: 8px;
+}
+
+.reward-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  background-color: rgba(20, 20, 25, 0.7);
+  border-radius: 8px;
+  padding: 12px;
+  border: none;
+}
+
+.reward-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.calculation-operator {
+  margin: 0 8px;
+  font-size: 1.2rem;
+  color: #ff6600;
+}
+
+.base-amount-display, .reward-formula, .reward-total {
+  background-color: rgba(20, 20, 25, 0.7);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: none;
+}
+
+.reward-total {
+  background-color: rgba(25, 25, 30, 0.8);
+  border: 1px solid rgba(255, 68, 0, 0.3);
+}
+
+.base-label, .formula-label, .total-label {
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.base-result, .formula-result, .total-value {
+  font-weight: 600;
+  color: #ff6600;
+}
+
+.contract-stats {
+  background-color: rgba(15, 15, 20, 0.9);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid rgba(255, 68, 0, 0.2);
+}
+
+.stats-header {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ff6600;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 68, 0, 0.2);
+  padding-bottom: 8px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: rgba(20, 20, 25, 0.7);
+  border-radius: 6px;
+  border: none;
+}
+
+.stats-label {
+  color: #aaa;
+}
+
+.stats-value {
+  font-weight: 600;
+  color: #ff6600;
+}
+
+/* Fix button styling */
+.button-container {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.approve-button, .burn-button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.approve-button {
+  background-color: rgba(30, 30, 40, 0.9);
+  color: #ff6600;
+}
+
+.burn-button {
+  background-color: rgba(255, 68, 0, 0.8);
+  color: #fff;
+}
+
+.approve-button:hover:not(:disabled) {
+  background-color: rgba(40, 40, 50, 0.9);
+}
+
+.burn-button:hover:not(:disabled) {
+  background-color: rgba(255, 68, 0, 1);
+}
+
+.approve-button:disabled, .burn-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+} 
