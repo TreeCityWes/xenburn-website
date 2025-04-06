@@ -1,0 +1,49 @@
+{
+  "name": "X1 Chain Card #0: Neon Purple",
+  "symbol": "X1CC",
+  "description": "A mystical collector's card from the X1 Chain. Features Quantum Lattices with Matrix Code Rain.",
+  "seller_fee_basis_points": 500,
+  "image": "0.png",
+  "external_url": "https://burnxen.com/x1cards",
+  "attributes": [
+    {
+      "trait_type": "Color Theme",
+      "value": "Neon Purple"
+    },
+    {
+      "trait_type": "Core Element",
+      "value": "Quantum Lattices"
+    },
+    {
+      "trait_type": "Energy Effect",
+      "value": "Matrix Code Rain"
+    },
+    {
+      "trait_type": "Sacred Symbol",
+      "value": "Fractal Patterns"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Cyber Grid"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "0.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "FbZMdR4TCyRGX9Pzbc1UnSrqmQt5pzUeByqrNBGwex6Ni",
+        "share": 100
+      }
+    ]
+  },
+  "collection": {
+    "name": "X1 Chain Cards",
+    "family": "X1 Chain Cards"
+  }
+}
