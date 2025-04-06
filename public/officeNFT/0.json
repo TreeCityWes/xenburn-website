@@ -1,0 +1,88 @@
+{
+  "name": "XENMT #0 - Blockchain Bard",
+  "symbol": "XENMT",
+  "description": "A legendary cyberpunk rebel style zombie investor of the Xen Marketing Team. A abstract geometry with glowing circuit veins, known for their quantum uncertainty while wearing their signature matrix code robes",
+  "seller_fee_basis_points": 500,
+  "external_url": "https://burnxen.com/officeNFT",
+  "attributes": [
+    {
+      "trait_type": "Character Style",
+      "value": "cyberpunk rebel",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Species",
+      "value": "zombie investor",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Body Type",
+      "value": "abstract geometry",
+      "rarity": "legendary"
+    },
+    {
+      "trait_type": "Physical Trait",
+      "value": "glowing circuit veins",
+      "rarity": "epic"
+    },
+    {
+      "trait_type": "Role",
+      "value": "Blockchain Bard",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "quantum uncertainty",
+      "rarity": "legendary"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "neon power crystals",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "matrix code robes",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Background",
+      "value": "neon blockchain",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Time of Day",
+      "value": "matrix twilight"
+    },
+    {
+      "trait_type": "Mood",
+      "value": "meta consciousness"
+    },
+    {
+      "trait_type": "Glitch Effect",
+      "value": "dimensional shift"
+    },
+    {
+      "trait_type": "Special Event",
+      "value": "metaverse convergence"
+    },
+    {
+      "trait_type": "Weather",
+      "value": "data storm"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  },
+  "collection": {
+    "name": "Xen Marketing Team",
+    "family": "BurnXen Collection"
+  },
+  "image": ""
+}

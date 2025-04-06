@@ -1,0 +1,88 @@
+{
+  "name": "XENMT #3 - Meme Alchemist",
+  "symbol": "XENMT",
+  "description": "A legendary vaporwave aesthetic style robot analyst of the Xen Marketing Team. A pixel art blob with glowing circuit veins, known for their holographic laughter while wearing their signature holographic armor",
+  "seller_fee_basis_points": 500,
+  "external_url": "https://burnxen.com/officeNFT",
+  "attributes": [
+    {
+      "trait_type": "Character Style",
+      "value": "vaporwave aesthetic",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Species",
+      "value": "robot analyst",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Body Type",
+      "value": "pixel art blob",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Physical Trait",
+      "value": "glowing circuit veins",
+      "rarity": "epic"
+    },
+    {
+      "trait_type": "Role",
+      "value": "Meme Alchemist",
+      "rarity": "epic"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "holographic laughter",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "digital familiar",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "holographic armor",
+      "rarity": "legendary"
+    },
+    {
+      "trait_type": "Background",
+      "value": "cyberpunk cityscape",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Time of Day",
+      "value": "matrix twilight"
+    },
+    {
+      "trait_type": "Mood",
+      "value": "meta consciousness"
+    },
+    {
+      "trait_type": "Glitch Effect",
+      "value": "quantum interference"
+    },
+    {
+      "trait_type": "Special Event",
+      "value": "blockchain singularity"
+    },
+    {
+      "trait_type": "Weather",
+      "value": "matrix rain"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  },
+  "collection": {
+    "name": "Xen Marketing Team",
+    "family": "BurnXen Collection"
+  },
+  "image": ""
+}

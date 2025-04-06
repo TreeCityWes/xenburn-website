@@ -1,0 +1,88 @@
+{
+  "name": "XENMT #4 - Quantum Shiller",
+  "symbol": "XENMT",
+  "description": "A legendary cyberpunk rebel style robot analyst of the Xen Marketing Team. A floating digital spirit with rainbow pixel hair, known for their cybernetic zen while wearing their signature holographic armor",
+  "seller_fee_basis_points": 500,
+  "external_url": "https://burnxen.com/officeNFT",
+  "attributes": [
+    {
+      "trait_type": "Character Style",
+      "value": "cyberpunk rebel",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Species",
+      "value": "robot analyst",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Body Type",
+      "value": "floating digital spirit",
+      "rarity": "epic"
+    },
+    {
+      "trait_type": "Physical Trait",
+      "value": "rainbow pixel hair",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Role",
+      "value": "Quantum Shiller",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "cybernetic zen",
+      "rarity": "epic"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "neon power crystals",
+      "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Clothing",
+      "value": "holographic armor",
+      "rarity": "legendary"
+    },
+    {
+      "trait_type": "Background",
+      "value": "cyberpunk cityscape",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Time of Day",
+      "value": "digital dawn"
+    },
+    {
+      "trait_type": "Mood",
+      "value": "meta consciousness"
+    },
+    {
+      "trait_type": "Glitch Effect",
+      "value": "dimensional shift"
+    },
+    {
+      "trait_type": "Special Event",
+      "value": "quantum airdrop"
+    },
+    {
+      "trait_type": "Weather",
+      "value": "matrix rain"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  },
+  "collection": {
+    "name": "Xen Marketing Team",
+    "family": "BurnXen Collection"
+  },
+  "image": ""
+}
