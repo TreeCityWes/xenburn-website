@@ -1,34 +1,34 @@
 {
-  "name": "XENMT #0 - Blockchain Bard",
+  "name": "XENMT #2 - Quantum Shiller",
   "symbol": "XENMT",
-  "description": "A legendary cyberpunk rebel style zombie investor of the Xen Marketing Team. A abstract geometry with glowing circuit veins, known for their quantum uncertainty while wearing their signature matrix code robes",
+  "description": "A legendary kawaii anime style cyborg trader of the Xen Marketing Team. A neon wireframe with static noise skin, known for their quantum uncertainty while wearing their signature matrix code robes",
   "seller_fee_basis_points": 500,
   "external_url": "https://burnxen.com/officeNFT",
   "attributes": [
     {
       "trait_type": "Character Style",
-      "value": "cyberpunk rebel",
-      "rarity": "rare"
+      "value": "kawaii anime",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Species",
-      "value": "zombie investor",
-      "rarity": "uncommon"
-    },
-    {
-      "trait_type": "Body Type",
-      "value": "abstract geometry",
-      "rarity": "legendary"
-    },
-    {
-      "trait_type": "Physical Trait",
-      "value": "glowing circuit veins",
+      "value": "cyborg trader",
       "rarity": "epic"
     },
     {
-      "trait_type": "Role",
-      "value": "Blockchain Bard",
+      "trait_type": "Body Type",
+      "value": "neon wireframe",
+      "rarity": "rare"
+    },
+    {
+      "trait_type": "Physical Trait",
+      "value": "static noise skin",
       "rarity": "uncommon"
+    },
+    {
+      "trait_type": "Role",
+      "value": "Quantum Shiller",
+      "rarity": "rare"
     },
     {
       "trait_type": "Expression",
@@ -37,7 +37,7 @@
     },
     {
       "trait_type": "Accessory",
-      "value": "neon power crystals",
+      "value": "meta-dimensional pods",
       "rarity": "uncommon"
     },
     {
@@ -47,16 +47,16 @@
     },
     {
       "trait_type": "Background",
-      "value": "neon blockchain",
-      "rarity": "rare"
+      "value": "quantum trading grid",
+      "rarity": "epic"
     },
     {
       "trait_type": "Time of Day",
-      "value": "matrix twilight"
+      "value": "digital dawn"
     },
     {
       "trait_type": "Mood",
-      "value": "meta consciousness"
+      "value": "quantum enlightenment"
     },
     {
       "trait_type": "Glitch Effect",
@@ -68,7 +68,7 @@
     },
     {
       "trait_type": "Weather",
-      "value": "data storm"
+      "value": "quantum particles"
     }
   ],
   "properties": {

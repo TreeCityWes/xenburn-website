@@ -1,14 +1,14 @@
 {
-  "name": "XENMT #0 - Blockchain Bard",
+  "name": "XENMT #1 - NFT Prophet",
   "symbol": "XENMT",
-  "description": "A legendary cyberpunk rebel style zombie investor of the Xen Marketing Team. A abstract geometry with glowing circuit veins, known for their quantum uncertainty while wearing their signature matrix code robes",
+  "description": "A legendary comic book hero style zombie investor of the Xen Marketing Team. A voxel chunk with static noise skin, known for their digital euphoria while wearing their signature holographic armor",
   "seller_fee_basis_points": 500,
   "external_url": "https://burnxen.com/officeNFT",
   "attributes": [
     {
       "trait_type": "Character Style",
-      "value": "cyberpunk rebel",
-      "rarity": "rare"
+      "value": "comic book hero",
+      "rarity": "epic"
     },
     {
       "trait_type": "Species",
@@ -17,38 +17,38 @@
     },
     {
       "trait_type": "Body Type",
-      "value": "abstract geometry",
-      "rarity": "legendary"
+      "value": "voxel chunk",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Physical Trait",
-      "value": "glowing circuit veins",
-      "rarity": "epic"
+      "value": "static noise skin",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Role",
-      "value": "Blockchain Bard",
-      "rarity": "uncommon"
-    },
-    {
-      "trait_type": "Expression",
-      "value": "quantum uncertainty",
+      "value": "NFT Prophet",
       "rarity": "legendary"
     },
     {
+      "trait_type": "Expression",
+      "value": "digital euphoria",
+      "rarity": "rare"
+    },
+    {
       "trait_type": "Accessory",
-      "value": "neon power crystals",
-      "rarity": "uncommon"
+      "value": "blockchain familiar",
+      "rarity": "legendary"
     },
     {
       "trait_type": "Clothing",
-      "value": "matrix code robes",
-      "rarity": "uncommon"
+      "value": "holographic armor",
+      "rarity": "legendary"
     },
     {
       "trait_type": "Background",
-      "value": "neon blockchain",
-      "rarity": "rare"
+      "value": "meta reality breach",
+      "rarity": "epic"
     },
     {
       "trait_type": "Time of Day",
@@ -60,11 +60,11 @@
     },
     {
       "trait_type": "Glitch Effect",
-      "value": "dimensional shift"
+      "value": "matrix corruption"
     },
     {
       "trait_type": "Special Event",
-      "value": "metaverse convergence"
+      "value": "quantum airdrop"
     },
     {
       "trait_type": "Weather",

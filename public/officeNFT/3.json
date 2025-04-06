@@ -1,24 +1,24 @@
 {
-  "name": "XENMT #0 - Blockchain Bard",
+  "name": "XENMT #3 - Meme Alchemist",
   "symbol": "XENMT",
-  "description": "A legendary cyberpunk rebel style zombie investor of the Xen Marketing Team. A abstract geometry with glowing circuit veins, known for their quantum uncertainty while wearing their signature matrix code robes",
+  "description": "A legendary vaporwave aesthetic style robot analyst of the Xen Marketing Team. A pixel art blob with glowing circuit veins, known for their holographic laughter while wearing their signature holographic armor",
   "seller_fee_basis_points": 500,
   "external_url": "https://burnxen.com/officeNFT",
   "attributes": [
     {
       "trait_type": "Character Style",
-      "value": "cyberpunk rebel",
-      "rarity": "rare"
+      "value": "vaporwave aesthetic",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Species",
-      "value": "zombie investor",
+      "value": "robot analyst",
       "rarity": "uncommon"
     },
     {
       "trait_type": "Body Type",
-      "value": "abstract geometry",
-      "rarity": "legendary"
+      "value": "pixel art blob",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Physical Trait",
@@ -27,27 +27,27 @@
     },
     {
       "trait_type": "Role",
-      "value": "Blockchain Bard",
-      "rarity": "uncommon"
+      "value": "Meme Alchemist",
+      "rarity": "epic"
     },
     {
       "trait_type": "Expression",
-      "value": "quantum uncertainty",
-      "rarity": "legendary"
+      "value": "holographic laughter",
+      "rarity": "uncommon"
     },
     {
       "trait_type": "Accessory",
-      "value": "neon power crystals",
-      "rarity": "uncommon"
+      "value": "digital familiar",
+      "rarity": "rare"
     },
     {
       "trait_type": "Clothing",
-      "value": "matrix code robes",
-      "rarity": "uncommon"
+      "value": "holographic armor",
+      "rarity": "legendary"
     },
     {
       "trait_type": "Background",
-      "value": "neon blockchain",
+      "value": "cyberpunk cityscape",
       "rarity": "rare"
     },
     {
@@ -60,15 +60,15 @@
     },
     {
       "trait_type": "Glitch Effect",
-      "value": "dimensional shift"
+      "value": "quantum interference"
     },
     {
       "trait_type": "Special Event",
-      "value": "metaverse convergence"
+      "value": "blockchain singularity"
     },
     {
       "trait_type": "Weather",
-      "value": "data storm"
+      "value": "matrix rain"
     }
   ],
   "properties": {
