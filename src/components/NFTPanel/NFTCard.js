@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from '../common/LoadingIndicator';
 import useTransactionState, { TX_STATE } from '../../hooks/useTransactionState';
+import { XBURN_NFT_ADDRESS } from '../../constants/addresses';
+import { useGlobalData } from '../../contexts/GlobalDataContext';
 
 const ExternalLinkIcon = () => (
   <svg 
@@ -26,6 +28,7 @@ const NFTCard = ({
   isEnded 
 }) => {
   const { txState, setTxState, getStatusMessage, isLoading } = useTransactionState('burning');
+  const { fetchNftDetails } = useGlobalData();
   
   const handleBurnNFT = async () => {
     try {
@@ -72,7 +75,7 @@ const NFTCard = ({
     }
   };
   
-  const blockscoutUrl = `https://eth-sepolia.blockscout.com/token/0x1EbC3157Cc44FE1cb0d7F4764D271BAD3deB9a03/instance/${nft.tokenId}`;
+  const blockscoutUrl = `https://basescan.org/token/${XBURN_NFT_ADDRESS}/instance/${nft.tokenId}`;
 
   return (
     <div className={`nft-card ${selected ? 'selected' : ''}`} onClick={() => onSelect(nft)}>

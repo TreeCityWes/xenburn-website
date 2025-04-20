@@ -1,5 +1,10 @@
 import React from 'react';
 import './Footer.css';
+import { 
+  XENBURNER_ADDRESS, 
+  XBURN_TOKEN_ADDRESS,
+  XBURN_XEN_LP_ADDRESS // Import LP address
+} from '../../constants/addresses';
 
 export function Footer() {
   return (
@@ -35,7 +40,7 @@ export function Footer() {
             <ul>
               <li>
                 <a 
-                  href="https://eth-sepolia.blockscout.com/token/0x1EbC3157Cc44FE1cb0d7F4764D271BAD3deB9a03" 
+                  href={`https://basescan.org/address/${XENBURNER_ADDRESS}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
@@ -44,11 +49,20 @@ export function Footer() {
               </li>
               <li>
                 <a 
-                  href="https://eth-sepolia.blockscout.com/token/0x964db60EfdF9FDa55eA62f598Ea4c7a9cD48F189" 
+                  href={`https://basescan.org/address/${XBURN_TOKEN_ADDRESS}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
                   XBURN Token
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={`https://basescan.org/address/${XBURN_XEN_LP_ADDRESS}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  XBURN/XEN LP
                 </a>
               </li>
             </ul>

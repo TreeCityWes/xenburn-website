@@ -25,6 +25,15 @@ let userManuallyDisconnected = false;
 let lastBalanceFetchTime = 0;
 const MIN_BALANCE_FETCH_INTERVAL = 5000; // Reduced from 60000ms to 5000ms (5 seconds)
 
+// Define the target network (Base Mainnet)
+const TARGET_CHAIN_ID = '0x2105'; // 8453 in hex
+const TARGET_NETWORK_NAME = 'Base';
+const TARGET_RPC_URL = 'https://mainnet.base.org'; // Standard Base RPC
+const TARGET_EXPLORER_URL = 'https://basescan.org/';
+const TARGET_CURRENCY_NAME = 'ETH';
+const TARGET_CURRENCY_SYMBOL = 'ETH';
+const TARGET_CURRENCY_DECIMALS = 18;
+
 // Queue system for RPC requests to prevent overwhelming the provider
 const enqueueRequest = (requestFn) => {
   return new Promise((resolve, reject) => {
@@ -260,12 +269,12 @@ export function WalletProvider({ children }) {
       const network = await ethersProvider.getNetwork();
       
       // Check network
-      if (network.chainId !== 11155111) {
+      if (network.chainId !== parseInt(TARGET_CHAIN_ID, 16)) {
         try {
-          // Attempt to switch to Sepolia
+          // Attempt to switch to Base
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0xaa36a7' }], // Sepolia chainId in hex
+            params: [{ chainId: TARGET_CHAIN_ID }],
           });
           // Reload the page after network switch
           window.location.reload();
@@ -279,29 +288,31 @@ export function WalletProvider({ children }) {
             try {
               await window.ethereum.request({
                 method: 'wallet_addEthereumChain',
-                params: [{
-                  chainId: '0xaa36a7',
-                  chainName: 'Sepolia',
-                  nativeCurrency: {
-                    name: 'Sepolia ETH',
-                    symbol: 'ETH',
-                    decimals: 18
+                params: [
+                  {
+                    chainId: TARGET_CHAIN_ID,
+                    chainName: TARGET_NETWORK_NAME,
+                    nativeCurrency: {
+                      name: TARGET_CURRENCY_NAME,
+                      symbol: TARGET_CURRENCY_SYMBOL,
+                      decimals: TARGET_CURRENCY_DECIMALS,
+                    },
+                    rpcUrls: [TARGET_RPC_URL],
+                    blockExplorerUrls: [TARGET_EXPLORER_URL],
                   },
-                  rpcUrls: ['https://sepolia.infura.io/v3/'],
-                  blockExplorerUrls: ['https://sepolia.etherscan.io/']
-                }]
+                ],
               });
               // Try connecting again
               connect();
               return;
             } catch (addError) {
-              toast.error('Failed to add Sepolia network');
+              toast.error('Failed to add Base network');
               localStorage.removeItem('walletConnected'); // Remove flag if network switch fails
               setConnecting(false);
               return;
             }
           } else {
-            toast.error('Please switch to Sepolia network');
+            toast.error('Please switch to Base network');
             localStorage.removeItem('walletConnected'); // Remove flag if network switch fails
             setConnecting(false);
             return;
@@ -436,17 +447,14 @@ export function WalletProvider({ children }) {
         }
       };
       
-      const handleChainChanged = (chainIdHex) => {
-        console.log('Network changed:', chainIdHex);
-        const newChainId = parseInt(chainIdHex, 16);
-        setChainId(newChainId);
-        
-        // If chain changed to something other than Sepolia, prompt to switch back
-        if (newChainId !== 11155111) {
-          toast.error('Please switch to Sepolia testnet');
-        } else if (account && provider) {
-          // Refresh balances on correct network
-          fetchBalances(provider, account);
+      const handleChainChanged = (chainId) => {
+        console.log('Network changed to:', chainId);
+        if (chainId !== TARGET_CHAIN_ID) {
+          disconnect(); // Disconnect if switched away from Base
+          toast.error(`Please switch to ${TARGET_NETWORK_NAME} network`);
+        } else {
+          // Re-fetch data if switched back to Base
+          connect(); 
         }
       };
       

@@ -6,7 +6,7 @@ import FireParticles from './FireParticles';
 
 // --- Launch Control Flag --- 
 // Set to true to enable wallet connection for launch
-const isLaunchReady = false;
+const isLaunchReady = true;
 // ---------------------------
 
 export const Navbar = ({ onTabChange, activeTab }) => {
