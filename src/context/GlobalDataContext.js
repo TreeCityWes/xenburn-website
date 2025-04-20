@@ -316,7 +316,7 @@ export const GlobalDataProvider = ({ children }) => {
     try {
       console.log("Loading stats for account", account, "using minter:", minterContract?.address);
       
-      let statsData, globalBurnRank;
+      let statsData, globalBurnRank, globalStatsData;
       try {
         console.log("Calling minterContract.getStats...");
         statsData = await minterContract.getStats(account);
@@ -325,18 +325,17 @@ export const GlobalDataProvider = ({ children }) => {
         console.log("Calling minterContract.globalBurnRank...");
         globalBurnRank = await minterContract.globalBurnRank();
         console.log("Raw globalBurnRank return:", globalBurnRank);
+        
+        console.log("Calling minterContract.getGlobalStats...");
+        globalStatsData = await minterContract.getGlobalStats(); 
+        console.log("Raw getGlobalStats return:", globalStatsData);
 
       } catch (contractCallError) {
-        console.error("ERROR during getStats or globalBurnRank call:", contractCallError);
+        console.error("ERROR during stats contract calls:", contractCallError);
         setStats(prev => ({ ...prev, loading: false, error: `Stats contract call failed: ${contractCallError.message}` }));
         return; // Stop execution if essential stats calls fail
       }
       
-      // Log the raw return values for debugging (moved after successful calls)
-      // console.log("Raw getStats return:", statsData);
-      // console.log("Raw globalXburnBurned from getStats:", statsData.globalXburnBurned);
-      // console.log("Raw globalBurnRank return:", globalBurnRank);
-
       let xenSupply = '0';
       try {
         console.log("Checking baseContract before calling totalSupply:", baseContract);
@@ -400,6 +399,8 @@ export const GlobalDataProvider = ({ children }) => {
         totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned, 18),
         totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply, 18),
         totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned, 18),
+        globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18),
+        currentAMP: globalStatsData?.currentAMP?.toString() || '0',
         globalBurnRank: globalBurnRank.toString(),
         userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount, 18),
         userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance, 18),
@@ -416,6 +417,8 @@ export const GlobalDataProvider = ({ children }) => {
           totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned, 18),
           totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply, 18),
           totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned, 18),
+          globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18),
+          currentAMP: globalStatsData?.currentAMP?.toString() || '0',
           globalBurnRank: globalBurnRank.toString(),
           userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount, 18),
           userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance, 18),
