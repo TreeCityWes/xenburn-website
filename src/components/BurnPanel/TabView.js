@@ -13,7 +13,6 @@ const TabView = ({ activeTab, setActiveTab }) => {
     { id: 'burnXEN', label: 'Burn XEN' },
     { id: 'burnXBURN', label: 'Burn XBURN' },
     { id: 'swapBurn', label: 'Swap & Burn' },
-    { id: 'swap', label: 'Swap' }
   ];
 
   return (

@@ -95,94 +95,55 @@ const StatsPanel = () => {
     });
   }, [balances, stats, xenApprovalRaw, xburnApprovalRaw]);
 
-  // Fetch additional stats when account changes
-  useEffect(() => {
-    if (account) {
-      loadBalances();
-      loadStats();
-    }
-  }, [account, loadBalances, loadStats]);
+  // Helper to render a single stat item
+  const renderStatItem = (label, value, formatOptions = {}, className = '') => (
+    <div className={`stat-item ${className}`}>
+      <span className="stat-label">{label}</span>
+      <span className="stat-value">{formatNumber(value, formatOptions)}</span>
+    </div>
+  );
+
+  // Helper to render a section
+  const renderSection = (title, children) => (
+    <div className="stats-section">
+      <h4 className="section-title">{title}</h4>
+      <div className="section-content">
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="stats-panel-container">
-      <div className="stats-panel">
+    <div className="stats-panel-container-redesigned">
+      <div className="stats-panel-card">
+        <FireParticles width={500} height={600} intensity={0.15} isBackground={true} />
+        
         <div className="stats-header">
           <h2>USER STATS & INFO</h2>
         </div>
         
-        <div className="stats-grid">
-          <div className="stat-boxes">
-            {/* XEN Stats */}
-            <div className="stat-box xen">
-              <div className="stat-content">
-                <div className="stat-title">XEN Balance</div>
-                <div className="stat-value">{formatNumber(displayStats.xenBalance)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="xen" />
-            </div>
-            
-            <div className="stat-box xen">
-              <div className="stat-content">
-                <div className="stat-title">XEN Approved</div>
-                <div className="stat-value">{formatNumber(displayStats.xenApproval)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="xen" />
-            </div>
-            
-            <div className="stat-box xen">
-              <div className="stat-content">
-                <div className="stat-title">User XEN 🔥</div>
-                <div className="stat-value">{formatNumber(displayStats.userXenBurned)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="xen" />
-            </div>
-            
-            {/* XBURN Stats */}
-            <div className="stat-box xburn">
-              <div className="stat-content">
-                <div className="stat-title">XBURN Balance</div>
-                <div className="stat-value">{formatNumber(displayStats.xburnBalance)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.7} type="xburn" />
-            </div>
-            
-            <div className="stat-box xburn">
-              <div className="stat-content">
-                <div className="stat-title">XBURN Approved</div>
-                <div className="stat-value">{formatNumber(displayStats.xburnApproval)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.7} type="xburn" />
-            </div>
-            
-            <div className="stat-box xburn">
-              <div className="stat-content">
-                <div className="stat-title">User XBURN 🔥</div>
-                <div className="stat-value">{formatNumber(displayStats.userXburnBurned)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.7} type="xburn" />
-            </div>
-            
-            {/* Supply Stats */}
-            <div className="stat-box supply">
-              <div className="stat-content">
-                <div className="stat-title">XEN Supply</div>
-                <div className="stat-value">{formatNumber(displayStats.xenSupply)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.5} type="supply" />
-            </div>
-            
-            <div className="stat-box supply">
-              <div className="stat-content">
-                <div className="stat-title">XBURN Supply</div>
-                <div className="stat-value">{formatNumber(displayStats.xburnSupply)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.5} type="supply" />
-            </div>
-            
-            <div className="stat-box supply">
-              <div className="stat-content">
-                <div className="stat-title">Contract</div>
-                <div className="stat-value">
+        <div className="stats-content-area">
+          {renderSection("User Wallet & Burn Activity", (
+            <>
+              {renderStatItem("XEN Balance", displayStats.xenBalance)}
+              {renderStatItem("XEN Approved", displayStats.xenApproval, { isApproved: true })}
+              {renderStatItem("User XEN Burned", displayStats.userXenBurned, {}, 'highlight-burn')}
+              {renderStatItem("XBURN Balance", displayStats.xburnBalance)}
+              {renderStatItem("XBURN Approved", displayStats.xburnApproval, { isApproved: true })}
+              {renderStatItem("User XBURN Burned", displayStats.userXburnBurned, {}, 'highlight-burn')}
+            </>
+          ))}
+
+          {renderSection("Token & Pool Info", (
+            <>
+              {renderStatItem("XEN Supply", displayStats.xenSupply)}
+              {renderStatItem("XBURN Supply", displayStats.xburnSupply)}
+              {renderStatItem("XEN in Pool", displayStats.xenInPool)}
+              {renderStatItem("XBURN in Pool", displayStats.xburnInPool)}
+              {renderStatItem("XEN per XBURN", displayStats.xenPerXburn, { isRatio: true })}
+              <div className="stat-item">
+                <span className="stat-label">Contract</span>
+                <span className="stat-value">
                   <a 
                     href="https://sepolia.etherscan.io/address/0x964db60EfdF9FDa55eA62f598Ea4c7a9cD48F189"
                     target="_blank"
@@ -191,61 +152,18 @@ const StatsPanel = () => {
                   >
                     $XBURN
                   </a>
-                </div>
+                </span>
               </div>
-              <FireParticles width="100%" height="100%" intensity={0.5} type="supply" />
-            </div>
-            
-            {/* Pool Stats */}
-            <div className="stat-box pool">
-              <div className="stat-content">
-                <div className="stat-title">XEN in Pool</div>
-                <div className="stat-value">{formatNumber(displayStats.xenInPool)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="pool" />
-            </div>
-            
-            <div className="stat-box pool">
-              <div className="stat-content">
-                <div className="stat-title">XBURN in Pool</div>
-                <div className="stat-value">{formatNumber(displayStats.xburnInPool)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="pool" />
-            </div>
-            
-            <div className="stat-box pool">
-              <div className="stat-content">
-                <div className="stat-title">XEN per XBURN</div>
-                <div className="stat-value">{formatNumber(displayStats.xenPerXburn, true)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.6} type="pool" />
-            </div>
-            
-            {/* Global Stats */}
-            <div className="stat-box global">
-              <div className="stat-content">
-                <div className="stat-title">Global XEN 🔥</div>
-                <div className="stat-value">{formatNumber(displayStats.globalXenBurned)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.8} type="global" />
-            </div>
-            
-            <div className="stat-box global">
-              <div className="stat-content">
-                <div className="stat-title">Global XBURN 🔥</div>
-                <div className="stat-value">{formatNumber(displayStats.globalXburnBurned)}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.8} type="global" />
-            </div>
-            
-            <div className="stat-box ratio">
-              <div className="stat-content">
-                <div className="stat-title">Burn Ratio</div>
-                <div className="stat-value">{displayStats.burnRatio}</div>
-              </div>
-              <FireParticles width="100%" height="100%" intensity={0.8} type="global" />
-            </div>
-          </div>
+            </>
+          ))}
+
+          {renderSection("Global Burn Stats", (
+            <>
+              {renderStatItem("Global XEN Burned", displayStats.globalXenBurned, {}, 'highlight-burn')}
+              {renderStatItem("Global XBURN Burned", displayStats.globalXburnBurned, {}, 'highlight-burn')}
+              {renderStatItem("Burn Ratio", displayStats.burnRatio)}
+            </>
+          ))}
         </div>
       </div>
     </div>

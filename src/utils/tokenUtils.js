@@ -266,4 +266,40 @@ export const formatNumber = (value, options = {}) => {
     console.error('Error formatting number:', error);
     return '0';
   }
+};
+
+/**
+ * Safely compares two values (likely amounts or balances) as BigNumbers.
+ * Handles potential string or number inputs and converts them to BigNumber with 18 decimals.
+ * @param {string|number|BigNumber} amount - The amount to compare.
+ * @param {string|number|BigNumber} balance - The balance to compare against.
+ * @returns {boolean} True if amount is greater than balance, false otherwise or on error.
+ */
+export const safelyCompareWithBalance = (amount, balance) => {
+  try {
+    // Ensure inputs are valid before parsing
+    if (amount === null || amount === undefined || balance === null || balance === undefined) {
+      return false;
+    }
+
+    // Convert values to string to handle different input types consistently
+    const amountStr = String(amount);
+    const balanceStr = String(balance);
+
+    // Handle potentially empty strings or invalid numbers early
+    if (amountStr.trim() === '' || balanceStr.trim() === '' || isNaN(parseFloat(amountStr)) || isNaN(parseFloat(balanceStr))) {
+      return false;
+    }
+
+    // Convert string values to BigNumber format (assuming 18 decimals)
+    const amountBN = ethers.utils.parseUnits(amountStr, 18);
+    const balanceBN = ethers.utils.parseUnits(balanceStr, 18);
+    
+    // Perform the comparison
+    return amountBN.gt(balanceBN);
+  } catch (error) {
+    // Log the error but return false for safety
+    console.error('Error comparing amounts with safelyCompareWithBalance:', error, { amount, balance });
+    return false;
+  }
 }; 

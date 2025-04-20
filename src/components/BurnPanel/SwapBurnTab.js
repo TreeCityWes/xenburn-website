@@ -186,7 +186,7 @@ const SwapBurnTab = ({
             <FireParticles width={300} height={100} intensity={0.3} isBackground={true} />
           </div>
           <button
-            className="swap-burn-button"
+            className="burn-button"
             onClick={handleSwapAndBurn}
             disabled={isLoading || !progress || !isThresholdReached()}
           >

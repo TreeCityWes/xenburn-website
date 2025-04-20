@@ -208,8 +208,13 @@
 }
 
 .nav-tab.active {
-  background-color: rgba(255, 92, 0, 0.7);
+  /* Use the flame gradient for a stronger effect */
+  background: var(--gradient-flame);
   color: white;
+  /* Add a subtle glow */
+  box-shadow: 0 0 15px rgba(255, 80, 32, 0.4), 0 0 5px rgba(255, 80, 32, 0.6);
+  /* Optional: slightly larger */
+  transform: scale(1.05);
 }
 
 /* Tab Navigation Styles for App.js */

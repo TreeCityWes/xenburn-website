@@ -38,6 +38,29 @@ export const Navbar = ({ onTabChange, activeTab }) => {
           >
             Stats
           </button>
+          <div className="nav-left">
+            <span className="nav-brand">XBURN</span>
+            <span className="nav-dot">·</span>
+            <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">@BurnMoreXen</a>
+            <span className="nav-dot">·</span>
+            <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">Telegram</a>
+            <span className="nav-dot">·</span>
+            <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
+            <span className="nav-dot">·</span>
+            <a 
+              href="/XBurnAudit-April2025.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="nav-link external-link" 
+            >
+              2025 AI Audit
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '4px', opacity: 0.7 }}>
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
         </div>
 
         <div className="wallet-section">

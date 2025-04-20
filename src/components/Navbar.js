@@ -18,8 +18,8 @@ export const Navbar = ({ onTabChange, activeTab }) => {
   // Check if the contract is ready
   useEffect(() => {
     const checkContract = async () => {
-      if (account) {
-        const contract = xenftBurnContract();
+      if (account && xenftBurnContract && typeof xenftBurnContract === 'object') {
+        const contract = xenftBurnContract;
         setContractReady(!!contract);
       } else {
         setContractReady(false);
@@ -75,7 +75,7 @@ export const Navbar = ({ onTabChange, activeTab }) => {
           <span className="nav-dot">·</span>
           <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
           <span className="nav-dot">·</span>
-          <span className="nav-text">Launch: Q2 2025</span>
+          <a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer" className="nav-link">Audit</a>
         </div>
 
         {account ? (

@@ -32,27 +32,6 @@ function App() {
               <img src="/xenburn.png" alt="XENBURNER" />
             </div>
             
-            <div className="tab-navigation">
-              <button 
-                className={`tab-button ${activeTab === 'burn' ? 'active' : ''}`}
-                onClick={() => handleTabChange('burn')}
-              >
-                Burn XEN
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'nfts' ? 'active' : ''}`}
-                onClick={() => handleTabChange('nfts')}
-              >
-                XBURN NFTs
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'stats' ? 'active' : ''}`}
-                onClick={() => handleTabChange('stats')}
-              >
-                Stats
-              </button>
-            </div>
-            
             <main className="main-content">
               {activeTab === 'burn' && (
                 <BurnPanelProvider>

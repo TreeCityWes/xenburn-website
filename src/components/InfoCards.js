@@ -18,6 +18,18 @@ export const InfoCards = () => {
       </div>
 
       <div className="info-card">
+        <FireParticles width={200} height={100} intensity={0.2} type="audit" />
+        <div className="info-card-content">
+          <h3>AI Audit</h3>
+          <p>Review the automated audit conducted on the smart contracts</p>
+        </div>
+        <a href="/XBurnAudit-April2025.pdf" className="info-button" target="_blank" rel="noopener noreferrer">
+          <span>VIEW PDF</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <div className="info-card">
         <FireParticles width={200} height={100} intensity={0.2} type="xburn" />
         <div className="info-card-content">
           <h3>Fire Follow</h3>

@@ -434,3 +434,26 @@
   pointer-events: none;
   overflow: hidden;
 }
+
+/* Add subtle glow effect to buttons and inputs on hover/focus */
+button:hover:not(:disabled),
+input[type="text"]:hover:not(:disabled),
+input[type="number"]:hover:not(:disabled),
+input[type="text"]:focus:not(:disabled),
+input[type="number"]:focus:not(:disabled) {
+  box-shadow: 0 0 12px rgba(255, 80, 32, 0.3), 0 0 4px rgba(255, 80, 32, 0.5);
+  /* Ensure transition is applied for smoothness */
+  transition: box-shadow var(--transition-normal), transform var(--transition-fast), background var(--transition-normal);
+}
+
+/* Ensure primary buttons also get the effect */
+.connect-wallet:hover:not(:disabled),
+.primary-button:hover:not(:disabled) { /* Assuming a .primary-button class exists or might be added */
+  box-shadow: 0 0 15px rgba(255, 80, 32, 0.4), 0 0 5px rgba(255, 80, 32, 0.6);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

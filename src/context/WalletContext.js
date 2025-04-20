@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import xenAbi from '../contracts/xen.json';
@@ -14,7 +14,8 @@ const WalletContext = createContext();
 
 // Global request tracker to limit requests across the app
 let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL = 500; // Reduced from 2000ms to 500ms for faster requests
+// Increased interval slightly to further reduce pressure
+const MIN_REQUEST_INTERVAL = 750; // Increased from 500ms 
 let requestQueue = [];
 let isProcessingQueue = false;
 // Track if user manually disconnected to prevent auto-reconnect
@@ -23,7 +24,6 @@ let userManuallyDisconnected = false;
 // Global flags to prevent duplicate fetches
 let lastBalanceFetchTime = 0;
 const MIN_BALANCE_FETCH_INTERVAL = 5000; // Reduced from 60000ms to 5000ms (5 seconds)
-let isAutoConnectAttempted = false; // Flag to ensure we only auto-connect once
 
 // Queue system for RPC requests to prevent overwhelming the provider
 const enqueueRequest = (requestFn) => {
@@ -57,8 +57,8 @@ const processQueue = async () => {
     reject(error);
   } finally {
     isProcessingQueue = false;
-    // Process next request after a small delay
-    setTimeout(processQueue, 200);
+    // Process next request after a slightly longer delay
+    setTimeout(processQueue, 300); // Increased from 200ms
   }
 };
 
@@ -79,6 +79,7 @@ export function WalletProvider({ children }) {
   const [xburnBalanceRaw, setXburnBalanceRaw] = useState(null);
   const [xenApprovalRaw, setXenApprovalRaw] = useState(null);
   const [xburnApprovalRaw, setXburnApprovalRaw] = useState(null);
+  const initialCheckDone = useRef(false); // Ref to track if initial check ran
   
   // Safe RPC request function 
   const safeRequest = useCallback(async (requestFn, errorMsg = 'RPC request failed') => {
@@ -184,7 +185,6 @@ export function WalletProvider({ children }) {
   
   // Connect function that handles wallet connection
   const connect = useCallback(async (isAutoConnect = false) => {
-    // Don't connect if we're already in the process of connecting
     if (connecting) {
       console.log('Already connecting, skipping duplicate request');
       return;
@@ -196,15 +196,9 @@ export function WalletProvider({ children }) {
       return;
     }
     
-    // Mark that we've attempted auto-connect
-    if (isAutoConnect) {
-      isAutoConnectAttempted = true;
-    }
-    
     setConnecting(true);
     
     try {
-      // Check if ethereum is available in the window object
       if (typeof window.ethereum === 'undefined') {
         if (!isAutoConnect) {
           toast.error('Please install a Web3 wallet like MetaMask or Rabby');
@@ -213,47 +207,59 @@ export function WalletProvider({ children }) {
         return;
       }
       
-      // Request accounts from the wallet
       let accounts;
       try {
-        if (!isAutoConnect) {
-          // Force prompt for wallet connection 
+        // Always use eth_accounts first for auto-connect to check permission silently
+        if (isAutoConnect) {
+          accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (!accounts || accounts.length === 0) {
+            // No permission or no accounts available silently
+            console.log('Auto-connect failed: No accounts found silently.');
+            // Clear local storage flag if auto-connect fails
+            localStorage.removeItem('walletConnected'); 
+            setConnecting(false);
+            return;
+          }
+        } else {
+          // Prompt user for connection if not auto-connecting
           console.log('Requesting accounts...');
           accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
           console.log('Accounts received:', accounts);
-          
-          // Reset the manual disconnect flag when user actively connects
-          userManuallyDisconnected = false;
-          
-          // Store connection preference for future visits
-          localStorage.setItem('walletConnected', 'true');
-        } else {
-          // Just check if we already have permission without prompting
-          accounts = await window.ethereum.request({ method: 'eth_accounts' });
         }
+
       } catch (requestError) {
         console.error('Error requesting accounts:', requestError);
         if (!isAutoConnect) {
           toast.error(`Wallet connection rejected: ${requestError.message || 'User rejected the request'}`);
         }
+        // Clear local storage flag on error during connection attempt
+        localStorage.removeItem('walletConnected'); 
         setConnecting(false);
         return;
       }
       
-      // Check if accounts were returned
       if (!accounts || accounts.length === 0) {
+        // This case should ideally be caught above for auto-connect
         if (!isAutoConnect) {
-          toast.error('Please connect to your wallet');
+          toast.error('No accounts found. Please connect to your wallet.');
         }
+        localStorage.removeItem('walletConnected'); // Clear flag if connect fails
         setConnecting(false);
         return;
       }
       
-      // Create provider from the user's wallet
+      // Successfully connected or reconnected
+      console.log('Wallet connected/reconnected with account:', accounts[0]);
+
+      // Reset the manual disconnect flag when user actively connects or auto-connects successfully
+      userManuallyDisconnected = false;
+      // Store connection preference persistently
+      localStorage.setItem('walletConnected', 'true');
+
       const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+      const network = await ethersProvider.getNetwork();
       
       // Check network
-      const network = await ethersProvider.getNetwork();
       if (network.chainId !== 11155111) {
         try {
           // Attempt to switch to Sepolia
@@ -263,6 +269,7 @@ export function WalletProvider({ children }) {
           });
           // Reload the page after network switch
           window.location.reload();
+          localStorage.removeItem('walletConnected'); // Remove flag if network switch fails
           setConnecting(false);
           return;
         } catch (switchError) {
@@ -289,18 +296,19 @@ export function WalletProvider({ children }) {
               return;
             } catch (addError) {
               toast.error('Failed to add Sepolia network');
+              localStorage.removeItem('walletConnected'); // Remove flag if network switch fails
               setConnecting(false);
               return;
             }
           } else {
             toast.error('Please switch to Sepolia network');
+            localStorage.removeItem('walletConnected'); // Remove flag if network switch fails
             setConnecting(false);
             return;
           }
         }
       }
       
-      // Get signer from provider
       const ethersSigner = ethersProvider.getSigner();
       
       // Update state
@@ -309,70 +317,67 @@ export function WalletProvider({ children }) {
       setAccount(accounts[0]);
       setChainId(network.chainId);
       
-      // Clear any existing interval first to prevent duplicates
+      // Clear any existing interval first
       if (balanceInterval) {
         clearInterval(balanceInterval);
         setBalanceInterval(null);
       }
       
-      // Fetch balances only once on initial connection
-      fetchBalances(ethersProvider, accounts[0]);
+      // Fetch balances immediately on connection
+      fetchBalances(ethersProvider, accounts[0], true); // Force refresh on connect
       
       if (!isAutoConnect) {
         toast.success('Wallet connected successfully');
       }
-      console.log('Wallet connected:', accounts[0]);
+      console.log('Wallet connection state updated for:', accounts[0]);
       
     } catch (error) {
-      console.error('Error in connect:', error);
+      console.error('Error in connect function:', error);
+      localStorage.removeItem('walletConnected'); // Clear flag on any unexpected error
       if (!isAutoConnect) {
-        toast.error(`Failed to connect: ${error.message}`);
+        toast.error(`Failed to connect: ${error.message || 'Unknown error'}`);
       }
     } finally {
       setConnecting(false);
     }
   }, [connecting, fetchBalances, balanceInterval]);
   
-  // Check if already connected on initial load
+  // Check connection on initial load using localStorage
   useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        // Skip if already attempted or user manually disconnected
-        if (isAutoConnectAttempted || userManuallyDisconnected) return;
-        
-        // Mark that we've attempted auto-connect
-        isAutoConnectAttempted = true;
-        
-        if (typeof window.ethereum !== 'undefined') {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts && accounts.length > 0) {
-            // User has already authorized this site
-            connect(true); // Pass true to indicate this is an auto-connect
-          }
-        }
-      } catch (error) {
-        console.error("Failed to check initial connection:", error);
+    // Ensure this runs only ONCE on mount
+    if (initialCheckDone.current) return;
+    initialCheckDone.current = true;
+
+    const checkInitialConnection = async () => {
+      if (userManuallyDisconnected) { // Skip if user explicitly disconnected last time
+        console.log('Skipping auto-reconnect: User manually disconnected.');
+        return;
+      }
+
+      const previouslyConnected = localStorage.getItem('walletConnected') === 'true';
+      console.log('Checking initial connection, previouslyConnected:', previouslyConnected);
+
+      if (previouslyConnected && typeof window.ethereum !== 'undefined') {
+          console.log('Attempting auto-reconnect...');
+          await connect(true); // Pass true to indicate auto-connect
       }
     };
-    
-    // Slight delay to ensure page is fully loaded
-    setTimeout(checkConnection, 1000);
-    
-    // Clean up function
-    return () => {
-      isAutoConnectAttempted = true; // Prevent reconnection if component remounts
-    };
-  }, [connect]);
 
-  // Disconnect function that properly disconnects and prevents auto-reconnect
+    // Delay slightly to let wallet providers inject
+    const timeoutId = setTimeout(checkInitialConnection, 500); 
+
+    return () => clearTimeout(timeoutId); // Cleanup timeout
+  // Add connect to dependency array as it's used inside checkInitialConnection
+  }, [connect]); // connect is stable due to useCallback, add to satisfy lint rule
+
+  // Disconnect function
   const disconnect = useCallback(() => {
     console.log('Disconnecting wallet...');
     
     // Set manual disconnect flag
     userManuallyDisconnected = true;
-    isAutoConnectAttempted = true;
     
-    // Clear all connection state
+    // Clear connection state
     setAccount(null);
     setSigner(null);
     setChainId(null);
@@ -382,25 +387,29 @@ export function WalletProvider({ children }) {
     setProvider(null);
     setXburnMinterContract(null);
     setNftContract(null);
+    // Clear raw balances and approvals as well
+    setXenBalanceRaw(null);
+    setXburnBalanceRaw(null);
+    setXenApprovalRaw(null);
+    setXburnApprovalRaw(null);
     
-    // Clear the stored provider preference
+    // Clear the stored connection preference
     localStorage.removeItem('walletConnected');
-    localStorage.removeItem('WALLET_RECONNECT');
+    localStorage.removeItem('WALLET_RECONNECT'); // Keep removing this if used elsewhere
     
-    // Clear any reconnection attempts
+    // Clear any reconnection attempts timeout
     if (reconnectTimeout) {
       clearTimeout(reconnectTimeout);
       setReconnectTimeout(null);
     }
     
-    // Make sure we're not using the cached provider
+    // Clear other potential wallet provider cache
     window.localStorage.removeItem('walletconnect');
     window.localStorage.removeItem('WALLETCONNECT_DEEPLINK_CHOICE');
     
-    // Reset connection state
     setConnecting(false);
     
-    // Stop the polling interval for balances
+    // Stop the balance polling interval
     if (balanceInterval) {
       clearInterval(balanceInterval);
       setBalanceInterval(null);
@@ -408,7 +417,7 @@ export function WalletProvider({ children }) {
     
     toast.success('Wallet disconnected successfully');
     console.log('Wallet disconnected successfully');
-  }, [reconnectTimeout, balanceInterval]);
+  }, [reconnectTimeout, balanceInterval]); // balanceInterval dependency added
 
   // Add effect to set up event listeners for wallet changes
   useEffect(() => {
@@ -451,6 +460,7 @@ export function WalletProvider({ children }) {
         window.ethereum.removeListener('chainChanged', handleChainChanged);
       };
     }
+    // Ensure dependencies are stable
   }, [account, provider, disconnect, fetchBalances]);
 
   // Return the provider with context values
