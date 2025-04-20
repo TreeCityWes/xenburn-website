@@ -251,7 +251,10 @@ const BurnPanel = () => {
       toast.error('Please connect your wallet');
       return;
     }
-    if (!progress || progress.percentage < 100) {
+    // Directly compare accumulated vs threshold, adding tolerance
+    const accumulatedNum = parseFloat(progress?.accumulated || '0');
+    const thresholdNum = parseFloat(progress?.threshold || '0');
+    if (!progress || accumulatedNum < (thresholdNum * 0.999)) { 
        toast.error('Threshold not reached yet for Swap & Burn.');
        return;
     }
