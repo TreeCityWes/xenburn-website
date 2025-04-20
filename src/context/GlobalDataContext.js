@@ -357,25 +357,9 @@ export const GlobalDataProvider = ({ children }) => {
       let xburnInPool = '0';
       
       try {
-        // Router ABI for getting LP pair (Keep ABI as is)
-        const routerAbi = ["function factory() external view returns (address)"];
+        // Removed factory/getPair logic - Directly use the known LP address
+        console.log("Using provided LP Pair address:", XBURN_XEN_LP_ADDRESS);
         
-        // Create router contract instance using imported address
-        const routerContract = new ethers.Contract(UNISWAP_ROUTER_ADDRESS, routerAbi, provider);
-        
-        // Get factory address
-        const factoryAddress = await routerContract.factory();
-        console.log("Factory address:", factoryAddress);
-        
-        // Create factory contract instance (Keep ABI as is)
-        const factoryAbi = ["function getPair(address, address) external view returns (address)"];
-        const factoryContract = new ethers.Contract(factoryAddress, factoryAbi, provider);
-        
-        // Get LP pair address using imported XEN and XBURN addresses
-        const lpPairAddress = await factoryContract.getPair(XEN_ADDRESS, XBURN_TOKEN_ADDRESS);
-        console.log("LP Pair address:", lpPairAddress);
-        
-        // Use the directly provided LP address for reserves check for consistency
         if (XBURN_XEN_LP_ADDRESS && XBURN_XEN_LP_ADDRESS !== ethers.constants.AddressZero) {
           // LP Pair ABI (Keep ABI as is)
           const lpPairAbi = [
@@ -405,6 +389,8 @@ export const GlobalDataProvider = ({ children }) => {
           
           console.log("XEN in pool:", ethers.utils.formatUnits(xenInPool, 18));
           console.log("XBURN in pool:", ethers.utils.formatUnits(xburnInPool, 18));
+        } else {
+          console.log("LP Pair address is zero or not provided.");
         }
       } catch (error) {
         console.error("Error fetching LP pool data:", error);
