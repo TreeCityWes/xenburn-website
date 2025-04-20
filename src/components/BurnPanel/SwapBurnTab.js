@@ -73,22 +73,19 @@ const SwapBurnTab = ({
     return Math.min(100, Math.max(0, (accumulated / threshold) * 100));
   };
 
-  // Check if threshold is reached - force to true since user is well above threshold
+  // Check if threshold is reached
   const isThresholdReached = () => {
-    // Always return true since we know the user is well above threshold
-    return true;
+    // Restored original logic:
+    if (!progress || !progress.accumulated || !progress.threshold) {
+      return false;
+    }
     
-    // Original code:
-    // if (!progress || !progress.accumulated || !progress.threshold) {
-    //   return false;
-    // }
-    // 
-    // const accumulated = parseFloat(progress.accumulated);
-    // const threshold = parseFloat(progress.threshold);
-    // 
-    // // Add some tolerance for floating point comparison
-    // // Consider it reached if it's at least 99.9% of the threshold
-    // return accumulated >= (threshold * 0.999);
+    const accumulated = parseFloat(progress.accumulated);
+    const threshold = parseFloat(progress.threshold);
+    
+    // Add some tolerance for floating point comparison
+    // Consider it reached if it's at least 99.9% of the threshold
+    return accumulated >= (threshold * 0.999);
   };
 
   return (

@@ -8,42 +8,65 @@ import './StatsPanel.css';
 // Format large numbers with K, M, B, T suffixes and improved decimal handling
 const formatNumber = (num, options = {}) => {
   const { isRatio = false, isApproved = false, maxDecimals = 2 } = options;
+  // Add logging
+  console.log(`formatNumber Input: num=${num}, type=${typeof num}, options=`, options);
 
   if (isApproved && typeof num === 'string' && num === 'MAX') {
     return 'MAX';
   }
 
   if (num === null || num === undefined || num === 'NaN' || num === '') {
+      // console.log("formatNumber: Handled null/undefined/NaN/empty");
       return isRatio ? '0.000000' : '0.00';
   }
 
   let numberString = String(num); // Work with the string representation
-
-  // Remove commas if present (from previous formatting attempts potentially)
   numberString = numberString.replace(/,/g, ''); 
 
   const n = parseFloat(numberString);
   
   if (isNaN(n)) {
-      console.warn("formatNumber received NaN for input:", num);
+      // console.warn("formatNumber received NaN for input:", num);
       return isRatio ? '0.000000' : '0.00';
   }
+  console.log(`formatNumber Parsed n: ${n}`);
 
   // Handle specific cases first
-  if (isRatio) return n.toFixed(6);
+  if (isRatio) {
+      // console.log(`formatNumber Output (Ratio): ${n.toFixed(6)}`);
+      return n.toFixed(6);
+  }
 
   // Suffix formatting with adjusted decimals
-  if (n >= 1e12) return `${(n / 1e12).toFixed(maxDecimals)}T`;
-  if (n >= 1e9) return `${(n / 1e9).toFixed(maxDecimals)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(maxDecimals)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(maxDecimals)}K`;
+  if (n >= 1e12) {
+      const val = `${(n / 1e12).toFixed(maxDecimals)}T`;
+      console.log(`formatNumber Output (T): ${val}`);
+      return val;
+  }
+  if (n >= 1e9) {
+      const val = `${(n / 1e9).toFixed(maxDecimals)}B`;
+      console.log(`formatNumber Output (B): ${val}`);
+      return val;
+  }
+  if (n >= 1e6) {
+      const val = `${(n / 1e6).toFixed(maxDecimals)}M`;
+      console.log(`formatNumber Output (M): ${val}`);
+      return val;
+  }
+  if (n >= 1e3) {
+      const val = `${(n / 1e3).toFixed(maxDecimals)}K`;
+      console.log(`formatNumber Output (K): ${val}`);
+      return val;
+  }
 
   // Default formatting for smaller numbers - use dynamic decimals
-  const dynamicDecimals = n === 0 ? 2 : Math.max(2, Math.min(6, maxDecimals + (n < 1 ? 4 : 0))); // Show more for < 1
-  return n.toLocaleString(undefined, {
+  const dynamicDecimals = n === 0 ? 2 : Math.max(2, Math.min(6, maxDecimals + (n < 1 ? 4 : 0))); 
+  const val = n.toLocaleString(undefined, {
     minimumFractionDigits: 2, 
     maximumFractionDigits: dynamicDecimals 
   });
+  console.log(`formatNumber Output (Default): ${val}`);
+  return val;
 };
 
 const StatsPanel = () => {
