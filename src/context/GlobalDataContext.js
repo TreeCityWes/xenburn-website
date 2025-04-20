@@ -65,11 +65,20 @@ export const GlobalDataProvider = ({ children }) => {
     lastFetched: 0
   });
 
+  // Add state for DexScreener data
+  const [xenPrice, setXenPrice] = useState('0');
+  const [xburnPrice, setXburnPrice] = useState('0');
+  const [poolTvl, setPoolTvl] = useState('0');
+  const [loadingPrices, setLoadingPrices] = useState(false);
+  const [priceError, setPriceError] = useState(null);
+
   // --- Debounce Timestamps using useRef ---
   const lastNftFetchTime = useRef(0);
   const MIN_NFT_FETCH_INTERVAL = 5000; 
   const lastStatsFetchTime = useRef(0);
   const MIN_STATS_FETCH_INTERVAL = 10000;
+  const lastPriceFetchTime = useRef(0);
+  const MIN_PRICE_FETCH_INTERVAL = 30000; // Fetch prices less often (e.g., 30 seconds)
 
   // --- Contract Instance Getters (useCallback) ---
   const xenftContract = useCallback(() => {
@@ -395,38 +404,28 @@ export const GlobalDataProvider = ({ children }) => {
         console.error("Error fetching LP pool data:", error);
       }
       
-      console.log("Stats loaded:", {
-        totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned, 18),
-        totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply, 18),
-        totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned, 18),
-        globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18),
-        currentAMP: globalStatsData?.currentAMP?.toString() || '0',
-        globalBurnRank: globalBurnRank.toString(),
-        userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount, 18),
-        userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance, 18),
-        userXburnBurned: ethers.utils.formatUnits(statsData.userXburnBurnedAmount, 18),
-        xenSupply: ethers.utils.formatUnits(xenSupply, 18),
-        xenInPool: ethers.utils.formatUnits(xenInPool, 18),
-        xburnInPool: ethers.utils.formatUnits(xburnInPool, 18)
-      });
+      // --- Construct the final stats object --- 
+      const finalStatsData = {
+        totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned || '0', 18),
+        totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply || '0', 18), // totalXburnSupply from getStats
+        totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned || '0', 18),
+        globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18), // Get from getStats result
+        currentAMP: globalStatsData?.currentAMP?.toString() || '0', // Get from getGlobalStats result
+        globalBurnRank: globalBurnRank?.toString() || '0', // Get from globalBurnRank result
+        userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount || '0', 18),
+        userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance || '0', 18), // userXburnBalance from getStats
+        userXburnBurned: ethers.utils.formatUnits(statsData.userXburnBurnedAmount || '0', 18),
+        xenSupply: ethers.utils.formatUnits(xenSupply || '0', 18),
+        xenInPool: ethers.utils.formatUnits(xenInPool || '0', 18),
+        xburnInPool: ethers.utils.formatUnits(xburnInPool || '0', 18)
+      };
+
+      console.log("Stats loaded:", finalStatsData); // Log the object being set
       
       setStats({
         loading: false,
         error: null,
-        data: {
-          totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned, 18),
-          totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply, 18),
-          totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned, 18),
-          globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18),
-          currentAMP: globalStatsData?.currentAMP?.toString() || '0',
-          globalBurnRank: globalBurnRank.toString(),
-          userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount, 18),
-          userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance, 18),
-          userXburnBurned: ethers.utils.formatUnits(statsData.userXburnBurnedAmount, 18),
-          xenSupply: ethers.utils.formatUnits(xenSupply, 18),
-          xenInPool: ethers.utils.formatUnits(xenInPool, 18),
-          xburnInPool: ethers.utils.formatUnits(xburnInPool, 18)
-        },
+        data: finalStatsData, // Set the correctly constructed object
         lastFetched: Date.now()
       });
     } catch (error) {
@@ -439,14 +438,116 @@ export const GlobalDataProvider = ({ children }) => {
     }
   }, [account, provider, xenftBurnContract, xenContract]);
 
-  // Main Data Loading Effect - Depends only on account and provider
+  // --- DexScreener Data Loading Function ---
+  const fetchDexScreenerData = useCallback(async () => {
+    // Debounce
+    const now = Date.now();
+    if (now - lastPriceFetchTime.current < MIN_PRICE_FETCH_INTERVAL) {
+      console.log('Skipping price fetch, last fetch too recent');
+      return;
+    }
+    lastPriceFetchTime.current = now;
+
+    setLoadingPrices(true);
+    setPriceError(null);
+
+    const cbxenPairAddress = "0xe28f5637d009732259fcbb5cea23488a411a5ead"; // WETH/cbXEN? 
+    const xburnPairAddress = "0x93e39bd6854d960a0c4f5b592381bb8356a2d725"; // cbXEN/XBURN
+    const dexscreenerApiBase = "https://api.dexscreener.com/latest/dex/pairs/base/";
+
+    try {
+      console.log("Fetching DexScreener data...");
+      const [cbxenResponse, xburnResponse] = await Promise.all([
+        fetch(`${dexscreenerApiBase}${cbxenPairAddress}`),
+        fetch(`${dexscreenerApiBase}${xburnPairAddress}`)
+      ]);
+
+      if (!cbxenResponse.ok || !xburnResponse.ok) {
+        console.error('Failed to fetch from DexScreener', { 
+          cbxenStatus: cbxenResponse.status, 
+          xburnStatus: xburnResponse.status 
+        });
+        throw new Error('Failed to fetch pair data from DexScreener');
+      }
+
+      const cbxenData = await cbxenResponse.json();
+      const xburnData = await xburnResponse.json();
+
+      // --- Process cbXEN Pair --- 
+      if (cbxenData.pair) {
+          // Assuming cbXEN is the baseToken in this pair - needs verification
+          // If cbXEN is quoteToken, logic needs adjustment
+          if (cbxenData.pair.baseToken?.address?.toLowerCase() === XEN_ADDRESS.toLowerCase()) {
+             setXenPrice(cbxenData.pair.priceUsd || '0');
+             console.log("Fetched cbXEN Price (as base):", cbxenData.pair.priceUsd);
+          } else if (cbxenData.pair.quoteToken?.address?.toLowerCase() === XEN_ADDRESS.toLowerCase()) {
+             // If cbXEN is quote, priceUsd is price of base in terms of quote.
+             // We need 1 / price of quote in terms of base. 
+             // Dexscreener usually prices base in terms of quote. Check API structure.
+             // For now, log a warning and keep price 0 until structure is confirmed.
+             console.warn("cbXEN is quote token in pair", cbxenPairAddress, "- Price calculation needs review.");
+             setXenPrice('0'); // Needs verification
+          } else {
+             console.warn("cbXEN address not found in base/quote token for pair", cbxenPairAddress);
+             setXenPrice('0');
+          }
+      } else {
+         console.warn("No pair data found for cbXEN address:", cbxenPairAddress);
+         setXenPrice('0');
+      }
+
+      // --- Process XBURN/cbXEN Pair --- 
+      if (xburnData.pair) {
+          // Determine XBURN price based on which token is base
+          if (xburnData.pair.baseToken?.address?.toLowerCase() === XBURN_TOKEN_ADDRESS.toLowerCase()) {
+             setXburnPrice(xburnData.pair.priceUsd || '0');
+             console.log("Fetched XBURN Price (as base):", xburnData.pair.priceUsd);
+          } else if (xburnData.pair.quoteToken?.address?.toLowerCase() === XBURN_TOKEN_ADDRESS.toLowerCase()) {
+             // PriceUsd is likely price of the BASE (cbXEN) in terms of QUOTE (XBURN)
+             // To get price of XBURN, we need price of quote in terms of base (cbXEN)
+             // This might involve inverting or using priceNative if available and stable
+             // For now, log warning, keep price 0
+             console.warn("XBURN is quote token in pair", xburnPairAddress, "- Price calculation needs review.");
+             setXburnPrice('0'); // Needs verification
+          } else {
+             console.warn("XBURN address not found in base/quote token for pair", xburnPairAddress);
+             setXburnPrice('0');
+          }
+          
+          // Get TVL
+          setPoolTvl(xburnData.pair.liquidity?.usd || '0');
+          console.log("Fetched Pool TVL:", xburnData.pair.liquidity?.usd);
+      } else {
+         console.warn("No pair data found for XBURN address:", xburnPairAddress);
+         setXburnPrice('0');
+         setPoolTvl('0');
+      }
+
+    } catch (error) {
+      console.error("Error fetching DexScreener data:", error);
+      setPriceError(error.message);
+      // Keep old prices on error? Or set to 0?
+      // setXenPrice('0'); 
+      // setXburnPrice('0');
+      // setPoolTvl('0');
+    } finally {
+      setLoadingPrices(false);
+    }
+  }, []); // No dependencies needed for pure fetch logic
+
+  // Main Data Loading Effect
   useEffect(() => {
     if (account && provider) { 
       console.log("Account/Provider changed, loading global data for", account);
       loadNFTs(); 
       loadStats();  
+      fetchDexScreenerData(); // Call the new function
     }
-  }, [account, provider, loadNFTs, loadStats]); // Keep loadNFTs/loadStats here per ESLint
+    // Add interval polling for prices?
+    const priceIntervalId = setInterval(fetchDexScreenerData, MIN_PRICE_FETCH_INTERVAL + 500); // Poll slightly slower than debounce interval
+    return () => clearInterval(priceIntervalId);
+
+  }, [account, provider, loadNFTs, loadStats, fetchDexScreenerData]); 
 
   // Claim NFT function
   const claimNFT = useCallback(async (tokenId) => {
@@ -522,7 +623,13 @@ export const GlobalDataProvider = ({ children }) => {
     loadStats,
     account,
     loading: loadingNFTs || stats.loading,
-    error: nftError || stats.error
+    error: nftError || stats.error,
+    xenPrice,     // Add price state
+    xburnPrice,   // Add price state
+    poolTvl,      // Add TVL state
+    loadingPrices, // Add loading state
+    priceError,    // Add error state
+    fetchDexScreenerData // Expose refetch function if needed
   };
 
   return (

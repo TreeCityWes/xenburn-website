@@ -71,11 +71,16 @@ const formatNumber = (num, options = {}) => {
 
 const StatsPanel = () => {
   const { xenApprovalRaw, xburnApprovalRaw } = useWallet();
-  const { balances, stats: globalStatsData, poolData, xenPrice, xburnPrice } = useGlobalData();
+  const { 
+      balances, 
+      stats: globalStatsData, 
+      xenPrice, 
+      xburnPrice,
+      poolTvl
+  } = useGlobalData();
 
   // Simplify state access
   const stats = globalStatsData?.data || {};
-  const pool = poolData?.data || {};
 
   // Format approved values safely
   const formatApproval = (rawApproval) => {
@@ -94,7 +99,7 @@ const StatsPanel = () => {
   const renderStatItem = (label, value, className = '', maxDecimals = 2) => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
-      <span className="stat-value">{formatNumber(value, { maxDecimals })}</span>
+      <span className="stat-value">{typeof value === 'string' && value.startsWith('$') ? value : formatNumber(value, { maxDecimals })}</span>
     </div>
   );
 
@@ -110,8 +115,8 @@ const StatsPanel = () => {
 
   // Calculate ratio
   const calculateRatio = () => {
-    const xen = parseFloat(ethers.utils.formatUnits(pool.xenInPool || '0', 18));
-    const xburn = parseFloat(ethers.utils.formatUnits(pool.xburnInPool || '0', 18));
+    const xen = parseFloat(stats.xenInPool?.replace(/,/g, '') || '0');
+    const xburn = parseFloat(stats.xburnInPool?.replace(/,/g, '') || '0');
     if (xen > 0 && xburn > 0) {
       return (xen / xburn).toFixed(6);
     }
@@ -147,7 +152,7 @@ const StatsPanel = () => {
               {renderStatItem("LP cbXEN", stats.xenInPool || '0', '', 2)}
               {renderStatItem("LP XBURN", stats.xburnInPool || '0', '', 4)}
               {renderStatItem("cbXEN per XBURN", calculateRatio(), '', 6)}
-              {renderStatItem("LP Value", `$${formatNumber(parseFloat(pool.tvl || '0').toFixed(2))}`)}
+              {renderStatItem("LP Value", `$${formatNumber(poolTvl || '0')}`)}
             </>
           ))}
 
