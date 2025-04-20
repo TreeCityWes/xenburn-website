@@ -77,15 +77,22 @@ const SwapBurnTab = ({
   const isThresholdReached = () => {
     // Restored original logic:
     if (!progress || !progress.accumulated || !progress.threshold) {
+      console.log("isThresholdReached: Missing progress data, returning false.");
       return false;
     }
     
     const accumulated = parseFloat(progress.accumulated);
     const threshold = parseFloat(progress.threshold);
+    const comparisonValue = threshold * 0.999;
+    const result = accumulated >= comparisonValue;
+
+    // Log values used for comparison
+    console.log(`isThresholdReached: accumulated=${accumulated}, threshold=${threshold}, comparisonValue=${comparisonValue}, result=${result}`);
     
     // Add some tolerance for floating point comparison
     // Consider it reached if it's at least 99.9% of the threshold
-    return accumulated >= (threshold * 0.999);
+    // return accumulated >= (threshold * 0.999); // Original return
+    return result; // Return calculated result
   };
 
   return (

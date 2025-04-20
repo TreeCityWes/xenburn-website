@@ -161,8 +161,6 @@ const StatsPanel = () => {
               {renderStatItem("Total cbXEN Burned", stats.totalXenBurned || '0', 'highlight-burn', 2)}
               {renderStatItem("Total XBURN Burned", stats.totalXburnBurned || '0', 'highlight-burn', 4)}
               {renderStatItem("Total XBURN Supply", stats.totalXburnMinted || '0', '', 4)}
-              {renderStatItem("Global Burn %", `${(parseFloat(stats.globalBurnPercentage || '0') / 100).toFixed(2)}%`)}
-              {renderStatItem("Current AMP", stats.currentAMP || '0')}
             </>
           ))}
         </div>
