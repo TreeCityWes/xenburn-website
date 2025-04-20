@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from './WalletContext';
+// Import necessary addresses from constants
+import {
+  XEN_ADDRESS,
+  XBURN_TOKEN_ADDRESS, // Assuming this is the XBURN token address
+  XBURN_NFT_ADDRESS,
+  XBURN_MINTER_ADDRESS,
+  UNISWAP_ROUTER_ADDRESS, // Using the correct Router constant
+  XBURN_XEN_LP_ADDRESS // Using the correct LP constant
+} from '../constants/addresses';
 
 const GlobalDataContext = createContext();
 
@@ -16,15 +25,8 @@ const ERC20_ABI = [
   'function totalSupply() view returns (uint256)'
 ];
 
-// Contract addresses for Sepolia testnet
-const CONTRACTS = {
-  XEN: ethers.utils.getAddress("0xcAe27BE52c003953f0B050ab6a31E5d5F0d52ccB"),
-  XBURN: ethers.utils.getAddress("0x644D5B0fFd68bD3215e3FcD869E23E8b8B0f481d"),
-  XENFT: ethers.utils.getAddress("0x1EbC3157Cc44FE1cb0d7F4764D271BAD3deB9a03"),
-  XENFT_BURN_MINTER: ethers.utils.getAddress("0x964db60EfdF9FDa55eA62f598Ea4c7a9cD48F189"),
-  ROUTER: ethers.utils.getAddress("0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3"),
-  LIQUIDITY_PAIR: ethers.utils.getAddress("0x38C29A96f026F169822c3Dd150cCF9504260b5e6")
-};
+// REMOVED Hardcoded Sepolia Addresses
+// const CONTRACTS = { ... };
 
 export const GlobalDataProvider = ({ children }) => {
   const { 
@@ -72,7 +74,7 @@ export const GlobalDataProvider = ({ children }) => {
   // --- Contract Instance Getters (useCallback) ---
   const xenftContract = useCallback(() => {
     if (!provider) return null;
-    console.log("Initializing XENFT contract at", CONTRACTS.XENFT);
+    console.log("Initializing XENFT contract at", XBURN_NFT_ADDRESS); // Use Constant
     
     const XENFT_CONTRACT_ABI = [
       "function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256)",
@@ -83,12 +85,12 @@ export const GlobalDataProvider = ({ children }) => {
     ];
     
     const contract = new ethers.Contract(
-      CONTRACTS.XENFT, 
+      XBURN_NFT_ADDRESS, // Use Constant
       XENFT_CONTRACT_ABI, 
       provider.getSigner ? provider.getSigner() : provider
     );
     
-    window.xenftContract = contract;
+    window.xenftContract = contract; // Still potentially useful for debugging
     return contract;
   }, [provider]);
 
@@ -96,7 +98,7 @@ export const GlobalDataProvider = ({ children }) => {
     if (!provider) return null;
     
     try {
-      console.log("Initializing XBurnMinter contract at", CONTRACTS.XENFT_BURN_MINTER);
+      console.log("Initializing XBurnMinter contract at", XBURN_MINTER_ADDRESS); // Use Constant
       const abi = [
         "function claimLockedXBURN(uint256 tokenId) external",
         "function emergencyEnd(uint256 tokenId) external",
@@ -108,7 +110,7 @@ export const GlobalDataProvider = ({ children }) => {
       ];
       
       return new ethers.Contract(
-        CONTRACTS.XENFT_BURN_MINTER,
+        XBURN_MINTER_ADDRESS, // Use Constant
         abi,
         provider.getSigner ? provider.getSigner() : provider
       );
@@ -120,14 +122,14 @@ export const GlobalDataProvider = ({ children }) => {
 
   const xenContract = useCallback(() => {
     if (!provider) return null;
-    console.log("Initializing XEN contract at", CONTRACTS.XEN);
-    return new ethers.Contract(CONTRACTS.XEN, ERC20_ABI, provider);
+    console.log("Initializing XEN contract at", XEN_ADDRESS); // Use Constant
+    return new ethers.Contract(XEN_ADDRESS, ERC20_ABI, provider); // Use Constant
   }, [provider]);
 
   const xburnContract = useCallback(() => {
     if (!provider) return null;
-    console.log("Initializing XBURN contract at", CONTRACTS.XBURN);
-    return new ethers.Contract(CONTRACTS.XBURN, ERC20_ABI, provider);
+    console.log("Initializing XBURN contract at", XBURN_TOKEN_ADDRESS); // Use Constant
+    return new ethers.Contract(XBURN_TOKEN_ADDRESS, ERC20_ABI, provider); // Use Constant
   }, [provider]);
 
   // --- Data Loading Functions ---
@@ -344,33 +346,34 @@ export const GlobalDataProvider = ({ children }) => {
       let xburnInPool = '0';
       
       try {
-        // Router ABI for getting LP pair
+        // Router ABI for getting LP pair (Keep ABI as is)
         const routerAbi = ["function factory() external view returns (address)"];
         
-        // Create router contract instance
-        const routerContract = new ethers.Contract(CONTRACTS.ROUTER, routerAbi, provider);
+        // Create router contract instance using imported address
+        const routerContract = new ethers.Contract(UNISWAP_ROUTER_ADDRESS, routerAbi, provider);
         
         // Get factory address
         const factoryAddress = await routerContract.factory();
         console.log("Factory address:", factoryAddress);
         
-        // Create factory contract instance
+        // Create factory contract instance (Keep ABI as is)
         const factoryAbi = ["function getPair(address, address) external view returns (address)"];
         const factoryContract = new ethers.Contract(factoryAddress, factoryAbi, provider);
         
-        // Get LP pair address
-        const lpPairAddress = await factoryContract.getPair(CONTRACTS.XEN, CONTRACTS.XBURN);
+        // Get LP pair address using imported XEN and XBURN addresses
+        const lpPairAddress = await factoryContract.getPair(XEN_ADDRESS, XBURN_TOKEN_ADDRESS);
         console.log("LP Pair address:", lpPairAddress);
         
-        if (lpPairAddress && lpPairAddress !== ethers.constants.AddressZero) {
-          // LP Pair ABI for getting reserves
+        // Use the directly provided LP address for reserves check for consistency
+        if (XBURN_XEN_LP_ADDRESS && XBURN_XEN_LP_ADDRESS !== ethers.constants.AddressZero) {
+          // LP Pair ABI (Keep ABI as is)
           const lpPairAbi = [
             "function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)",
             "function token0() external view returns (address)"
           ];
           
-          // Create LP pair contract instance
-          const lpPairContract = new ethers.Contract(lpPairAddress, lpPairAbi, provider);
+          // Create LP pair contract instance using the provided constant
+          const lpPairContract = new ethers.Contract(XBURN_XEN_LP_ADDRESS, lpPairAbi, provider);
           
           // Get token order in the pair
           const token0 = await lpPairContract.token0();
@@ -380,8 +383,8 @@ export const GlobalDataProvider = ({ children }) => {
           const reserves = await lpPairContract.getReserves();
           console.log("Reserves:", reserves);
           
-          // Determine which reserve is XEN and which is XBURN
-          if (token0.toLowerCase() === CONTRACTS.XEN.toLowerCase()) {
+          // Determine which reserve is XEN and which is XBURN using imported constants
+          if (token0.toLowerCase() === XEN_ADDRESS.toLowerCase()) {
             xenInPool = reserves.reserve0;
             xburnInPool = reserves.reserve1;
           } else {
