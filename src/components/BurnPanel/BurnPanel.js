@@ -30,7 +30,7 @@ import {
 import { 
   DEFAULT_AMP_START,
   DEFAULT_AMP_SNAPSHOT
-} from '../../constants/constants';
+} from '../../utils/constants';
 
 // Import contract addresses and ABIs
 import {
