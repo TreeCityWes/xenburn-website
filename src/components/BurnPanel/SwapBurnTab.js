@@ -32,22 +32,21 @@ const SwapBurnTab = ({
     }
   }, [progress]);
 
-  // Format progress percentage
+  // Calculate actual percentage (can be > 100)
+  const getActualPercentage = () => {
+    if (!progress || !progress.accumulated || !progress.threshold) {
+      return 0;
+    }
+    const accumulated = parseFloat(progress.accumulated);
+    const threshold = parseFloat(progress.threshold);
+    if (threshold <= 0) return 0; // Avoid division by zero
+    return (accumulated / threshold) * 100;
+  };
+  
+  // Format progress percentage for display (no capping here)
   const formatProgress = () => {
-    if (!progress || progress.percentage === undefined || progress.percentage === null) {
-      console.log("Progress percentage is missing or invalid:", progress);
-      return '0%';
-    }
-    
-    // Calculate percentage based on accumulated and threshold
-    if (progress.accumulated && progress.threshold) {
-      const accumulated = parseFloat(progress.accumulated);
-      const threshold = parseFloat(progress.threshold);
-      const calculatedPercentage = (accumulated / threshold) * 100;
-      return `${Math.min(100, Math.floor(calculatedPercentage))}%`;
-    }
-    
-    return `${Math.min(100, Math.floor(progress.percentage * 100))}%`;
+    const actualPercentage = getActualPercentage();
+    return `${Math.floor(actualPercentage)}%`; // Show floored percentage
   };
 
   // Calculate remaining cbXEN needed
@@ -118,7 +117,7 @@ const SwapBurnTab = ({
           <div className="progress-bar">
             <div 
               className="progress-fill" 
-              style={{ width: formatProgress() }}
+              style={{ width: `${Math.min(100, getActualPercentage())}%` }}
             ></div>
           </div>
           
