@@ -28,7 +28,7 @@ const MIN_BALANCE_FETCH_INTERVAL = 5000; // Reduced from 60000ms to 5000ms (5 se
 // Define the target network (Base Mainnet)
 const TARGET_CHAIN_ID = '0x2105'; // 8453 in hex
 const TARGET_NETWORK_NAME = 'Base';
-const TARGET_RPC_URL = 'https://mainnet.base.org'; // Standard Base RPC
+const TARGET_RPC_URL = 'https://base.api.onfinality.io/public'; // Changed RPC to OnFinality
 const TARGET_EXPLORER_URL = 'https://basescan.org/';
 const TARGET_CURRENCY_NAME = 'ETH';
 const TARGET_CURRENCY_SYMBOL = 'ETH';
