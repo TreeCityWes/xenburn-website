@@ -104,14 +104,33 @@ const BurnPanel = () => {
       
       // Fetch accumulation progress for SwapBurnTab
       const progressRaw = await xburnMinterContract.getAccumulationProgress();
+      console.log("Raw progress from contract:", progressRaw); // Log raw return value
+
       const accumulated = ethers.utils.formatUnits(progressRaw.accumulated || '0', 18);
       const threshold = ethers.utils.formatUnits(progressRaw.threshold || '0', 18);
       const accumulatedNum = parseFloat(accumulated);
       const thresholdNum = parseFloat(threshold);
-      const percentage = thresholdNum > 0 
-          ? Math.min(1, accumulatedNum / thresholdNum) * 100
-          : 0;
-      const progressData = { accumulated, threshold, percentage };
+      // Recalculate percentage here accurately without capping for logging
+      const calculatedPercentage = thresholdNum > 0 ? (accumulatedNum / thresholdNum) * 100 : 0;
+      
+      // Use the potentially capped percentage from contract if available and valid, otherwise use calculated (capped)
+      let percentageToStore = Math.min(100, calculatedPercentage);
+      if (progressRaw.percentage !== undefined) {
+        try {
+          // Format contract percentage (assuming it's also 18 decimals or similar scale)
+          const contractPercentage = parseFloat(ethers.utils.formatUnits(progressRaw.percentage || '0', 18)); 
+          percentageToStore = Math.min(100, contractPercentage * 100); // Adjust based on how contract returns percentage
+        } catch { 
+           console.warn("Could not parse percentage from contract, using calculated.");
+        }
+      }
+      
+      const progressData = { 
+          accumulated,
+          threshold,
+          percentage: percentageToStore // Store the possibly capped percentage for UI
+      };
+      console.log("Setting progress state:", progressData); // Log data before setting state
       setProgress(progressData);
             
       console.log("Swap Burn Progress fetched.");
