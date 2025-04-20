@@ -5,47 +5,44 @@ import { useGlobalData } from '../../context/GlobalDataContext';
 import FireParticles from '../FireParticles';
 import './StatsPanel.css';
 
-// Format large numbers with K, M, B, T suffixes and special handling for ratios
+// Format large numbers with K, M, B, T suffixes and improved decimal handling
 const formatNumber = (num, options = {}) => {
-  const { isRatio = false, isApproved = false, showFull = false } = options;
+  const { isRatio = false, isApproved = false, maxDecimals = 2 } = options;
 
   if (isApproved && typeof num === 'string' && num === 'MAX') {
     return 'MAX';
   }
 
-  if (!num || num === 'NaN') return isRatio ? '0.000000' : '0.00';
-
-  // Handle potential BigNumber strings
-  let numberString;
-  try {
-    numberString = ethers.utils.formatUnits(num, 0); // Format as integer first to handle large numbers
-    numberString = String(num); // Revert to original string if it wasn't a BigNumber string
-  } catch {
-    numberString = String(num);
+  if (num === null || num === undefined || num === 'NaN' || num === '') {
+      return isRatio ? '0.000000' : '0.00';
   }
+
+  let numberString = String(num); // Work with the string representation
+
+  // Remove commas if present (from previous formatting attempts potentially)
+  numberString = numberString.replace(/,/g, ''); 
 
   const n = parseFloat(numberString);
-  if (isNaN(n)) return isRatio ? '0.000000' : '0.00';
-
-  if (showFull) {
-    return n.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 18
-    });
+  
+  if (isNaN(n)) {
+      console.warn("formatNumber received NaN for input:", num);
+      return isRatio ? '0.000000' : '0.00';
   }
 
-  if (n > 999e12) return '999T+';
-  if (n >= 1e12) return `${(n / 1e12).toFixed(2)}T`;
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
-  if (n >= 1e3 && !isRatio) return `${(n / 1e3).toFixed(2)}K`;
-
+  // Handle specific cases first
   if (isRatio) return n.toFixed(6);
 
-  // Default formatting for smaller numbers
+  // Suffix formatting with adjusted decimals
+  if (n >= 1e12) return `${(n / 1e12).toFixed(maxDecimals)}T`;
+  if (n >= 1e9) return `${(n / 1e9).toFixed(maxDecimals)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(maxDecimals)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(maxDecimals)}K`;
+
+  // Default formatting for smaller numbers - use dynamic decimals
+  const dynamicDecimals = n === 0 ? 2 : Math.max(2, Math.min(6, maxDecimals + (n < 1 ? 4 : 0))); // Show more for < 1
   return n.toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: n < 1 ? 6 : 2
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: dynamicDecimals 
   });
 };
 
@@ -70,12 +67,11 @@ const StatsPanel = () => {
     }
   };
 
-  // Helper to render a single stat item - Removed internal formatNumber call
-  const renderStatItem = (label, value, className = '') => (
+  // Helper to render a single stat item - Pass maxDecimals option
+  const renderStatItem = (label, value, className = '', maxDecimals = 2) => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
-      {/* Display value directly */}
-      <span className="stat-value">{value}</span> 
+      <span className="stat-value">{formatNumber(value, { maxDecimals })}</span>
     </div>
   );
 
@@ -112,14 +108,12 @@ const StatsPanel = () => {
         <div className="stats-content-area">
           {renderSection("User Wallet & Burn Activity", (
             <>
-              {/* Format balances before passing */}
-              {renderStatItem("cbXEN Balance", formatNumber(balances?.xen || '0'))}
+              {renderStatItem("cbXEN Balance", balances?.xen || '0')}
               {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw))}
-              {/* Pass pre-formatted stats directly */}
-              {renderStatItem("User cbXEN Burned", stats.userXenBurned || '0', 'highlight-burn')}
-              {renderStatItem("XBURN Balance", formatNumber(balances?.xburn || '0'))}
+              {renderStatItem("User cbXEN Burned", stats.userXenBurned || '0', 'highlight-burn', 2)}
+              {renderStatItem("XBURN Balance", balances?.xburn || '0')}
               {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw))}
-              {renderStatItem("User XBURN Burned", stats.userXburnBurned || '0', 'highlight-burn')}
+              {renderStatItem("User XBURN Burned", stats.userXburnBurned || '0', 'highlight-burn', 4)}
             </>
           ))}
 
@@ -127,23 +121,20 @@ const StatsPanel = () => {
             <>
               {renderStatItem("cbXEN Price", `$${parseFloat(xenPrice || '0').toPrecision(6)}`)}
               {renderStatItem("XBURN Price", `$${parseFloat(xburnPrice || '0').toFixed(6)}`)}
-              {/* Pass pre-formatted pool data directly */}
-              {renderStatItem("LP cbXEN", stats.xenInPool || '0')}
-              {renderStatItem("LP XBURN", stats.xburnInPool || '0')}
-              {renderStatItem("cbXEN per XBURN", calculateRatio())}
+              {renderStatItem("LP cbXEN", stats.xenInPool || '0', '', 2)}
+              {renderStatItem("LP XBURN", stats.xburnInPool || '0', '', 4)}
+              {renderStatItem("cbXEN per XBURN", calculateRatio(), '', 6)}
               {renderStatItem("LP Value", `$${formatNumber(parseFloat(pool.tvl || '0').toFixed(2))}`)}
             </>
           ))}
 
           {renderSection("Global Burn & Supply Stats", (
             <>
-              {/* Pass pre-formatted stats directly */}
-              {renderStatItem("Total cbXEN Burned", stats.totalXenBurned || '0', 'highlight-burn')}
-              {renderStatItem("Total XBURN Burned", stats.totalXburnBurned || '0', 'highlight-burn')}
-              {renderStatItem("Total XBURN Supply", stats.totalXburnMinted || '0')}
+              {renderStatItem("Total cbXEN Burned", stats.totalXenBurned || '0', 'highlight-burn', 2)}
+              {renderStatItem("Total XBURN Burned", stats.totalXburnBurned || '0', 'highlight-burn', 4)}
+              {renderStatItem("Total XBURN Supply", stats.totalXburnMinted || '0', '', 4)}
               {renderStatItem("Global Burn %", `${(parseFloat(stats.globalBurnPercentage || '0') / 100).toFixed(2)}%`)}
               {renderStatItem("Current AMP", stats.currentAMP || '0')}
-              {/* Contract link removed as it was static and potentially confusing */}
             </>
           ))}
         </div>
