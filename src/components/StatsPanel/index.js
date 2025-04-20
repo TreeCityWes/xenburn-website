@@ -113,10 +113,10 @@ const StatsPanel = () => {
             <>
               {renderStatItem("cbXEN Balance", balances?.xen || '0')}
               {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw), { isApproved: true })}
-              {renderStatItem("User cbXEN Burned", ethers.utils.formatUnits(stats.userXenBurnedAmount || '0', 18), {}, 'highlight-burn')}
+              {renderStatItem("User cbXEN Burned", stats.userXenBurnedAmount || '0', {}, 'highlight-burn')}
               {renderStatItem("XBURN Balance", balances?.xburn || '0')}
               {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw), { isApproved: true })}
-              {renderStatItem("User XBURN Burned", ethers.utils.formatUnits(stats.userXburnBurnedAmount || '0', 18), {}, 'highlight-burn')}
+              {renderStatItem("User XBURN Burned", stats.userXburnBurnedAmount || '0', {}, 'highlight-burn')}
             </>
           ))}
 
@@ -124,8 +124,8 @@ const StatsPanel = () => {
             <>
               {renderStatItem("cbXEN Price", `$${parseFloat(xenPrice || '0').toPrecision(6)}`)}
               {renderStatItem("XBURN Price", `$${parseFloat(xburnPrice || '0').toFixed(6)}`)}
-              {renderStatItem("LP cbXEN", ethers.utils.formatUnits(pool.xenInPool || '0', 18))}
-              {renderStatItem("LP XBURN", ethers.utils.formatUnits(pool.xburnInPool || '0', 18))}
+              {renderStatItem("LP cbXEN", pool.xenInPool || '0')}
+              {renderStatItem("LP XBURN", pool.xburnInPool || '0')}
               {renderStatItem("cbXEN per XBURN", calculateRatio(), { isRatio: true })}
               {renderStatItem("LP Value", `$${formatNumber(parseFloat(pool.tvl || '0').toFixed(2))}`)}
             </>
@@ -133,9 +133,9 @@ const StatsPanel = () => {
 
           {renderSection("Global Burn & Supply Stats", (
             <>
-              {renderStatItem("Total cbXEN Burned", ethers.utils.formatUnits(stats.globalXenBurned || '0', 18), {}, 'highlight-burn')}
-              {renderStatItem("Total XBURN Burned", ethers.utils.formatUnits(stats.globalXburnBurned || '0', 18), {}, 'highlight-burn')}
-              {renderStatItem("Total XBURN Supply", ethers.utils.formatUnits(stats.totalXburnSupply || '0', 18))}
+              {renderStatItem("Total cbXEN Burned", stats.globalXenBurned || '0', {}, 'highlight-burn')}
+              {renderStatItem("Total XBURN Burned", stats.globalXburnBurned || '0', {}, 'highlight-burn')}
+              {renderStatItem("Total XBURN Supply", stats.totalXburnSupply || '0')}
               {renderStatItem("Global Burn %", `${(parseFloat(stats.globalBurnPercentage || '0') / 100).toFixed(2)}%`)}
               {renderStatItem("Current AMP", stats.currentAMP || '0')}
               {/* Contract link removed as it was static and potentially confusing */}
