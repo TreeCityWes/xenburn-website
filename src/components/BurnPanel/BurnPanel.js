@@ -131,7 +131,7 @@ const BurnPanel = () => {
           percentage: percentageToStore // Store the possibly capped percentage for UI
       };
       console.log("Setting progress state:", progressData); // Log data before setting state
-      setProgress(progressData);
+      setProgress(prev => ({ ...prev, ...progressData })); 
             
       console.log("Swap Burn Progress fetched.");
     } catch (error) {
