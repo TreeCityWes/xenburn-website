@@ -214,16 +214,9 @@ export const calculateMultiplier = (days, ampStart = 3000, ampSnapshot = 3000) =
   if (dayValue === 183) return 1.5;
   if (dayValue === 2193) return 7.5;
   
-  // Use the correct formula from the contract:
-  // termPercentage = (termDays * 100) / 365;  // 0-100
-  // ampPercentage = (ampSnapshot * 100) / AMP_START;  // 0-100
-  // bonus = (baseAmount * termPercentage * ampPercentage) / 10000;
-  // return baseAmount + bonus;
-
-  const termPercentage = (dayValue * 100) / 365;
-  const ampPercentage = (aSnapshot * 100) / aStart;
-  const bonus = termPercentage * ampPercentage / 10000;
-  const multiplier = 1 + bonus;
+  // Use the contract's formula:
+  // multiplier = 1 + (termDays * ampSnapshot) / (365 * ampStart)
+  const multiplier = 1 + (dayValue * aSnapshot) / (365 * aStart);
   
   // Round to 2 decimal places for display
   return parseFloat(multiplier.toFixed(2));
