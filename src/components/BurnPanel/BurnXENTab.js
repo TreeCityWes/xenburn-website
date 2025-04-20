@@ -193,22 +193,16 @@ const BurnXENTab = ({
   // Calculate multiplier based on term days and amplifier values
   const multiplier = calculateMultiplier(selectedTerm, ampStart, ampSnapshot);
   
-  // Calculate term percentage
-  const termPercentage = (selectedTerm / 365) * 100;
-  
-  // Use the AMP value directly from the contract
-  const ampValue = ampSnapshot;
-  
   // Calculate base amount
   const baseAmount = xenAmount && parseFloat(xenAmount) > 0 
     ? parseFloat(xenAmount) / 1000000
     : 0;
     
-  // Calculate bonus
-  const bonus = baseAmount * (termPercentage * ampValue / 100);
+  // Calculate bonus using the multiplier
+  const bonus = baseAmount * (multiplier - 1);
   
   // Calculate total
-  const total = baseAmount + bonus;
+  const total = baseAmount * multiplier;
 
   // Determine if approval button should be shown
   const isMaxApproved = formattedXenApproval === "MAX";
