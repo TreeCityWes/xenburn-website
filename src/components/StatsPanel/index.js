@@ -147,12 +147,12 @@ const StatsPanel = () => {
       {/* Dex Screener Embed */}
       <div className="dexscreener-container">
         <style>{`
-          #dexscreener-embed{position:relative;width:100%;padding-bottom:125%;}
-          @media(min-width:1400px){#dexscreener-embed{padding-bottom:65%;}}
+          #dexscreener-embed{position:relative;width:100%;padding-bottom:100%;}
+          @media(min-width:1400px){#dexscreener-embed{padding-bottom:55%;}}
           #dexscreener-embed iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:0;}
         `}</style>
         <div id="dexscreener-embed">
-          <iframe src="https://dexscreener.com/base/0x93e39bd6854d960a0c4f5b592381bb8356a2d725?embed=1&loadChartSettings=0&chartLeftToolbar=0&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe>
+          <iframe src="https://dexscreener.com/base/0x93e39bd6854d960a0c4f5b592381bb8356a2d725?embed=1&info=0&loadChartSettings=0&chartLeftToolbar=0&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe>
         </div>
       </div>
     </div>

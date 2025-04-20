@@ -314,17 +314,28 @@ export const GlobalDataProvider = ({ children }) => {
     setStats(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      console.log("Loading stats for account", account);
+      console.log("Loading stats for account", account, "using minter:", minterContract?.address);
       
-      // Use the instances obtained from the memoized functions
-      const [statsData, globalBurnRank] = await Promise.all([
-        minterContract.getStats(account),
-        minterContract.globalBurnRank()
-      ]);
+      let statsData, globalBurnRank;
+      try {
+        console.log("Calling minterContract.getStats...");
+        statsData = await minterContract.getStats(account);
+        console.log("Raw getStats return:", statsData);
+
+        console.log("Calling minterContract.globalBurnRank...");
+        globalBurnRank = await minterContract.globalBurnRank();
+        console.log("Raw globalBurnRank return:", globalBurnRank);
+
+      } catch (contractCallError) {
+        console.error("ERROR during getStats or globalBurnRank call:", contractCallError);
+        setStats(prev => ({ ...prev, loading: false, error: `Stats contract call failed: ${contractCallError.message}` }));
+        return; // Stop execution if essential stats calls fail
+      }
       
-      // Log the raw return values for debugging
-      console.log("Raw getStats return:", statsData);
-      console.log("Raw globalXburnBurned from getStats:", statsData.globalXburnBurned);
+      // Log the raw return values for debugging (moved after successful calls)
+      // console.log("Raw getStats return:", statsData);
+      // console.log("Raw globalXburnBurned from getStats:", statsData.globalXburnBurned);
+      // console.log("Raw globalBurnRank return:", globalBurnRank);
 
       let xenSupply = '0';
       try {
