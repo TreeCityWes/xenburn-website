@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from '../common/LoadingIndicator';
 import useTransactionState, { TX_STATE } from '../../hooks/useTransactionState';
-import { XBURN_NFT_ADDRESS } from '../constants/addresses';
+import { XBURN_NFT_ADDRESS } from '../../constants/addresses';
 import { useGlobalData } from '../../contexts/GlobalDataContext';
 
 const ExternalLinkIcon = () => (
