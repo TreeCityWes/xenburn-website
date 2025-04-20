@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import { Tooltip } from '../../utils/components/Tooltip';
-import { XEN_ADDRESS, XENBURNER_ADDRESS } from '../../constants/addresses';
+import { XEN_ADDRESS, XENBURNER_ADDRESS } from '../constants/addresses';
 import xenAbi from '../../contracts/xen.json';
 import { useWallet } from '../../context/WalletContext';
 import FireParticles from '../FireParticles';

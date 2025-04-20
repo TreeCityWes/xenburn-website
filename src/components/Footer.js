@@ -4,7 +4,7 @@ import {
   XENBURNER_ADDRESS, 
   XBURN_TOKEN_ADDRESS,
   XBURN_XEN_LP_ADDRESS // Import LP address
-} from '../../constants/addresses';
+} from '../constants/addresses';
 
 export function Footer() {
   return (

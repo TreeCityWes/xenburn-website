@@ -8,7 +8,7 @@ import {
   XEN_ADDRESS,
   XENBURNER_ADDRESS,
   XBURN_NFT_ADDRESS
-} from '../constants/addresses';
+} from './constants/addresses';
 
 const WalletContext = createContext();
 

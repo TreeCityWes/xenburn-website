@@ -30,13 +30,13 @@ import {
 import { 
   DEFAULT_AMP_START,
   DEFAULT_AMP_SNAPSHOT
-} from '../../utils/constants';
+} from '../constants/constants';
 
 // Import contract addresses and ABIs
 import {
   // Removed unused: XEN_ADDRESS, UNISWAP_ROUTER_ADDRESS 
   XENBURNER_ADDRESS
-} from '../../constants/addresses';
+} from '../constants/addresses';
 // Removed unused: xenAbi, 
 import xenBurnerAbi from '../../contracts/XBurnMinter.json';
 
