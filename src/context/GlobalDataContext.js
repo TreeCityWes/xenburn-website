@@ -325,7 +325,7 @@ export const GlobalDataProvider = ({ children }) => {
     try {
       console.log("Loading stats for account", account, "using minter:", minterContract?.address);
       
-      let statsData, globalBurnRank, globalStatsData;
+      let statsData, globalBurnRank;
       try {
         console.log("Calling minterContract.getStats...");
         statsData = await minterContract.getStats(account);
@@ -335,9 +335,9 @@ export const GlobalDataProvider = ({ children }) => {
         globalBurnRank = await minterContract.globalBurnRank();
         console.log("Raw globalBurnRank return:", globalBurnRank);
         
-        console.log("Calling minterContract.getGlobalStats...");
-        globalStatsData = await minterContract.getGlobalStats(); 
-        console.log("Raw getGlobalStats return:", globalStatsData);
+        // console.log("Calling minterContract.getGlobalStats..."); // Removed call
+        // globalStatsData = await minterContract.getGlobalStats(); 
+        // console.log("Raw getGlobalStats return:", globalStatsData);
 
       } catch (contractCallError) {
         console.error("ERROR during stats contract calls:", contractCallError);
@@ -410,7 +410,7 @@ export const GlobalDataProvider = ({ children }) => {
         totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply || '0', 18), // totalXburnSupply from getStats
         totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned || '0', 18),
         globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18), // Get from getStats result
-        currentAMP: globalStatsData?.currentAMP?.toString() || '0', // Get from getGlobalStats result
+        currentAMP: '0', // Set AMP to 0 as getGlobalStats call removed
         globalBurnRank: globalBurnRank?.toString() || '0', // Get from globalBurnRank result
         userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount || '0', 18),
         userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance || '0', 18), // userXburnBalance from getStats

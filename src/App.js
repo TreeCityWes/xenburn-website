@@ -34,7 +34,7 @@ function App() {
             </div>
             
             <IntroBanner />
-
+            
             <main className="main-content">
               {activeTab === 'burn' && (
                 <BurnPanelProvider>
