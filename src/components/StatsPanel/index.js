@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from '../../context/WalletContext';
 import { useGlobalData } from '../../context/GlobalDataContext';
@@ -6,96 +6,71 @@ import FireParticles from '../FireParticles';
 import './StatsPanel.css';
 
 // Format large numbers with K, M, B, T suffixes and special handling for ratios
-const formatNumber = (num, isRatio = false) => {
-  if (!num) return isRatio ? '0.031478' : '0.00';
-  
-  const n = parseFloat(num);
-  if (isNaN(n)) return isRatio ? '0.031478' : '0.00';
-  
-  // Handle scientific notation (e.g., 1.15792089237316e+50B)
-  if (String(num).includes('e+')) {
-    // Special case for extremely large values (likely MAX_UINT256)
-    if (n > 1e20) return "999T+";
-    return "999T+";
+const formatNumber = (num, options = {}) => {
+  const { isRatio = false, isApproved = false, showFull = false } = options;
+
+  if (isApproved && typeof num === 'string' && num === 'MAX') {
+    return 'MAX';
   }
-  
-  // Cap at 999T+
+
+  if (!num || num === 'NaN') return isRatio ? '0.000000' : '0.00';
+
+  // Handle potential BigNumber strings
+  let numberString;
+  try {
+    numberString = ethers.utils.formatUnits(num, 0); // Format as integer first to handle large numbers
+    numberString = String(num); // Revert to original string if it wasn't a BigNumber string
+  } catch {
+    numberString = String(num);
+  }
+
+  const n = parseFloat(numberString);
+  if (isNaN(n)) return isRatio ? '0.000000' : '0.00';
+
+  if (showFull) {
+    return n.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 18
+    });
+  }
+
   if (n > 999e12) return '999T+';
-  
-  // Handle large numbers with proper suffixes
   if (n >= 1e12) return `${(n / 1e12).toFixed(2)}T`;
   if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(2)}K`;
-  
-  // Special case for ratio
-  if (isRatio) {
-    return n.toFixed(6);
-  }
-  
-  // For regular numbers
-  return n.toFixed(2);
+  if (n >= 1e3 && !isRatio) return `${(n / 1e3).toFixed(2)}K`;
+
+  if (isRatio) return n.toFixed(6);
+
+  // Default formatting for smaller numbers
+  return n.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: n < 1 ? 6 : 2
+  });
 };
 
 const StatsPanel = () => {
-  const { 
-    account, 
-    xenApprovalRaw,
-    xburnApprovalRaw
-  } = useWallet();
+  const { xenApprovalRaw, xburnApprovalRaw } = useWallet();
+  const { balances, stats: globalStatsData, poolData, xenPrice, xburnPrice } = useGlobalData();
 
-  const {
-    balances,
-    stats,
-    loadStats,
-    loadBalances
-  } = useGlobalData();
+  // Simplify state access
+  const stats = globalStatsData?.data || {};
+  const pool = poolData?.data || {};
 
-  // State for tracking stats
-  const [displayStats, setDisplayStats] = useState({
-    xenBalance: '0',
-    xenApproval: '0',
-    userXenBurned: '0',
-    xburnBalance: '0',
-    xburnApproval: '0',
-    userXburnBurned: '0',
-    xenSupply: '0',
-    xburnSupply: '0',
-    xenInPool: '0',
-    xburnInPool: '0',
-    globalXenBurned: '0',
-    globalXburnBurned: '0',
-    xenPerXburn: '0.031478',
-    burnRatio: '100,000:1'
-  });
+  // Format approved values safely
+  const formatApproval = (rawApproval) => {
+    if (!rawApproval) return '0';
+    try {
+      const formatted = ethers.utils.formatUnits(rawApproval, 18);
+      // Check if it's effectively MAX_UINT256
+      if (parseFloat(formatted) > 1e18) return 'MAX';
+      return formatNumber(formatted);
+    } catch {
+      return '0'; // Handle potential errors during formatting
+    }
+  };
 
-  // Update stats when balances or approvals change
-  useEffect(() => {
-    // Update the stats with the latest values
-    setDisplayStats(prevStats => {
-      // Format approved values to ensure they're properly handled
-      const xenApproval = xenApprovalRaw ? ethers.utils.formatUnits(xenApprovalRaw, 18) : prevStats.xenApproval;
-      const xburnApproval = xburnApprovalRaw ? ethers.utils.formatUnits(xburnApprovalRaw, 18) : prevStats.xburnApproval;
-      
-      return {
-        ...prevStats,
-        xenBalance: balances?.xen || prevStats.xenBalance,
-        xburnBalance: balances?.xburn || prevStats.xburnBalance,
-        xenApproval,
-        xburnApproval,
-        userXenBurned: stats?.data?.userXenBurned || prevStats.userXenBurned,
-        userXburnBurned: stats?.data?.userXburnBurned || prevStats.userXburnBurned,
-        globalXenBurned: stats?.data?.totalXenBurned || prevStats.globalXenBurned,
-        globalXburnBurned: stats?.data?.totalXburnBurned || prevStats.globalXburnBurned,
-        xburnSupply: stats?.data?.totalXburnMinted || prevStats.xburnSupply,
-        xenSupply: stats?.data?.xenSupply || prevStats.xenSupply,
-        xenInPool: stats?.data?.xenInPool || prevStats.xenInPool,
-        xburnInPool: stats?.data?.xburnInPool || prevStats.xburnInPool
-      };
-    });
-  }, [balances, stats, xenApprovalRaw, xburnApprovalRaw]);
-
-  // Helper to render a single stat item
+  // Helper to render a single stat item - Reinstated
   const renderStatItem = (label, value, formatOptions = {}, className = '') => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
@@ -103,7 +78,7 @@ const StatsPanel = () => {
     </div>
   );
 
-  // Helper to render a section
+  // Helper to render a section - Reinstated
   const renderSection = (title, children) => (
     <div className="stats-section">
       <h4 className="section-title">{title}</h4>
@@ -113,55 +88,57 @@ const StatsPanel = () => {
     </div>
   );
 
+  // Calculate ratio
+  const calculateRatio = () => {
+    const xen = parseFloat(ethers.utils.formatUnits(pool.xenInPool || '0', 18));
+    const xburn = parseFloat(ethers.utils.formatUnits(pool.xburnInPool || '0', 18));
+    if (xen > 0 && xburn > 0) {
+      return (xen / xburn).toFixed(6);
+    }
+    return '0.000000';
+  };
+
   return (
     <div className="stats-panel-container-redesigned">
       <div className="stats-panel-card">
-        <FireParticles width={500} height={600} intensity={0.15} isBackground={true} />
-        
+        {/* Use FireParticles component for background */}
+        <FireParticles width="100%" height="100%" intensity={0.15} isBackground={true} />
+
         <div className="stats-header">
-          <h2>USER STATS & INFO</h2>
+          <h2>PROTOCOL STATISTICS</h2>
         </div>
-        
+
         <div className="stats-content-area">
           {renderSection("User Wallet & Burn Activity", (
             <>
-              {renderStatItem("XEN Balance", displayStats.xenBalance)}
-              {renderStatItem("XEN Approved", displayStats.xenApproval, { isApproved: true })}
-              {renderStatItem("User XEN Burned", displayStats.userXenBurned, {}, 'highlight-burn')}
-              {renderStatItem("XBURN Balance", displayStats.xburnBalance)}
-              {renderStatItem("XBURN Approved", displayStats.xburnApproval, { isApproved: true })}
-              {renderStatItem("User XBURN Burned", displayStats.userXburnBurned, {}, 'highlight-burn')}
+              {renderStatItem("cbXEN Balance", balances?.xen || '0')}
+              {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw), { isApproved: true })}
+              {renderStatItem("User cbXEN Burned", ethers.utils.formatUnits(stats.userXenBurnedAmount || '0', 18), {}, 'highlight-burn')}
+              {renderStatItem("XBURN Balance", balances?.xburn || '0')}
+              {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw), { isApproved: true })}
+              {renderStatItem("User XBURN Burned", ethers.utils.formatUnits(stats.userXburnBurnedAmount || '0', 18), {}, 'highlight-burn')}
             </>
           ))}
 
           {renderSection("Token & Pool Info", (
             <>
-              {renderStatItem("XEN Supply", displayStats.xenSupply)}
-              {renderStatItem("XBURN Supply", displayStats.xburnSupply)}
-              {renderStatItem("XEN in Pool", displayStats.xenInPool)}
-              {renderStatItem("XBURN in Pool", displayStats.xburnInPool)}
-              {renderStatItem("XEN per XBURN", displayStats.xenPerXburn, { isRatio: true })}
-              <div className="stat-item">
-                <span className="stat-label">Contract</span>
-                <span className="stat-value">
-                  <a 
-                    href="https://sepolia.etherscan.io/address/0x964db60EfdF9FDa55eA62f598Ea4c7a9cD48F189"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="stat-value link"
-                  >
-                    $XBURN
-                  </a>
-                </span>
-              </div>
+              {renderStatItem("cbXEN Price", `$${parseFloat(xenPrice || '0').toPrecision(6)}`)}
+              {renderStatItem("XBURN Price", `$${parseFloat(xburnPrice || '0').toFixed(6)}`)}
+              {renderStatItem("LP cbXEN", ethers.utils.formatUnits(pool.xenInPool || '0', 18))}
+              {renderStatItem("LP XBURN", ethers.utils.formatUnits(pool.xburnInPool || '0', 18))}
+              {renderStatItem("cbXEN per XBURN", calculateRatio(), { isRatio: true })}
+              {renderStatItem("LP Value", `$${formatNumber(parseFloat(pool.tvl || '0').toFixed(2))}`)}
             </>
           ))}
 
-          {renderSection("Global Burn Stats", (
+          {renderSection("Global Burn & Supply Stats", (
             <>
-              {renderStatItem("Global XEN Burned", displayStats.globalXenBurned, {}, 'highlight-burn')}
-              {renderStatItem("Global XBURN Burned", displayStats.globalXburnBurned, {}, 'highlight-burn')}
-              {renderStatItem("Burn Ratio", displayStats.burnRatio)}
+              {renderStatItem("Total cbXEN Burned", ethers.utils.formatUnits(stats.globalXenBurned || '0', 18), {}, 'highlight-burn')}
+              {renderStatItem("Total XBURN Burned", ethers.utils.formatUnits(stats.globalXburnBurned || '0', 18), {}, 'highlight-burn')}
+              {renderStatItem("Total XBURN Supply", ethers.utils.formatUnits(stats.totalXburnSupply || '0', 18))}
+              {renderStatItem("Global Burn %", `${(parseFloat(stats.globalBurnPercentage || '0') / 100).toFixed(2)}%`)}
+              {renderStatItem("Current AMP", stats.currentAMP || '0')}
+              {/* Contract link removed as it was static and potentially confusing */}
             </>
           ))}
         </div>

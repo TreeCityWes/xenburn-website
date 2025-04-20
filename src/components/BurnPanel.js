@@ -1,5 +1,6 @@
 import React from 'react';
 import BurnPanelComponent from './BurnPanel/BurnPanel';
+import FireParticles from './FireParticles';
 import './BurnPanel.css';
 
 /**
@@ -10,6 +11,7 @@ import './BurnPanel.css';
 const BurnPanel = () => {
   return (
     <div className="burn-container">
+      <FireParticles width="100%" height="100%" intensity={0.3} isBackground={true} type="xburn" />
       <BurnPanelComponent />
     </div>
   );

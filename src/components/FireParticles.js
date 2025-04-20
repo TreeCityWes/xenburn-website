@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+// import './FireParticles.css'; // Removed unused CSS import
 
 const FireParticles = ({ width, height, intensity = 1, isBackground = false, type = "xburn" }) => {
   const canvasRef = useRef(null);
@@ -127,11 +128,12 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false, typ
       style={{
         position: 'absolute',
         bottom: 0,
-        left: 0,
+        left: isBackground ? 0 : '50%', // Center horizontally if not background
+        transform: isBackground ? 'none' : 'translateX(-50%)', // Apply transform for centering
         width: width || '100%',
         height: height || '100%',
         pointerEvents: 'none',
-        opacity: isBackground ? 0.3 : 0.25,
+        opacity: isBackground ? 0.6 : 0.5,
         mixBlendMode: isBackground ? 'soft-light' : 'screen',
         borderRadius: 'inherit',
       }}

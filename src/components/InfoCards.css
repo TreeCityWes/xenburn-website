@@ -50,6 +50,17 @@
   margin: 0;
 }
 
+/* Style links within the info card paragraphs */
+.info-card p a {
+  color: inherit; /* Use the paragraph's color */
+  text-decoration: underline; /* Add underline for visibility */
+  transition: color 0.2s ease;
+}
+
+.info-card p a:hover {
+  color: #fff; /* Slightly brighten on hover */
+}
+
 .info-card-content {
   width: 70%;
   padding-right: 20px;

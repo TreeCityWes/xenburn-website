@@ -4,6 +4,11 @@ import { useGlobalData } from '../context/GlobalDataContext';
 import './Navbar.css';
 import FireParticles from './FireParticles';
 
+// --- Launch Control Flag --- 
+// Set to true to enable wallet connection for launch
+const isLaunchReady = false;
+// ---------------------------
+
 export const Navbar = ({ onTabChange, activeTab }) => {
   const { 
     account, 
@@ -53,6 +58,13 @@ export const Navbar = ({ onTabChange, activeTab }) => {
   };
 
   const handleConnect = () => {
+    if (!isLaunchReady) {
+      console.log('Wallet connection disabled until launch.');
+      // Optionally show a toast message
+      // import toast from 'react-hot-toast';
+      // toast('Launching soon!');
+      return;
+    }
     console.log('Connect button clicked');
     connect();
   };
@@ -85,7 +97,7 @@ export const Navbar = ({ onTabChange, activeTab }) => {
                 <span className="balance-value">{formatBalance(balances?.eth, 'ETH')}</span> ETH
               </span>
               <span className="balance-item">
-                <span className="balance-value">{formatBalance(balances?.xen, 'XEN')}</span> XEN
+                <span className="balance-value">{formatBalance(balances?.xen, 'XEN')}</span> cbXEN
               </span>
               <span className="balance-item">
                 <span className="balance-value">{formatBalance(balances?.xburn, 'XBURN')}</span> XBURN
@@ -121,9 +133,11 @@ export const Navbar = ({ onTabChange, activeTab }) => {
           <button 
             className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
             onClick={handleConnect}
-            disabled={connecting}
+            disabled={connecting || !isLaunchReady}
           >
-            {connecting ? 'Connecting...' : 'Connect Wallet'}
+            {isLaunchReady 
+              ? (connecting ? 'Connecting...' : 'Connect Wallet') 
+              : 'Launching 4/20/25'}
           </button>
         )}
       </div>

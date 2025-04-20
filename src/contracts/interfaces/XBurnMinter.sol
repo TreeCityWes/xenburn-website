@@ -99,14 +99,14 @@ contract XBurnMinter is ERC20, Ownable, ReentrancyGuard, IBurnRedeemable, IERC16
 
     uint256 public constant AMP_START = 3000;
     uint256 public constant AMP_END = 1;
-    uint256 public constant BASE_RATIO = 100_000; // 100k XEN = 1 XBURN
+    uint256 public constant BASE_RATIO = 1_000_000; // 1M XEN = 1 XBURN
     uint256 public constant MIN_TERM = 1 days;
     uint256 public constant MAX_TERM = 3650 days; // ~10 years
-    uint256 public constant INITIAL_SUPPLY = 1_000_000 * 10**18;
-    uint256 public constant SWAP_THRESHOLD = 100_000 * 1e18;
-    uint256 public constant CALLER_REWARD_PERCENTAGE = 5;
+    uint256 public constant INITIAL_SUPPLY = 1_000_000 * 10**18; // 1M XBURN for LP
+    uint256 public constant SWAP_THRESHOLD = 500_000_000 * 1e18; // 500M XEN trigger
+    uint256 public constant CALLER_REWARD_PERCENTAGE = 5; // 5% of threshold
     uint256 public constant MAX_DEADLINE = 15 minutes;
-    uint256 public constant MINIMUM_LIQUIDITY = 100_000 * 1e18;
+    uint256 public constant MINIMUM_LIQUIDITY = 1_000_000_000_000 * 1e18; // 1T XEN minimum for LP
     uint256 public constant MAX_BATCH_SIZE = 25; // Reduced from 50 to 25 for gas optimization and reliability
 
     // ------------------------------------------------
@@ -221,7 +221,7 @@ contract XBurnMinter is ERC20, Ownable, ReentrancyGuard, IBurnRedeemable, IERC16
      * @dev Initializes liquidity in Uniswap
      * @param xenAmount Amount of XEN to provide for liquidity
      */
-    function initializeLiquidity(uint256 xenAmount) external onlyOwner {
+    function initializeLiquidity(uint256 xenAmount) external onlyOwner nonReentrant {
         if (liquidityInitialized) revert LiquidityAlreadyInitialized();
         if (xenAmount < MINIMUM_LIQUIDITY) revert InsufficientXen(MINIMUM_LIQUIDITY, xenAmount);
         if (XEN.balanceOf(msg.sender) < xenAmount) revert InsufficientXen(xenAmount, XEN.balanceOf(msg.sender));
@@ -393,6 +393,8 @@ contract XBurnMinter is ERC20, Ownable, ReentrancyGuard, IBurnRedeemable, IERC16
      */
     function burnXEN(uint256 amount, uint256 termDays) external nonReentrant {
         if (amount == 0) revert InvalidAmount(amount);
+        // Audit recommendation: Ensure minimum burn amount >= base ratio
+        require(amount >= BASE_RATIO, "InvalidAmount");
         if (termDays * 1 days > MAX_TERM) revert InvalidTerm(termDays, MAX_TERM / 1 days);
         
         // Step 1: Handle XEN tokens (burn + accumulate)

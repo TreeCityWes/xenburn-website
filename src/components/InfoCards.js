@@ -20,8 +20,11 @@ export const InfoCards = () => {
       <div className="info-card">
         <FireParticles width={200} height={100} intensity={0.2} type="audit" />
         <div className="info-card-content">
-          <h3>AI Audit</h3>
-          <p>Review the automated audit conducted on the smart contracts</p>
+          <h3>AI Security Audit</h3>
+          <p>
+            The AI security audit (<a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer">here</a>) was completed in April 2025 
+            and the project addressed issues found in the audit (<a href="/XBurnAudit-Response.pdf" target="_blank" rel="noopener noreferrer">here</a>).
+          </p>
         </div>
         <a href="/XBurnAudit-April2025.pdf" className="info-button" target="_blank" rel="noopener noreferrer">
           <span>VIEW PDF</span>

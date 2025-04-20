@@ -6,6 +6,7 @@ import { Tooltip } from '../../utils/components/Tooltip';
 import { XEN_ADDRESS, XENBURNER_ADDRESS } from '../../constants/addresses';
 import xenAbi from '../../contracts/xen.json';
 import { useWallet } from '../../context/WalletContext';
+import FireParticles from '../FireParticles';
 
 // Import utility functions
 import { 
@@ -37,10 +38,22 @@ const BurnXENTab = ({
   // Add default value for xenBalance
   const safeXenBalance = xenBalance || '0';
   
-  // Format the raw approval value from context
-  const formattedXenApproval = xenApprovalRaw 
-    ? ethers.utils.formatUnits(xenApprovalRaw, 18) 
-    : '0';
+  // Format the raw approval value from context, checking for MAX
+  const formattedXenApproval = React.useMemo(() => {
+    if (!xenApprovalRaw) {
+      return '0';
+    }
+    // Check if the raw value equals MaxUint256
+    if (xenApprovalRaw.eq(ethers.constants.MaxUint256)) {
+      return 'MAX';
+    }
+    // Otherwise, format the number
+    try {
+      return ethers.utils.formatUnits(xenApprovalRaw, 18);
+    } catch {
+      return '0'; // Fallback in case of formatting error
+    }
+  }, [xenApprovalRaw]);
 
   // Handler for input change
   const handleInputChange = (e) => {
@@ -95,7 +108,7 @@ const BurnXENTab = ({
 
     setIsApproveLoading(true);
     try {
-        console.log(`Approving ${xenAmount} XEN tokens...`);
+        console.log(`Approving ${xenAmount} cbXEN tokens...`);
         const amountToApproveWei = ethers.utils.parseUnits(xenAmount, 18);
         
         const xenContract = new ethers.Contract(XEN_ADDRESS, xenAbi, signer);
@@ -107,9 +120,9 @@ const BurnXENTab = ({
         // Refetch ALL balances (including approval) after transaction confirmation
         if (fetchBalances) await fetchBalances(provider, account, true); 
         
-        toast.success(`${xenAmount} XEN tokens approved successfully!`);
+        toast.success(`${xenAmount} cbXEN tokens approved successfully!`);
     } catch (err) {
-        console.error('Error approving XEN tokens:', err);
+        console.error('Error approving cbXEN tokens:', err);
         toast.error(`Approval failed: ${err.reason || err.message}`);
         setError('Approval failed');
     } finally {
@@ -131,6 +144,13 @@ const BurnXENTab = ({
         return;
     }
 
+    // Add minimum burn amount check
+    if (parseFloat(xenAmount) < 1000000) {
+        toast.error('Minimum burn amount is 1,000,000 cbXEN');
+        setError('Amount below minimum'); // Set a specific error state if needed
+        return;
+    }
+
     if (safelyCompareWithBalance(xenAmount, safeXenBalance)) {
         toast.error('Amount exceeds your balance');
         setError('Amount exceeds balance');
@@ -146,7 +166,7 @@ const BurnXENTab = ({
 
     setIsBurnLoading(true);
     try {
-        console.log(`Burning ${xenAmount} XEN for ${selectedTerm} days...`);
+        console.log(`Burning ${xenAmount} cbXEN for ${selectedTerm} days...`);
         const xburnMinterWithSigner = xburnMinterContract.connect(signer);
         const amountWei = ethers.utils.parseUnits(xenAmount, 18);
         
@@ -155,14 +175,14 @@ const BurnXENTab = ({
         toast('Burn transaction submitted. Waiting for confirmation...', { icon: '🔥' });
         await tx.wait();
         
-        toast.success('XEN burned successfully!');
+        toast.success('cbXEN burned successfully!');
         
         setXenAmount('');
         // Refresh balances (including approval) via WalletContext
         if (fetchBalances) await fetchBalances(provider, account, true);
 
     } catch (err) {
-        console.error('Error burning XEN:', err);
+        console.error('Error burning cbXEN:', err);
         toast.error(`Burn failed: ${err.reason || err.message}`);
         setError('Burn transaction failed');
     } finally {
@@ -181,7 +201,7 @@ const BurnXENTab = ({
   
   // Calculate base amount
   const baseAmount = xenAmount && parseFloat(xenAmount) > 0 
-    ? parseFloat(xenAmount) / 100000 
+    ? parseFloat(xenAmount) / 1000000
     : 0;
     
   // Calculate bonus
@@ -206,15 +226,15 @@ const BurnXENTab = ({
 
   return (
     <div className="burn-xen-tab">
-      <h2 className="burn-title burnXEN">Burn XEN Tokens</h2>
-      <p className="burn-subtitle">Burn your XEN tokens to mint XBURN!</p>
+      <h2 className="burn-title burnXEN">Burn cbXEN Tokens</h2>
+      <p className="burn-subtitle">Burn your cbXEN tokens on Base Network to mint XBURN!</p>
 
       <div className="burn-form">
         <div className={`input-token-container ${error ? 'error' : ''}`}>
           <div className="input-token-header">
             <div className="token-info">
-              <img src={xenLogo} alt="XEN" className="token-logo" />
-              <span className="token-symbol">XEN</span>
+              <img src={xenLogo} alt="cbXEN" className="token-logo" />
+              <span className="token-symbol">cbXEN</span>
             </div>
             <div className="input-field">
               <input
@@ -238,12 +258,12 @@ const BurnXENTab = ({
           <div className="token-details">
             <div className="balance-info">
               <span className="balance-label">Balance:</span>
-              <span className="balance-value">{formatDecimals(safeXenBalance)} XEN</span>
+              <span className="balance-value">{formatDecimals(safeXenBalance)} cbXEN</span>
             </div>
             <div className="approved-info">
               <span className="approved-label">Approved:</span>
               <span className="approved-value">
-                {formatDecimals(formattedXenApproval)} XEN
+                {formatDecimals(formattedXenApproval)} cbXEN
               </span>
             </div>
           </div>
@@ -285,29 +305,33 @@ const BurnXENTab = ({
                   Approving...
                 </>
               ) : (
-                'APPROVE XEN'
+                'APPROVE cbXEN'
               )}
             </button>
           )}
-          <button
-            className="burn-button"
-            onClick={burnXEN}
-            disabled={!canBurn || isBurnLoading || isApproveLoading}
-          >
-            {isBurnLoading ? (
-              <>
-                <div className="loader"></div>
-                Burning...
-              </>
-            ) : isApproveLoading ? (
-              <>
-                <div className="loader"></div>
-                Approving...
-              </>
-            ) : (
-              'BURN XEN NOW'
-            )}
-          </button>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <FireParticles width="100%" height="100%" intensity={0.2} isBackground={true} />
+            <button
+              className="burn-button"
+              onClick={burnXEN}
+              disabled={!canBurn || isBurnLoading || isApproveLoading}
+              style={{ position: 'relative', zIndex: 1, width: '100%' }}
+            >
+              {isBurnLoading ? (
+                <>
+                  <div className="loader"></div>
+                  Burning...
+                </>
+              ) : isApproveLoading ? (
+                <>
+                  <div className="loader"></div>
+                  Approving...
+                </>
+              ) : (
+                'BURN cbXEN NOW'
+              )}
+            </button>
+          </div>
         </div>
 
         {error && <div className="error-message tab-error">{error}</div>}
@@ -316,6 +340,7 @@ const BurnXENTab = ({
 
         <div className="conversion-info">
           <div className="reward-calculation">
+            <FireParticles width="100%" height="100%" intensity={0.3} isBackground={false} />
             <div className="reward-header">
               <span>Potential XBURN Reward</span>
               <Tooltip content="This is an estimate based on current AMP and selected term. Actual reward determined at time of burn.">
@@ -324,7 +349,7 @@ const BurnXENTab = ({
             </div>
             
             <div className="base-amount-display">
-              <div className="base-label">Base ({formatDecimals(xenAmount || 0)} XEN / 100k)</div>
+              <div className="base-label">Base ({formatDecimals(xenAmount || 0)} cbXEN / 1M)</div>
               <div className="base-result">
                 {formatDecimals(baseAmount, 6)} XBURN
               </div>

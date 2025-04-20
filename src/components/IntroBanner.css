@@ -1,0 +1,19 @@
+/* src/components/IntroBanner.css */
+.intro-banner {
+  padding: 15px 20px;
+  margin: 0 auto 20px auto; /* Add some bottom margin */
+  max-width: 680px; /* Match width of panels below */
+  width: 100%;
+  text-align: center;
+  /* background: rgba(30, 31, 41, 0.5); Removed background */
+  /* border-radius: 12px; Removed border-radius */
+  /* border: 1px solid rgba(255, 68, 0, 0.1); Removed border */
+  box-sizing: border-box;
+}
+
+.intro-banner p {
+  margin: 0;
+  color: #ccc; /* Lighter text color */
+  font-size: 15px;
+  line-height: 1.5;
+} 

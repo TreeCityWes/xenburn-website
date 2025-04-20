@@ -8,6 +8,7 @@ import StatsPanel from './components/StatsPanel/index';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { BurnPanelProvider } from './components/BurnPanel/BurnPanelContext';
+import { IntroBanner } from './components/IntroBanner';
 import './App.css';
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
               <img src="/xenburn.png" alt="XENBURNER" />
             </div>
             
+            <IntroBanner />
+
             <main className="main-content">
               {activeTab === 'burn' && (
                 <BurnPanelProvider>

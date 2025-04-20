@@ -99,36 +99,15 @@
   color: #ff6600;
 }
 
-/* Fix button styling - Simplify overrides */
-/* REMOVED .button-container override */
-/* Use container style from BurnPanel.css */
-
 .approve-button, .burn-button {
-  /* Keep only necessary overrides if any */
-  /* Example: If different padding/flex needed ONLY for this tab */
-  /* flex: 1; */ /* Already width: 100% in base */
-  /* padding: 12px; */ /* Keep base padding? */
-  /* font-weight: 600; */ /* Keep base font-weight? */
-  /* ... remove properties defined in BurnPanel.css ... */
 }
 
 .approve-button {
-  /* REMOVED background-color override - use base grey */
-  /* REMOVED color override - use base white */
 }
 
 .burn-button {
-  /* REMOVED background-color override - use base gradient */
-  /* color: #fff; */ /* Already default */
 }
 
-/* REMOVED hover/disabled overrides if base styles are sufficient */
-/* .approve-button:hover:not(:disabled) { ... } */
-/* .burn-button:hover:not(:disabled) { ... } */
-/* .approve-button:disabled, .burn-button:disabled { ... } */
-
-/* Styles moved from BurnPanel.css */
-/* Title Gradient for BurnXEN Tab */
 .burn-title.burnXEN {
   background: linear-gradient(to right, #ff4400, #ff6600);
   -webkit-background-clip: text;
@@ -220,7 +199,6 @@
   outline: none;
 }
 
-/* Enhance input focus/hover */
 .custom-days-input input:focus {
   border-bottom-color: var(--color-flame-500);
   box-shadow: 0 1px 0 0 var(--color-flame-500), /* Mimic glow below */
@@ -233,7 +211,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Responsive styles for Term Selector */
 @media (max-width: 480px) {
   .term-row {
     flex-wrap: wrap;

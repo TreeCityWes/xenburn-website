@@ -50,7 +50,7 @@ const SwapBurnTab = ({
     return `${Math.min(100, Math.floor(progress.percentage * 100))}%`;
   };
 
-  // Calculate remaining XEN needed
+  // Calculate remaining cbXEN needed
   const calculateRemaining = () => {
     if (!progress || !progress.accumulated || !progress.threshold) {
       console.log("Missing accumulated or threshold values:", progress);
@@ -95,13 +95,13 @@ const SwapBurnTab = ({
     <div className="tab-content">
       <h2 className="burn-title swapBurn">Swap & Burn</h2>
       <p className="burn-subtitle">
-        Swap accumulated XEN for XBURN when threshold is reached
+        Swap accumulated cbXEN for XBURN when the 500,000,000 cbXEN threshold is reached
       </p>
       
       <div className="progress-container">
         <div className="progress-section-header">
           <h3>Accumulation Progress</h3>
-          <Tooltip text="When the threshold is reached, anyone can trigger the Swap & Burn process to convert accumulated XEN to XBURN and burn it, reducing supply.">
+          <Tooltip text="When the 500M cbXEN threshold is reached, anyone can trigger the Swap & Burn process to convert accumulated cbXEN to XBURN and burn it, reducing supply.">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -133,7 +133,7 @@ const SwapBurnTab = ({
               )}
               <span>
                 {progress && progress.accumulated && progress.threshold ? (
-                  `${formatDecimals(progress.accumulated, { useCommas: true })} / ${formatDecimals(progress.threshold, { useCommas: true })} XEN`
+                  `${formatDecimals(progress.accumulated, { useCommas: true })} / ${formatDecimals(progress.threshold, { useCommas: true })} cbXEN`
                 ) : (
                   'Loading...'
                 )}
@@ -144,7 +144,7 @@ const SwapBurnTab = ({
         
         <div className="accumulation-details">
           <div className="accumulation-row">
-            <span className="accumulation-label">Accumulated XEN:</span>
+            <span className="accumulation-label">Accumulated cbXEN:</span>
             <span className="accumulation-value">
               {progress && progress.accumulated ? 
                 formatDecimals(progress.accumulated, { useCommas: true }) : 
@@ -162,7 +162,7 @@ const SwapBurnTab = ({
           <div className="accumulation-row">
             <span className="accumulation-label">Remaining Needed:</span>
             <span className="accumulation-value">
-              {calculateRemaining()} XEN
+              {calculateRemaining()} cbXEN
             </span>
           </div>
         </div>
@@ -173,7 +173,7 @@ const SwapBurnTab = ({
           ) : (
             <span>
               {progress && progress.accumulated && progress.threshold ? (
-                `${100 - Math.floor(getPercentage())}% remaining until threshold is reached`
+                `${100 - Math.floor(getPercentage())}% remaining until the 500M cbXEN threshold is reached`
               ) : (
                 'Calculating...'
               )}
@@ -202,7 +202,7 @@ const SwapBurnTab = ({
           
           {progress && !isThresholdReached() && (
             <div className="swap-disabled-reason">
-              Swap & Burn will be enabled once the XEN threshold is reached
+              Swap & Burn will be enabled once the 500,000,000 cbXEN threshold is reached
             </div>
           )}
         </div>
@@ -211,7 +211,7 @@ const SwapBurnTab = ({
           <div className="swap-info-note">
             <p>When you click the Swap & Burn button, the contract will:</p>
             <ol>
-              <li>Swap the accumulated XEN for XBURN tokens</li>
+              <li>Swap the accumulated cbXEN for XBURN tokens</li>
               <li>Burn the received XBURN tokens</li>
               <li>Reset the accumulation counter for the next cycle</li>
             </ol>

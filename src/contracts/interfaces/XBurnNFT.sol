@@ -27,7 +27,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
     
     uint256 public constant MAX_TERM_DAYS = 3650; // ~10 years
     uint256 public constant MAX_BATCH_SIZE = 35; // Reduced from 100 to 35 for gas optimization and reliability
-    uint256 public constant BASE_RATIO = 100_000;
+    uint256 public constant BASE_RATIO = 1_000_000; // 1M XEN = 1 XBURN
     // ------------------------------------------------
     // ================ State Variables ==============
     // ------------------------------------------------
@@ -138,7 +138,7 @@ contract XBurnNFT is ERC721, ERC721Enumerable, ERC2981, Ownable {
         uint256 rewardAmount
     ) internal {
         // Calculate the base mint amount
-        uint256 baseMint = xenAmount / 100_000; // Using BASE_RATIO
+        uint256 baseMint = xenAmount / BASE_RATIO; // Using updated BASE_RATIO
         
         // Set maturity timestamp
         uint256 maturityTs;

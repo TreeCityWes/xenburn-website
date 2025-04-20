@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatDecimals } from '../../utils/tokenUtils';
 import { Tooltip } from '../../utils/components';
+import FireParticles from '../FireParticles';
 
 /**
  * BurnXBURNTab - Component for the "Burn XBURN" tab content
@@ -76,32 +77,38 @@ const BurnXBURNTab = ({
               'APPROVE XBURN'
             )}
           </button>
-          <button
-            className="burn-button"
-            onClick={handleBurn}
-            disabled={
-              isLoading || 
-              approving ||
-              !amount || 
-              amount === '0' || 
-              parseFloat(approved) < parseFloat(amount || 0) ||
-              amountExceedsBalance
-            }
-          >
-            {isLoading ? (
-              <>
-                <div className="loader"></div>
-                Burning...
-              </>
-            ) : approving ? (
-              <>
-                <div className="loader"></div>
-                Waiting for approval...
-              </>
-            ) : (
-              'BURN XBURN NOW'
-            )}
-          </button>
+          {/* Wrap burn button with a relative container */}
+          <div style={{ position: 'relative', flex: 1 }}> 
+            {/* Add FireParticles behind the button */}
+            <FireParticles width="100%" height="100%" intensity={0.2} isBackground={true} type="xburn" />
+            <button
+              className="burn-button"
+              onClick={handleBurn}
+              disabled={
+                isLoading || 
+                approving ||
+                !amount || 
+                amount === '0' || 
+                parseFloat(approved) < parseFloat(amount || 0) ||
+                amountExceedsBalance
+              }
+              style={{ position: 'relative', zIndex: 1, width: '100%' }} // Ensure button is above particles
+            >
+              {isLoading ? (
+                <>
+                  <div className="loader"></div>
+                  Burning...
+                </>
+              ) : approving ? (
+                <>
+                  <div className="loader"></div>
+                  Waiting for approval...
+                </>
+              ) : (
+                'BURN XBURN NOW'
+              )}
+            </button>
+          </div>
         </div>
         
         <div className="section-divider"></div>

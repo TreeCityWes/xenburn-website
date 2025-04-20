@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useGlobalData } from '../context/GlobalDataContext';
+import FireParticles from './FireParticles';
 import './NFTPanel.css';
 import { ethers } from 'ethers';
 
@@ -445,6 +446,7 @@ export const NFTPanel = () => {
 
   return (
     <div className="nft-panel">
+      <FireParticles width="100%" height="100%" intensity={0.1} isBackground={true} type="xburn" />
       <h2>Your XBURN NFTs</h2>
       <p className="subtitle">View and claim your XBURN NFTs</p>
       {renderContent()}

@@ -128,3 +128,28 @@ Reusable UI components have been moved to a dedicated file:
 2. **Better Reusability**: UI components and utility functions can be reused across the application.
 3. **Reduced File Size**: The BurnPanel.js file is now significantly smaller and more focused.
 4. **Better Separation of Concerns**: UI components, utility functions, and constants are now properly separated.
+
+## Post-Audit Contract Updates (April 19, 2025)
+
+Following a security audit completed on April 19, 2025, the following changes were implemented in the `XBurnMinter.sol` contract based on the audit recommendations and a final review of token economic parameters:
+
+### Code Changes Implemented:
+
+1.  **Minimum Burn Amount Check:**
+    *   Added a `require(amount >= BASE_RATIO, "InvalidAmount")` check to the `burnXEN` function. This prevents users from burning an amount of XEN too small to generate any base XBURN (due to integer division), ensuring the amount is at least the `BASE_RATIO` (now 1,000,000 XEN).
+2.  **`nonReentrant` Modifier on `initializeLiquidity`:**
+    *   Added the `nonReentrant` modifier to the `initializeLiquidity` function for consistency and robustness, aligning with best practices even for `onlyOwner` functions.
+
+### Finalized Token Economic Parameters:
+
+The following parameters were confirmed and updated in the contracts (`XBurnMinter.sol`, `XBurnNFT.sol`) or defined for deployment:
+
+*   **Base Burn Rate:** `1,000,000` cbXEN per 1 XBURN (`BASE_RATIO` constant).
+*   **Seed LP Amounts:** `1,000,000,000,000` cbXEN + `1,000,000` XBURN (`MINIMUM_LIQUIDITY` and `INITIAL_SUPPLY` constants).
+*   **cbXEN Burn Split:** 80% destroyed, 20% saved for swap (handled in `_handleXenTokens` logic).
+*   **Swap-and-Burn Trigger:** `500,000,000` cbXEN accumulated (`SWAP_THRESHOLD` constant).
+*   **Caller Bounty:** 5% of the threshold (`CALLER_REWARD_PERCENTAGE` constant).
+*   **Liquidity Pool Lock:** 100% LP tokens locked for >= 1 year (Operational step for deployment).
+*   **Owner Renouncement:** Owner privileges to be renounced post-deployment (Operational step).
+
+These updates address the actionable feedback from the audit and finalize the core mechanics for mainnet.
