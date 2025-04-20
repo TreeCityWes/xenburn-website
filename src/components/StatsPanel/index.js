@@ -70,11 +70,12 @@ const StatsPanel = () => {
     }
   };
 
-  // Helper to render a single stat item - Reinstated
-  const renderStatItem = (label, value, formatOptions = {}, className = '') => (
+  // Helper to render a single stat item - Removed internal formatNumber call
+  const renderStatItem = (label, value, className = '') => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
-      <span className="stat-value">{formatNumber(value, formatOptions)}</span>
+      {/* Display value directly */}
+      <span className="stat-value">{value}</span> 
     </div>
   );
 
@@ -111,12 +112,14 @@ const StatsPanel = () => {
         <div className="stats-content-area">
           {renderSection("User Wallet & Burn Activity", (
             <>
-              {renderStatItem("cbXEN Balance", balances?.xen || '0')}
-              {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw), { isApproved: true })}
-              {renderStatItem("User cbXEN Burned", stats.userXenBurnedAmount || '0', {}, 'highlight-burn')}
-              {renderStatItem("XBURN Balance", balances?.xburn || '0')}
-              {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw), { isApproved: true })}
-              {renderStatItem("User XBURN Burned", stats.userXburnBurnedAmount || '0', {}, 'highlight-burn')}
+              {/* Format balances before passing */}
+              {renderStatItem("cbXEN Balance", formatNumber(balances?.xen || '0'))}
+              {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw))}
+              {/* Pass pre-formatted stats directly */}
+              {renderStatItem("User cbXEN Burned", stats.userXenBurned || '0', 'highlight-burn')}
+              {renderStatItem("XBURN Balance", formatNumber(balances?.xburn || '0'))}
+              {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw))}
+              {renderStatItem("User XBURN Burned", stats.userXburnBurned || '0', 'highlight-burn')}
             </>
           ))}
 
@@ -124,18 +127,20 @@ const StatsPanel = () => {
             <>
               {renderStatItem("cbXEN Price", `$${parseFloat(xenPrice || '0').toPrecision(6)}`)}
               {renderStatItem("XBURN Price", `$${parseFloat(xburnPrice || '0').toFixed(6)}`)}
-              {renderStatItem("LP cbXEN", pool.xenInPool || '0')}
-              {renderStatItem("LP XBURN", pool.xburnInPool || '0')}
-              {renderStatItem("cbXEN per XBURN", calculateRatio(), { isRatio: true })}
+              {/* Pass pre-formatted pool data directly */}
+              {renderStatItem("LP cbXEN", stats.xenInPool || '0')}
+              {renderStatItem("LP XBURN", stats.xburnInPool || '0')}
+              {renderStatItem("cbXEN per XBURN", calculateRatio())}
               {renderStatItem("LP Value", `$${formatNumber(parseFloat(pool.tvl || '0').toFixed(2))}`)}
             </>
           ))}
 
           {renderSection("Global Burn & Supply Stats", (
             <>
-              {renderStatItem("Total cbXEN Burned", stats.globalXenBurned || '0', {}, 'highlight-burn')}
-              {renderStatItem("Total XBURN Burned", stats.globalXburnBurned || '0', {}, 'highlight-burn')}
-              {renderStatItem("Total XBURN Supply", stats.totalXburnSupply || '0')}
+              {/* Pass pre-formatted stats directly */}
+              {renderStatItem("Total cbXEN Burned", stats.totalXenBurned || '0', 'highlight-burn')}
+              {renderStatItem("Total XBURN Burned", stats.totalXburnBurned || '0', 'highlight-burn')}
+              {renderStatItem("Total XBURN Supply", stats.totalXburnMinted || '0')}
               {renderStatItem("Global Burn %", `${(parseFloat(stats.globalBurnPercentage || '0') / 100).toFixed(2)}%`)}
               {renderStatItem("Current AMP", stats.currentAMP || '0')}
               {/* Contract link removed as it was static and potentially confusing */}
