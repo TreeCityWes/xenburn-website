@@ -19,5 +19,5 @@ export const PAIR_ABI = [
 export const MAX_TERM_DAYS = 3650;
 
 // Default amplification parameters
-export const DEFAULT_AMP_START = 3000;
-export const DEFAULT_AMP_SNAPSHOT = 1; 
+export const DEFAULT_AMP_START = 2397;
+export const DEFAULT_AMP_SNAPSHOT = 2397; 
