@@ -210,6 +210,8 @@ export const calculateMultiplier = (days, ampStart = 3000, ampSnapshot = 3000) =
   const aStart = Number(ampStart);
   const aSnapshot = Number(ampSnapshot);
   
+  console.log('Multiplier calculation inputs:', { dayValue, aStart, aSnapshot });
+  
   // For specific day values that match our predefined multipliers, return exact values
   if (dayValue === 183) return 1.5;
   if (dayValue === 2193) return 7.5;
@@ -217,6 +219,8 @@ export const calculateMultiplier = (days, ampStart = 3000, ampSnapshot = 3000) =
   // Use the contract's formula:
   // multiplier = 1 + (termDays * ampSnapshot) / (365 * ampStart)
   const multiplier = 1 + (dayValue * aSnapshot) / (365 * aStart);
+  
+  console.log('Calculated multiplier:', multiplier);
   
   // Round to 2 decimal places for display
   return parseFloat(multiplier.toFixed(2));

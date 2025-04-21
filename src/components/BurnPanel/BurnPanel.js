@@ -312,8 +312,8 @@ const BurnPanel = () => {
       {activeTab === 'burnXEN' && (
         <BurnXENTab
           xenBalance={xenBalance} // From WalletContext
-          ampStart={DEFAULT_AMP_START} 
-          ampSnapshot={parseFloat(globalStatsData?.data?.currentAMP || DEFAULT_AMP_SNAPSHOT.toString())} // Use the imported constant
+          ampStart={2397} // Hardcode the XEN AMP value
+          ampSnapshot={2397} // Hardcode the XEN AMP value
           daysSinceLaunch={parseInt(globalStatsData?.data?.daysSinceLaunch || '0')}
           totalBurnedXEN={globalStatsData?.data?.totalXenBurned || '0'}
           totalMintedXBURN={globalStatsData?.data?.totalXburnMinted || '0'}
