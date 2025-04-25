@@ -97,11 +97,11 @@
 */
 
 .stat-item {
-  background: rgba(20, 21, 31, 0.5);
+  background: rgba(255, 255, 255, 0.03); /* Subtle default background */
   padding: 12px;
   border-radius: 8px;
   text-align: center;
-  border: 1px solid transparent; /* Base border */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Default subtle gray border */
   transition: background 0.2s, border-color 0.2s;
   display: flex; /* Use flexbox */
   flex-direction: column; /* Stack label and value */
@@ -126,6 +126,19 @@
   word-break: break-word;
 }
 
+/* New styles for vertical stacking */
+.stat-pair-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between the paired items */
+}
+
+/* Ensure stat items within the pair container take full width */
+.stat-pair-container .stat-item {
+  width: 100%;
+  margin-bottom: 0; /* Remove default bottom margin if any */
+}
+
 /* Specific styling for highlighted burn stats - Toned down */
 .stat-item.highlight-burn {
   border-color: rgba(255, 87, 34, 0.3); /* Subtler border */
@@ -140,6 +153,22 @@
   color: #ff6e40; /* Slightly less intense orange */
   font-weight: 600; /* Slightly less bold */
   text-shadow: 0 0 5px rgba(255, 87, 34, 0.3); /* Subtler shadow */
+}
+
+/* New styles for Green Value Highlight */
+.stat-item.highlight-value-green {
+  border-color: rgba(0, 255, 65, 0.3); /* Neon green border */
+  background: rgba(0, 255, 65, 0.05); /* Subtle green background tint */
+}
+
+.stat-item.highlight-value-green .stat-label {
+  color: #4CAF50; /* A slightly less intense green for label */
+}
+
+.stat-item.highlight-value-green .stat-value {
+  color: #00FF41; /* Neon green value */
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.4); /* Green glow */
 }
 
 /* Make contract link distinct */
@@ -193,4 +222,14 @@
    .stat-value {
     font-size: 1.4rem; /* Slightly larger again for clarity */
   }
+}
+
+/* Style for Last Updated Timestamp */
+.last-updated-timestamp {
+  text-align: center;
+  margin-top: 25px; /* Space above timestamp */
+  font-size: 0.8rem;
+  color: #888; /* Gray color */
+  position: relative; /* Keep above particles if necessary */
+  z-index: 1;
 } 

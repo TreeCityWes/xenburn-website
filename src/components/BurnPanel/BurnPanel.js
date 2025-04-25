@@ -29,7 +29,6 @@ import {
 // Import constants
 import { 
   DEFAULT_AMP_START,
-  DEFAULT_AMP_SNAPSHOT
 } from '../../utils/constants';
 
 // Import contract addresses and ABIs
@@ -38,7 +37,6 @@ import {
   XENBURNER_ADDRESS
 } from '../../constants/addresses';
 // Removed unused: xenAbi, 
-import xenBurnerAbi from '../../contracts/XBurnMinter.json';
 
 // Import wallet context
 import { useWallet } from '../../context/WalletContext';
@@ -110,21 +108,24 @@ const BurnPanel = () => {
       const threshold = ethers.utils.formatUnits(progressRaw.threshold || '0', 18);
       const accumulatedNum = parseFloat(accumulated);
       const thresholdNum = parseFloat(threshold);
-      // Recalculate percentage here accurately without capping for logging
-      const calculatedPercentage = thresholdNum > 0 ? (accumulatedNum / thresholdNum) * 100 : 0;
       
-      // Use the potentially capped percentage from contract if available and valid, otherwise use calculated (capped)
-      let percentageToStore = Math.min(100, calculatedPercentage);
-      if (progressRaw.percentage !== undefined) {
+      // Calculate percentage based on contract logic (basis points / 100)
+      let percentageFromContract = 0;
+      if (progressRaw.percentage !== undefined && progressRaw.percentage.gt(0)) { // Check if contract returned a valid percentage > 0
         try {
-          // Format contract percentage (assuming it's also 18 decimals or similar scale)
-          const contractPercentage = parseFloat(ethers.utils.formatUnits(progressRaw.percentage || '0', 18)); 
-          percentageToStore = Math.min(100, contractPercentage * 100); // Adjust based on how contract returns percentage
-        } catch { 
-           console.warn("Could not parse percentage from contract, using calculated.");
-        }
-      }
-      
+          // Contract returns basis points (0-10000), divide by 100 for percentage (0-100)
+          percentageFromContract = progressRaw.percentage.toNumber() / 100;
+        } catch (e) {
+          console.warn("Could not parse percentage from contract, using calculated.", e);
+          percentageFromContract = 0; // Fallback if conversion fails
+        } 
+      } 
+
+      // Use contract percentage if valid, otherwise calculate manually
+      const percentageToStore = percentageFromContract > 0 
+          ? Math.min(100, percentageFromContract) // Use contract value (capped at 100)
+          : thresholdNum > 0 ? Math.min(100, (accumulatedNum / thresholdNum) * 100) : 0; // Fallback calculation (capped at 100)
+
       const progressData = { 
           accumulated,
           threshold,
@@ -313,7 +314,7 @@ const BurnPanel = () => {
         <BurnXENTab
           xenBalance={xenBalance} // From WalletContext
           ampStart={2397} // Hardcode the XEN AMP value
-          ampSnapshot={2397} // Hardcode the XEN AMP value
+          ampSnapshot={parseInt(globalStatsData?.data?.currentAMP || DEFAULT_AMP_START.toString())} // Pass current AMP
           daysSinceLaunch={parseInt(globalStatsData?.data?.daysSinceLaunch || '0')}
           totalBurnedXEN={globalStatsData?.data?.totalXenBurned || '0'}
           totalMintedXBURN={globalStatsData?.data?.totalXburnMinted || '0'}

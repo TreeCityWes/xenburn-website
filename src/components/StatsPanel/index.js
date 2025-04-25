@@ -69,28 +69,84 @@ const formatNumber = (num, options = {}) => {
   return val;
 };
 
+// Format very small prices like $0.0(zeros) semnifican digits
+const formatSmallPrice = (price, significantDigits = 4, maxTotalDecimals = 10) => {
+  const priceNum = parseFloat(price);
+  if (isNaN(priceNum) || priceNum === 0) {
+    return `$0.00`; // Or handle as needed
+  }
+
+  // If the number is not extremely small, format normally
+  if (priceNum >= 0.0001) {
+    return `$${priceNum.toFixed(6)}`; // Use standard formatting for larger small numbers
+  }
+
+  // Convert to string with high precision to find zeros
+  const priceString = priceNum.toFixed(20); // Adjust precision as needed
+  const decimalPart = priceString.split('.')[1] || '';
+
+  let firstDigitIndex = -1;
+  for (let i = 0; i < decimalPart.length; i++) {
+    if (decimalPart[i] !== '0') {
+      firstDigitIndex = i;
+      break;
+    }
+  }
+
+  if (firstDigitIndex === -1) {
+    return `$0.00`; // Should not happen if priceNum !== 0
+  }
+
+  const zeroCount = firstDigitIndex;
+  const significantPart = decimalPart.substring(firstDigitIndex, firstDigitIndex + significantDigits);
+
+  // Ensure the total decimal places (zeros + significant digits) don't exceed the max
+  const allowedSignificantDigits = Math.max(1, maxTotalDecimals - zeroCount);
+  const finalSignificantPart = significantPart.substring(0, allowedSignificantDigits);
+
+  return `$0.0(${zeroCount})${finalSignificantPart}`;
+};
+
 const StatsPanel = () => {
-  const { xenApprovalRaw, xburnApprovalRaw } = useWallet();
   const { 
       balances, 
       stats: globalStatsData, 
       xenPrice, 
       xburnPrice,
-      poolTvl
+      poolTvl,
+      totalNFTs,
+      externalStats
   } = useGlobalData();
 
   // Simplify state access
   const stats = globalStatsData?.data || {};
+  const extStats = externalStats?.data || {};
+
+  // --- Calculate Derived Stats ---
+  const parseAndMultiply = (val1, val2) => {
+    const num1 = parseFloat(String(val1).replace(/,/g, '') || '0');
+    const num2 = parseFloat(String(val2).replace(/,/g, '') || '0');
+    if (isNaN(num1) || isNaN(num2)) return 0;
+    return num1 * num2;
+  };
+
+  const usdValueXenBurned = parseAndMultiply(stats.totalXenBurned, xenPrice);
+  const usdValueXburnBurned = parseAndMultiply(stats.totalXburnBurned, xburnPrice);
+  const xburnMarketCap = parseAndMultiply(stats.totalXburnMinted, xburnPrice);
 
   // Format approved values safely
   const formatApproval = (rawApproval) => {
     if (!rawApproval) return '0';
+    // Use precise check for MaxUint256
+    if (rawApproval.eq(ethers.constants.MaxUint256)) {
+      return 'MAX';
+    }
+    // Otherwise, format the number
     try {
       const formatted = ethers.utils.formatUnits(rawApproval, 18);
-      // Check if it's effectively MAX_UINT256
-      if (parseFloat(formatted) > 1e18) return 'MAX';
-      return formatNumber(formatted);
-    } catch {
+      return formatNumber(formatted); // Use the existing formatNumber for display
+    } catch (e) {
+      console.error("Error formatting approval value:", e);
       return '0'; // Handle potential errors during formatting
     }
   };
@@ -99,7 +155,7 @@ const StatsPanel = () => {
   const renderStatItem = (label, value, className = '', maxDecimals = 2) => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
-      <span className="stat-value">{typeof value === 'string' && value.startsWith('$') ? value : formatNumber(value, { maxDecimals })}</span>
+      <span className="stat-value">{value}</span>
     </div>
   );
 
@@ -136,43 +192,51 @@ const StatsPanel = () => {
         <div className="stats-content-area">
           {renderSection("User Wallet & Burn Activity", (
             <>
-              {renderStatItem("cbXEN Balance", balances?.xen || '0')}
-              {renderStatItem("cbXEN Approved", formatApproval(xenApprovalRaw))}
-              {renderStatItem("User cbXEN Burned", stats.userXenBurned || '0', 'highlight-burn', 2)}
-              {renderStatItem("XBURN Balance", balances?.xburn || '0')}
-              {renderStatItem("XBURN Approved", formatApproval(xburnApprovalRaw))}
-              {renderStatItem("User XBURN Burned", stats.userXburnBurned || '0', 'highlight-burn', 4)}
+              {renderStatItem("cbXEN Balance", formatNumber(balances?.xen || '0', {maxDecimals: 2}))}
+              {renderStatItem("XLOCK NFT Count", totalNFTs ?? '...')}
+              {renderStatItem("User cbXEN Burned", formatNumber(stats.userXenBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
+              {renderStatItem("XBURN Balance", formatNumber(balances?.xburn || '0', {maxDecimals: 2}))}
+              {renderStatItem("Current AMP", stats.currentAMP ?? '...')}
+              {renderStatItem("User XBURN Burned", formatNumber(stats.userXburnBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
             </>
           ))}
 
+          {/* Token & Pool Info Section */}
           {renderSection("Token & Pool Info", (
             <>
-              {renderStatItem("cbXEN Price", `$${parseFloat(xenPrice || '0').toPrecision(6)}`)}
-              {renderStatItem("XBURN Price", `$${parseFloat(xburnPrice || '0').toFixed(6)}`)}
-              {renderStatItem("LP cbXEN", stats.xenInPool || '0', '', 2)}
-              {renderStatItem("LP XBURN", stats.xburnInPool || '0', '', 4)}
-              {renderStatItem("cbXEN per XBURN", calculateRatio(), '', 6)}
-              {renderStatItem("LP Value", `$${formatNumber(poolTvl || '0')}`)}
+              {/* Top Row */}
+              {renderStatItem("cbXEN Price", formatSmallPrice(xenPrice, 6, 13))} {/* Keep custom format */}
+              {renderStatItem("XBURN Price", formatSmallPrice(xburnPrice, 6, 13))} {/* Keep custom format */}
+              {renderStatItem("cbXEN per XBURN", formatNumber(calculateRatio() || '0', { maxDecimals: 2 }))}
+              
+              {/* Middle Row */}
+              {renderStatItem("CBXEN LP", formatNumber(stats.xenInPool || '0', { maxDecimals: 2 }))} 
+              {renderStatItem("XBURN LP", formatNumber(stats.xburnInPool || '0', { maxDecimals: 2 }))}
+              {renderStatItem("Contract LP Value", `$${parseFloat(poolTvl || '0').toLocaleString(undefined, { maximumFractionDigits: 0 })}`)} {/* Whole USD */}
+              
+              {/* Bottom Row */}
+              {renderStatItem("CBXEN Total Supply", formatNumber(extStats.tokenSupply?.cbxen?.total_supply_formatted || '0', { maxDecimals: 2 }))}
+              {renderStatItem("XBURN Total Supply", formatNumber(extStats.tokenSupply?.xburn?.total_supply_formatted || '0', { maxDecimals: 2 }))}
+              {renderStatItem("burn ratio", "1,000,000:1")} {/* Placeholder Ratio */}
             </>
           ))}
 
           {renderSection("Global Burn & Supply Stats", (
             <>
-              {renderStatItem("Total cbXEN Burned", stats.totalXenBurned || '0', 'highlight-burn', 2)}
-              {renderStatItem("Total XBURN Burned", stats.totalXburnBurned || '0', 'highlight-burn', 4)}
-              {renderStatItem("Total XBURN Supply", stats.totalXburnMinted || '0', '', 4)}
+              <div className="stat-pair-container">
+                {renderStatItem("Total cbXEN Burned", formatNumber(stats.totalXenBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
+                {renderStatItem("Value cbXEN Burned", `$${parseFloat(usdValueXenBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+              </div>
+              <div className="stat-pair-container">
+                {renderStatItem("Total XBURN Burned", formatNumber(stats.totalXburnBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
+                {renderStatItem("Value XBURN Burned", `$${parseFloat(usdValueXburnBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+              </div>
+              <div className="stat-pair-container">
+                {renderStatItem("XBURN Circulating", formatNumber(stats.totalXburnMinted || '0', { maxDecimals: 2 }))}
+                {renderStatItem("XBURN Market Cap", `$${parseFloat(xburnMarketCap || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+              </div>
             </>
           ))}
-        </div>
-      </div>
-
-      {/* Dex Screener Embed - Updated */}
-      <div className="dexscreener-container">
-        {/* Use style tag directly as provided */}
-        <style>{`#dexscreener-embed{position:relative;width:100%;padding-bottom:125%;}@media(min-width:1400px){#dexscreener-embed{padding-bottom:65%;}}#dexscreener-embed iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:0;}`}</style>
-        <div id="dexscreener-embed">
-          {/* Use iframe tag directly as provided */}
-          <iframe src="https://dexscreener.com/base/0x93e39bd6854D960a0C4F5b592381bB8356a2D725?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe>
         </div>
       </div>
     </div>

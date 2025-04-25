@@ -11,8 +11,7 @@ export const XEN_ADDRESS = '0xffcbF84650cE02DaFE96926B37a0ac5E34932fa5'; // cbXE
 export const XBURN_MINTER_ADDRESS = '0xe89AFDeFeBDba033f6e750615f0A0f1A37C78c4A'; // XBurnMinter
 export const XENBURNER_ADDRESS = '0xe89AFDeFeBDba033f6e750615f0A0f1A37C78c4A'; // Alias for XBurnMinter
 export const XBURN_NFT_ADDRESS = '0x305C60D2fEf49FADfEe67EC530DE98f67bac861D'; // XBurnNFT 
-// Assuming XBURN Token is the same as XBurnNFT for display/linking purposes. Adjust if separate.
-export const XBURN_TOKEN_ADDRESS = '0x305C60D2fEf49FADfEe67EC530DE98f67bac861D'; 
+export const XBURN_TOKEN_ADDRESS = '0xe89AFDeFeBDba033f6e750615f0A0f1A37C78c4A'; // The actual XBURN ERC20 token
 
 // DEX / Liquidity Related (Using Uniswap v3 Universal Router on Base)
 export const UNISWAP_ROUTER_ADDRESS = '0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24'; // Provided Router Address

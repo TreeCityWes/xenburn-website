@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
@@ -11,13 +11,16 @@ import FireParticles from '../FireParticles';
 // Import utility functions
 import { 
   formatDecimals,
-  calculateMultiplier,
   safelyCompareWithBalance,
   parseInputValue
 } from '../../utils/tokenUtils';
 
 // Use public path for XEN logo
 const xenLogo = '/xen.png';
+
+// Contract constants (matching XBurnMinter.sol)
+const MAX_TERM = 3650; // ~10 years
+const BASE_RATIO = 1000000; // 1M XEN = 1 XBURN
 
 // BurnXENTab component for burning XEN tokens
 const BurnXENTab = ({ 
@@ -190,19 +193,36 @@ const BurnXENTab = ({
     }
   };
 
-  // Calculate multiplier based on term days and amplifier values
-  const multiplier = calculateMultiplier(selectedTerm, ampStart, ampSnapshot);
-  
-  // Calculate base amount
-  const baseAmount = xenAmount && parseFloat(xenAmount) > 0 
-    ? parseFloat(xenAmount) / 1000000
-    : 0;
+  // --- Reward Calculation (Matching Contract Logic) ---
+  const { baseAmount, bonus, total, displayMultiplier } = useMemo(() => {
+    const inputAmount = parseFloat(xenAmount) || 0;
+    if (inputAmount <= 0) {
+      return { baseAmount: 0, bonus: 0, total: 0, displayMultiplier: 1 };
+    }
+
+    const currentBaseAmount = inputAmount / BASE_RATIO;
     
-  // Calculate bonus using the multiplier
-  const bonus = baseAmount * (multiplier - 1);
-  
-  // Calculate total
-  const total = baseAmount * multiplier;
+    // Ensure ampStart is valid
+    const validAmpStart = ampStart > 0 ? ampStart : 1; // Avoid division by zero
+
+    // Calculate percentages (scale: 0-100)
+    const termPercentage = (selectedTerm * 100) / MAX_TERM;
+    const ampPercentage = (ampSnapshot * 100) / validAmpStart;
+
+    // Calculate bonus based on contract formula
+    // (base * term% * amp%) / 10000
+    const calculatedBonus = (currentBaseAmount * termPercentage * ampPercentage) / 10000;
+    
+    const calculatedTotal = currentBaseAmount + calculatedBonus;
+    const calculatedMultiplier = currentBaseAmount > 0 ? calculatedTotal / currentBaseAmount : 1;
+
+    return {
+      baseAmount: currentBaseAmount,
+      bonus: calculatedBonus,
+      total: calculatedTotal,
+      displayMultiplier: calculatedMultiplier
+    };
+  }, [xenAmount, selectedTerm, ampStart, ampSnapshot]);
 
   // Determine if approval button should be shown
   const isMaxApproved = formattedXenApproval === "MAX";
@@ -282,7 +302,7 @@ const BurnXENTab = ({
               className="term-input"
               disabled={isApproveLoading || isBurnLoading}
             />
-            <div className="term-input-note">Multiplier: {formatDecimals(multiplier, 4)}x</div>
+            <div className="term-input-note">Multiplier: {formatDecimals(displayMultiplier, 4)}x</div>
           </div>
         </div>
 
@@ -343,23 +363,23 @@ const BurnXENTab = ({
             </div>
             
             <div className="base-amount-display">
-              <div className="base-label">Base ({formatDecimals(xenAmount || 0)} cbXEN / 1M)</div>
+              <div className="base-label">Base ({formatDecimals(xenAmount || 0)} cbXEN / {BASE_RATIO.toLocaleString()})</div>
               <div className="base-result">
                 {formatDecimals(baseAmount, 6)} XBURN
               </div>
             </div>
             
             <div className="reward-formula">
-              <div className="formula-label">Term Bonus ({selectedTerm} days, {formatDecimals(multiplier, 4)}x)</div>
+              <div className="formula-label">Term Bonus ({selectedTerm} days, {formatDecimals(ampSnapshot, 0)} AMP)</div>
               <div className="formula-result">
-                + {formatDecimals(bonus, 6)} XBURN
+                + {formatDecimals(bonus, 8)} XBURN
               </div>
             </div>
             
             <div className="reward-total">
               <div className="total-label">Estimated Total XBURN</div>
               <div className="total-value">
-                {formatDecimals(total, 6)} XBURN
+                {formatDecimals(total, 8)} XBURN
               </div>
             </div>
           </div>

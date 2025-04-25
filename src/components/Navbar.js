@@ -46,7 +46,10 @@ export const Navbar = ({ onTabChange, activeTab }) => {
       return balanceNum.toFixed(4);
     }
     
-    // For XEN and XBURN with larger values, use K/M formatting
+    // For XEN and XBURN with larger values, use K/M/B formatting
+    if (balanceNum >= 1000000000) {
+      return (balanceNum / 1000000000).toFixed(2) + 'B';
+    }
     if (balanceNum >= 1000000) {
       return (balanceNum / 1000000).toFixed(2) + 'M';
     } else if (balanceNum >= 1000) {

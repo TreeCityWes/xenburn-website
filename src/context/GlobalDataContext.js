@@ -7,7 +7,6 @@ import {
   XBURN_TOKEN_ADDRESS, // Assuming this is the XBURN token address
   XBURN_NFT_ADDRESS,
   XBURN_MINTER_ADDRESS,
-  UNISWAP_ROUTER_ADDRESS, // Using the correct Router constant
   XBURN_XEN_LP_ADDRESS // Using the correct LP constant
 } from '../constants/addresses';
 
@@ -72,6 +71,14 @@ export const GlobalDataProvider = ({ children }) => {
   const [loadingPrices, setLoadingPrices] = useState(false);
   const [priceError, setPriceError] = useState(null);
 
+  // --- State for External Stats from JSON ---
+  const [externalStats, setExternalStats] = useState({
+    loading: false,
+    error: null,
+    data: null, // Store the entire JSON object here
+    lastFetched: 0
+  });
+
   // --- Debounce Timestamps using useRef ---
   const lastNftFetchTime = useRef(0);
   const MIN_NFT_FETCH_INTERVAL = 5000; 
@@ -79,6 +86,8 @@ export const GlobalDataProvider = ({ children }) => {
   const MIN_STATS_FETCH_INTERVAL = 10000;
   const lastPriceFetchTime = useRef(0);
   const MIN_PRICE_FETCH_INTERVAL = 30000; // Fetch prices less often (e.g., 30 seconds)
+  const lastExternalStatsFetchTime = useRef(0);
+  const MIN_EXTERNAL_STATS_FETCH_INTERVAL = 60000; // Fetch external stats every minute
 
   // --- Contract Instance Getters (useCallback) ---
   const xenftContract = useCallback(() => {
@@ -115,7 +124,8 @@ export const GlobalDataProvider = ({ children }) => {
         "function balanceOf(address owner) external view returns (uint256)",
         "function getUserLocks(address user) external view returns (uint256[])",
         "function getStats(address user) external view returns (uint256 userXenBurnedAmount, uint256 userXburnBurnedAmount, uint256 userXburnBalance, uint256 userBurnPercentage, uint256 globalXenBurned, uint256 globalXburnBurned, uint256 totalXburnSupply, uint256 globalBurnPercentage)",
-        "function globalBurnRank() external view returns (uint256)"
+        "function globalBurnRank() external view returns (uint256)",
+        "function getGlobalStats() external view returns (uint256 currentAMP, uint256 daysSinceLaunch, uint256 totalBurnedXEN, uint256 totalMintedXBURN, uint256 ampDecayDaysLeft)"
       ];
       
       return new ethers.Contract(
@@ -152,7 +162,6 @@ export const GlobalDataProvider = ({ children }) => {
 
     try {
       console.log("Loading NFT details for token ID", tokenId);
-      const burnContract = minterContract;
       const baseNftContract = nftContract;
       
       // First check if the user owns this NFT
@@ -172,7 +181,7 @@ export const GlobalDataProvider = ({ children }) => {
       console.log("NFT details for", tokenId, ":", details);
       
       // Get additional token stats from the burn contract
-      const tokenStats = await burnContract.getTokenStats(tokenId);
+      const tokenStats = await minterContract.getTokenStats(tokenId);
       console.log("Token stats for", tokenId, ":", tokenStats);
       
       return {
@@ -216,7 +225,6 @@ export const GlobalDataProvider = ({ children }) => {
 
     try {
       console.log("Loading NFTs for account", account, "page", currentPage);
-      const burnContract = minterContract;
       const baseNftContract = nftContract;
       
       // Get total NFTs for user
@@ -325,7 +333,15 @@ export const GlobalDataProvider = ({ children }) => {
     try {
       console.log("Loading stats for account", account, "using minter:", minterContract?.address);
       
-      let statsData, globalBurnRank;
+      // Declare variables outside the try block
+      let statsData = null;
+      let globalBurnRank = null;
+      let currentAMP = null;
+      let daysSinceLaunch = null;
+      let totalBurnedXENGlobal = null;
+      let totalMintedXBURNGlobal = null;
+      let ampDecayDaysLeft = null;
+
       try {
         console.log("Calling minterContract.getStats...");
         statsData = await minterContract.getStats(account);
@@ -335,9 +351,12 @@ export const GlobalDataProvider = ({ children }) => {
         globalBurnRank = await minterContract.globalBurnRank();
         console.log("Raw globalBurnRank return:", globalBurnRank);
         
-        // console.log("Calling minterContract.getGlobalStats..."); // Removed call
-        // globalStatsData = await minterContract.getGlobalStats(); 
-        // console.log("Raw getGlobalStats return:", globalStatsData);
+        console.log("Calling minterContract.getGlobalStats...");
+        const globalStatsResult = await minterContract.getGlobalStats(); 
+        console.log("Raw getGlobalStats return:", globalStatsResult);
+
+        // Destructure global stats & Assign to variables declared outside
+        [currentAMP, daysSinceLaunch, totalBurnedXENGlobal, totalMintedXBURNGlobal, ampDecayDaysLeft] = globalStatsResult;
 
       } catch (contractCallError) {
         console.error("ERROR during stats contract calls:", contractCallError);
@@ -406,18 +425,20 @@ export const GlobalDataProvider = ({ children }) => {
       
       // --- Construct the final stats object --- 
       const finalStatsData = {
-        totalXenBurned: ethers.utils.formatUnits(statsData.globalXenBurned || '0', 18),
-        totalXburnMinted: ethers.utils.formatUnits(statsData.totalXburnSupply || '0', 18), // totalXburnSupply from getStats
-        totalXburnBurned: ethers.utils.formatUnits(statsData.globalXburnBurned || '0', 18),
-        globalBurnPercentage: ethers.utils.formatUnits(statsData.globalBurnPercentage || '0', 18), // Get from getStats result
-        currentAMP: '0', // Set AMP to 0 as getGlobalStats call removed
-        globalBurnRank: globalBurnRank?.toString() || '0', // Get from globalBurnRank result
-        userXenBurned: ethers.utils.formatUnits(statsData.userXenBurnedAmount || '0', 18),
-        userXburnMinted: ethers.utils.formatUnits(statsData.userXburnBalance || '0', 18), // userXburnBalance from getStats
-        userXburnBurned: ethers.utils.formatUnits(statsData.userXburnBurnedAmount || '0', 18),
+        totalXenBurned: ethers.utils.formatUnits(totalBurnedXENGlobal || '0', 18),
+        totalXburnMinted: ethers.utils.formatUnits(totalMintedXBURNGlobal || '0', 18),
+        totalXburnBurned: ethers.utils.formatUnits(statsData?.globalXburnBurned || '0', 18),
+        globalBurnPercentage: ethers.utils.formatUnits(statsData?.globalBurnPercentage || '0', 18),
+        currentAMP: currentAMP ? currentAMP.toString() : '0',
+        globalBurnRank: globalBurnRank?.toString() || '0',
+        userXenBurned: ethers.utils.formatUnits(statsData?.userXenBurnedAmount || '0', 18),
+        userXburnMinted: '0',
+        userXburnBurned: ethers.utils.formatUnits(statsData?.userXburnBurnedAmount || '0', 18),
         xenSupply: ethers.utils.formatUnits(xenSupply || '0', 18),
         xenInPool: ethers.utils.formatUnits(xenInPool || '0', 18),
-        xburnInPool: ethers.utils.formatUnits(xburnInPool || '0', 18)
+        xburnInPool: ethers.utils.formatUnits(xburnInPool || '0', 18),
+        daysSinceLaunch: daysSinceLaunch ? daysSinceLaunch.toString() : '0',
+        ampDecayDaysLeft: ampDecayDaysLeft ? ampDecayDaysLeft.toString() : '0',
       };
 
       console.log("Stats loaded:", finalStatsData); // Log the object being set
@@ -425,7 +446,7 @@ export const GlobalDataProvider = ({ children }) => {
       setStats({
         loading: false,
         error: null,
-        data: finalStatsData, // Set the correctly constructed object
+        data: finalStatsData,
         lastFetched: Date.now()
       });
     } catch (error) {
@@ -535,6 +556,40 @@ export const GlobalDataProvider = ({ children }) => {
     }
   }, []); // No dependencies needed for pure fetch logic
 
+  // --- Fetch External Stats from GitHub Action JSON ---
+  const fetchExternalStats = useCallback(async () => {
+    const now = Date.now();
+    if (now - lastExternalStatsFetchTime.current < MIN_EXTERNAL_STATS_FETCH_INTERVAL) {
+      console.log('Skipping external stats fetch, last fetch too recent');
+      return;
+    }
+    lastExternalStatsFetchTime.current = now;
+
+    setExternalStats(prev => ({ ...prev, loading: true, error: null }));
+    const url = "https://raw.githubusercontent.com/TreeCityWes/XBURN-STATS/refs/heads/main/stats.json";
+    console.log(`Fetching external stats from: ${url}`);
+
+    try {
+      const response = await fetch(url, {
+        cache: 'no-cache' // Ensure fresh data
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("External stats fetched successfully:", data);
+      setExternalStats(prev => ({ 
+        ...prev, 
+        loading: false, 
+        data: data, 
+        lastFetched: now 
+      }));
+    } catch (error) {
+      console.error('Error fetching external stats:', error);
+      setExternalStats(prev => ({ ...prev, loading: false, error: error.message }));
+    } 
+  }, []);
+
   // Main Data Loading Effect
   useEffect(() => {
     if (account && provider) { 
@@ -542,12 +597,19 @@ export const GlobalDataProvider = ({ children }) => {
       loadNFTs(); 
       loadStats();  
       fetchDexScreenerData(); // Call the new function
+      fetchExternalStats(); // <--- ADD THIS CALL
     }
     // Add interval polling for prices?
     const priceIntervalId = setInterval(fetchDexScreenerData, MIN_PRICE_FETCH_INTERVAL + 500); // Poll slightly slower than debounce interval
-    return () => clearInterval(priceIntervalId);
+    // Add interval polling for external stats
+    const externalStatsIntervalId = setInterval(fetchExternalStats, MIN_EXTERNAL_STATS_FETCH_INTERVAL + 500); // Poll external stats
+    
+    return () => {
+      clearInterval(priceIntervalId);
+      clearInterval(externalStatsIntervalId); // Clear interval on cleanup
+    };
 
-  }, [account, provider, loadNFTs, loadStats, fetchDexScreenerData]); 
+  }, [account, provider, loadNFTs, loadStats, fetchDexScreenerData, fetchExternalStats]); // <-- Already added here, good. No change needed to array.
 
   // Claim NFT function
   const claimNFT = useCallback(async (tokenId) => {
@@ -629,7 +691,8 @@ export const GlobalDataProvider = ({ children }) => {
     poolTvl,      // Add TVL state
     loadingPrices, // Add loading state
     priceError,    // Add error state
-    fetchDexScreenerData // Expose refetch function if needed
+    fetchDexScreenerData, // Expose refetch function if needed
+    externalStats
   };
 
   return (
