@@ -1,0 +1,150 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--surface-0);
+  color: var(--text-secondary);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--sinopia-700);
+  min-height: var(--footer-height);
+  overflow: hidden;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(220, 47, 2, 0.1);
+  z-index: 50;
+  box-sizing: border-box;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-brand);
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.footer::after {
+  display: none;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  margin-bottom: 15px;
+  flex: 0 0 200px;
+}
+
+.footer-logo-img {
+  max-width: 150px;
+  height: auto;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.footer-links {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 15px;
+}
+
+.footer-links a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: var(--text-link);
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 150px;
+}
+
+.footer-section h3 {
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section li {
+  margin-bottom: 10px;
+}
+
+.footer-bottom {
+  margin-top: var(--space-md);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.copyright {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 5px;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .footer-logo {
+    text-align: center;
+    flex: 0 0 100%;
+  }
+  
+  .footer-links {
+    justify-content: space-around;
+    width: 100%;
+  }
+  
+  .footer-section {
+    text-align: center;
+    min-width: 120px;
+  }
+} 

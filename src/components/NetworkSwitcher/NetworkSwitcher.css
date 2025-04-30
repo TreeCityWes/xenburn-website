@@ -1,0 +1,185 @@
+/* NetworkSwitcher.css */
+
+.network-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem; /* Slightly smaller gap */
+  background-color: var(--surface-3); /* Use warmer dark #21040e */
+  padding: 3px 8px; /* Slightly more padding to handle longer network names */
+  border-radius: var(--radius-lg, 50px); /* Use variable or default */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Slightly more visible border */
+  position: relative; /* For switching indicator */
+  z-index: 60; /* Increased z-index to ensure proper layering */
+  overflow: visible; /* Allow the switching indicator to overflow */
+  min-width: 120px; /* Ensure minimum width for consistency */
+  transition: all 0.2s ease;
+  margin: 0 4px;
+}
+
+/* Add styles for the switching indicator */
+.switching-indicator {
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  background-color: rgba(244, 140, 6, 0.8); /* Accent: Princeton Orange transparent */
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+  z-index: 70; /* Ensure the switching indicator is on top */
+  white-space: nowrap;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.network-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%; /* Make logo buttons circular */
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center content */
+  padding: 0; /* Remove padding for logo buttons */
+  width: 28px; /* Fixed size for circle */
+  height: 28px; /* Fixed size for circle */
+  overflow: hidden; /* Ensure logo stays within bounds */
+}
+
+.network-button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.network-button.active {
+  /* Active state doesn't need background, use border/shadow */
+  background-color: rgba(255, 255, 255, 0.05); /* Very subtle background */
+  box-shadow: 0 0 10px var(--shadow-accent-sm), /* Use Accent Shadow */
+              inset 0 0 0 2px var(--color-accent-primary); /* Use Accent Color */
+  cursor: default;
+}
+
+/* Optional: Chain-specific active styles */
+/* .network-button.active.base { background-color: #0052ff; } */
+/* .network-button.active.optimism { background-color: #ff0420; } */
+/* .network-button.active.sepolia { background-color: #8c8c8c; } */
+
+.network-button:disabled:not(.active) {
+  opacity: 0.5; /* Dim disabled buttons more */
+  cursor: not-allowed;
+  filter: grayscale(80%); /* Make disabled logos grayscale */
+}
+
+/* This is the class used in the component */
+.network-logo {
+  display: block;
+  width: 20px; /* Fixed size for logo */
+  height: 20px; /* Fixed size for logo */
+  object-fit: contain; /* Ensure logo scales nicely */
+  border-radius: 50%; /* Circular logo */
+  margin-right: 4px; /* Add spacing between logo and text */
+  background-color: var(--surface-3); /* Dark surface */
+  z-index: 1;
+  position: relative;
+}
+
+/* Fallback text style if logo fails */
+.network-name {
+  font-size: var(--text-xs, 10px); /* Smaller text */
+  font-weight: 600;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.network-button.active .network-name {
+  color: var(--tangerine-500); /* Use accent color */
+}
+
+.network-select {
+  /* Remove borders/background from select itself */
+  background-color: transparent;
+  border: none;
+  color: var(--text-primary); /* Use bright text */
+  border-radius: 0; /* No radius needed */
+  padding: 0 18px 0 4px; /* Space for arrow on right, small left padding */
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: none; /* No transition needed */
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
+  /* Keep dropdown arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* White arrow */
+  background-repeat: no-repeat;
+  background-position: right 0px center;
+  background-size: 18px 18px;
+  /* Remove focus styles from select, apply to container? */
+  outline: none;
+  max-width: 100px; /* Limit width of select */
+  z-index: 2;
+  position: relative;
+}
+
+/* Style the select options to ensure they appear above other content */
+.network-select option {
+  background-color: var(--surface-1); /* Use surface */
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.network-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Add a loader for network switching */
+.network-switcher::after {
+  display: none; /* Ensure it's gone */
+}
+
+.network-switcher.switching::after {
+  display: none; /* Ensure it's gone */
+}
+
+/* Media queries for mobile */
+@media (max-width: 480px) {
+  .network-switcher {
+    padding: 2px 4px;
+    min-width: 100px;
+  }
+  
+  .network-logo {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .network-select {
+    font-size: 12px;
+    max-width: 80px;
+  }
+  
+  .switching-indicator {
+    right: -80px;
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+}
+
+/* Remove duplicate container class */
+.network-switcher-container {
+  display: none; /* Hide this class as we're now using .network-switcher */
+}
+
+/* Remove old logo/button styles */
+/* .network-button { ... } */
+/* .logo-button { ... } */
+/* .network-logo { ... } */ 

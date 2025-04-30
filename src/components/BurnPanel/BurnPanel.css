@@ -1,0 +1,1163 @@
+/* Define refined color variables */
+/* REMOVED internal :root variable definitions */
+
+/* BurnPanel Component Styles */
+.burn-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 32px;
+  background: var(--background-primary); /* USE DARK GRAY */
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(230, 57, 0, 0.05);
+}
+
+/* Remove subtle burning embers effect from the container background */
+.burn-container::before {
+  /* content: ''; */ /* REMOVED */
+  /* position: absolute; */
+  /* top: 0; */
+  /* left: 0; */
+  /* right: 0; */
+  /* bottom: 0; */
+  /* background: radial-gradient(ellipse at bottom right, rgba(255, 100, 50, 0.05), transparent 70%); */ /* REMOVED */
+  /* pointer-events: none; */
+  /* border-radius: inherit; */
+  /* z-index: -1; */
+  display: none; /* Ensure it's gone */
+}
+
+.burn-card {
+  background: var(--background-primary); /* USE DARK GRAY */
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+/* Tab navigation */
+.tab-view {
+  display: flex;
+  margin-bottom: 24px;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+  gap: 8px;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 12px 16px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  color: var(--text-secondary);
+  background: var(--background-secondary); /* Use Gray */
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.tab-button:hover {
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+}
+
+.tab-button.active {
+  background: #ff4400; /* Use red-orange */
+  color: var(--text-primary);
+  border: none;
+  box-shadow: 0 2px 10px rgba(230, 57, 0, 0.3);
+}
+
+.burn-content {
+  position: relative;
+  z-index: 1;
+  padding: 32px;
+  text-align: center;
+  background: transparent;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.burn-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.burn-title-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.burn-subtitle {
+  color: var(--color-accent-primary); /* Persimmon */
+  margin: 0 auto 24px; /* Center horizontally */
+  font-size: 18px; /* Standard title size */
+  font-weight: 600; /* Standard title weight */
+  line-height: 1.5;
+  text-align: center;
+  max-width: 500px; /* Allow more width if needed */
+}
+
+/* Different gradients for different tabs */
+.burn-title.burnXEN,
+.burn-title.burnXBURN,
+.burn-title.swapBurn,
+.burn-title.swap {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 18px; /* Re-add margin removed from base .burn-title */
+}
+
+.burn-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* InputToken component styling */
+.input-token-container {
+  background: var(--surface-2); /* Dark bg */
+  border-radius: 12px; 
+  padding: 0; /* No padding on container */
+  width: 100%;
+  border: 1px solid var(--surface-3); /* Subtle border */
+  overflow: hidden;
+  transition: all 0.25s ease;
+  margin-bottom: 16px; /* Space below this box */
+}
+
+.input-token-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 16px; /* Padding inside header */
+}
+
+.input-field {
+  flex: 1; /* Allow field to grow */
+  margin: 0 10px; /* Keep margin */
+  display: flex; /* Use flex to help align input */
+}
+
+.input-field input {
+  width: 100%; /* Allow input to fill the flex container */
+  background: transparent;
+  border: 1px solid var(--surface-4); 
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 500;
+  outline: none;
+  text-align: right !important; /* Force right alignment */
+  padding: 8px 12px; 
+  border-radius: 8px; 
+}
+
+/* Override focus background */
+.input-field input:focus,
+.input-field input:active {
+  background: var(--surface-1) !important; 
+  border-color: var(--color-accent-primary) !important; 
+  outline: none;
+  box-shadow: none;
+}
+
+.token-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px; /* Padding for balance */
+  border-top: 1px solid var(--surface-3); /* Divider */
+}
+
+/* Re-apply styles for the separate Term Input Container */
+.term-input-container {
+  background: var(--surface-2); /* Dark bg */
+  border-radius: 12px; 
+  padding: 15px;
+  margin-bottom: 24px; /* Space below this box */
+  display: flex;
+  flex-direction: row; 
+  align-items: center; 
+  justify-content: space-between;
+  gap: 15px;
+  border: 1px solid var(--surface-3); /* Subtle border */
+}
+
+/* Keep existing term label/field/input/note styles */
+.term-input-label {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  margin-bottom: 0;
+  color: var(--text-primary); 
+  flex-shrink: 0; 
+}
+
+.term-input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  flex: 0 0 auto; 
+  width: 120px; 
+}
+
+.term-input {
+  width: 100%; 
+  background: var(--surface-3); 
+  border: 1px solid var(--surface-4); 
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text-primary); 
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px; 
+  /* Remove spinner buttons (Firefox) */
+  -moz-appearance: textfield;
+  /* Remove spinner buttons (Chrome, Safari, Edge, Opera) */
+}
+.term-input::-webkit-outer-spin-button,
+.term-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.term-input:focus {
+  background: var(--surface-4);
+  border-color: var(--color-accent-primary); 
+  outline: none;
+  color: var(--text-primary);
+}
+
+.term-input-note {
+  color: var(--text-secondary); 
+  font-size: 14px;
+  text-align: center; 
+  width: 100%; 
+  margin-top: 0; 
+}
+
+.token-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.token-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 120, 50, 0.3);
+}
+
+.token-symbol {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.balance-info, .approved-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.balance-label, .approved-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.balance-value, .approved-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.approved-value {
+  color: #ff8800;
+}
+
+.approved-note {
+  display: none;
+}
+
+/* MAX button styling */
+.max-button {
+  background: #ff4400; /* Bright orange */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px !important; /* Restored original padding with !important */
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px !important; /* Restored original font size with !important */
+  /* Ensure it doesn't inherit larger button styles */
+  height: auto !important; 
+  flex: none !important;
+  min-width: auto !important;
+}
+
+.max-button:hover {
+  background: var(--burn-color-hover);
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(255, 51, 34, 0.4);
+}
+
+.max-button:active {
+  background: var(--burn-color);
+  transform: scale(0.98);
+  box-shadow: 0 1px 5px rgba(255, 51, 34, 0.3);
+}
+
+.max-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 180px;
+  visibility: visible;
+}
+
+/* Swap styling */
+.swap-container {
+  width: 100%;
+}
+
+.swap-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.swap-token-field {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.swap-token-label {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.token-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.token-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 120, 50, 0.3);
+}
+
+.token-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.token-amount-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 500;
+  outline: none;
+  text-align: right;
+  padding: 8px 16px;
+}
+
+/* Enhance input focus/hover */
+.token-amount-input:focus {
+  /* Optional: subtle background change on focus */
+  /* background-color: rgba(255, 255, 255, 0.03); */
+  /* Apply glow defined in App.css */
+}
+
+.token-amount-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.balance-display {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clickable-balance {
+  cursor: pointer;
+}
+
+.clickable-balance:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* Swap direction button */
+.swap-direction-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-button); /* Use themed gradient */
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin: 16px auto;
+  box-shadow: 0 4px 10px rgba(255, 51, 34, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.swap-direction-button:hover {
+  background: var(--gradient-button-hover); /* Use themed hover gradient */
+  box-shadow: 0 6px 12px rgba(255, 51, 34, 0.4);
+}
+
+/* Swap info section */
+.swap-info {
+  background: var(--background-secondary); /* Use Gray */
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.swap-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.swap-info-row span:last-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Slippage control */
+.slippage-control {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.slippage-slider-container {
+  padding: 8px 0 16px;
+  width: 100%;
+}
+
+.slippage-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--background-tertiary);
+  border-radius: 3px;
+  outline: none;
+  margin: 10px 0;
+  cursor: pointer;
+  touch-action: none;
+  border: none;
+}
+
+.slippage-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--burn-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slippage-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--burn-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+/* Button container styling - Single Button Centered */
+.button-container.single-button-container {
+  display: flex;
+  justify-content: center; 
+  margin-top: 0; 
+  margin-bottom: 24px; 
+  padding: 0; 
+  border: none; 
+}
+
+/* Style the single button */
+.single-button-container button {
+  width: 100%; 
+  max-width: 400px; 
+  height: 50px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none; /* Remove border */
+  padding: 0 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* Default: Active/Enabled State */
+  background: var(--gradient-button); /* Orange-Red Gradient */
+  color: var(--surface-0) !important; /* Dark text */
+  box-shadow: 0 4px 12px rgba(232, 93, 4, 0.3); /* Persimmon shadow */
+}
+
+.single-button-container button:hover:not(:disabled) {
+  background: var(--gradient-button-hover) !important; /* Orange Hover Gradient */
+  border-color: var(--surface-5); /* Not really visible but good practice */
+  color: var(--surface-0) !important; /* Keep dark text */
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 16px rgba(244, 140, 6, 0.3); /* Princeton Orange shadow */
+}
+
+.single-button-container button:disabled {
+  background: var(--surface-4) !important; /* Dark Grey for disabled */
+  border-color: transparent !important; /* No border when disabled */
+  opacity: 0.6 !important; /* Adjust opacity for disabled */
+  color: var(--text-disabled) !important; 
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Tooltip styling */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  background: var(--background-tertiary); /* Use gray */
+  color: var(--text-primary);
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  z-index: 100;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: normal;
+  max-width: 250px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-text.tooltip-top {
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-text.tooltip-bottom {
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-text.tooltip-left {
+  right: 125%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-text.tooltip-right {
+  left: 125%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Info icon styling */
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 120, 50, 0.2);
+  color: var(--text-primary);
+  font-size: 12px;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.info-icon:hover {
+  background: rgba(255, 120, 50, 0.4);
+  color: var(--text-primary);
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .button-container {
+    flex-direction: column;
+  }
+}
+
+/* Add styles for the button-loading class */
+.button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-loading .loader {
+  margin: 0;
+}
+
+.button-loading span {
+  white-space: nowrap;
+}
+
+/* Ensure the loader is properly styled */
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid var(--text-primary);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Improve the progress bar styling */
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--background-tertiary);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-burn);
+  border-radius: 6px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.progress-percent {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-accent-primary); /* Use Persimmon for better readability */
+}
+
+.progress-info {
+  margin-bottom: 20px;
+  margin-top: var(--space-sm); /* Add space above progress bar */
+}
+
+.accumulation-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.accumulation-status svg {
+  color: #ff9800;
+}
+
+/* Style the ready message */
+.ready {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+/* Style the swap-info-note */
+.swap-info-note {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--background-tertiary); /* Use Gray */
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-secondary);
+}
+
+.swap-info-note p {
+  margin: 8px 0;
+  color: var(--text-secondary);
+}
+
+.swap-info-note ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.swap-info-note li {
+  margin: 6px 0;
+  color: var(--text-secondary);
+}
+
+/* Style the swap-disabled-reason */
+.swap-disabled-reason {
+  margin-top: 12px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Reward calculation styling - Based on User Example */
+.reward-calculation {
+  background: var(--surface-2); /* Standard dark surface */
+  border-radius: 12px; /* Consistent radius */
+  padding: 15px;
+  margin: 24px 0; /* Consistent margin */
+  border: 1px solid var(--border-color-accent); /* Use accent border */
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md); /* Add subtle shadow */
+}
+
+.reward-header {
+  font-size: 18px; /* Standard title size */
+  font-weight: 600; /* Standard title weight */
+  margin-bottom: 15px;
+  color: var(--color-accent-primary); /* Persimmon */
+  text-align: center; /* Center reward header */
+  border-bottom: 1px solid var(--border-color-accent); 
+  padding-bottom: 10px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px; 
+}
+
+/* Remove generic .reward-row background */
+.reward-row {
+  /* display: flex; 
+  flex-direction: column; 
+  margin-bottom: 8px;
+  padding: 8px 12px; 
+  border: none;
+  border-radius: 6px; 
+  text-align: center;  */
+  /* Keep only necessary base styles if any */
+  text-align: center; /* Ensure text is centered */
+  margin-bottom: 8px; /* Add spacing */
+  padding: 8px 12px; /* Add padding */
+  border-radius: 6px; /* Add rounding */
+}
+
+/* Style specific reward sections */
+.base-amount-display {
+  display: block; 
+  background-color: rgba(110, 0, 0, 0.2); /* Semi-transparent Blood Red */
+  padding: 10px; 
+  border-radius: 6px; 
+  margin-bottom: 8px; 
+  text-align: center; 
+}
+
+.reward-formula {
+  display: block; 
+  background-color: rgba(220, 47, 2, 0.15); /* Sinopia Red/Orange Tint */
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px 0 8px; 
+  text-align: center; 
+}
+
+.reward-total {
+  display: block; 
+  background-color: rgba(232, 93, 4, 0.15); /* Persimmon Orange Tint */
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 10px; 
+  text-align: center; 
+}
+
+.reward-label,
+.base-label,
+.formula-label,
+.total-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  display: block; 
+}
+
+.reward-value,
+.base-result,
+.formula-result,
+.total-value {
+  font-size: 14px;
+  font-weight: 600; /* Make values bolder */
+  color: var(--text-primary); /* Bright text */
+  display: block; 
+}
+
+/* Specific color for formula result */
+.formula-result {
+  color: var(--color-accent-primary); /* Persimmon */
+}
+
+/* Specific color for total value */
+.total-value {
+  color: var(--color-accent-secondary); /* Gold */
+  font-size: 16px; /* Make total slightly larger */
+}
+
+/* Additional refinements for a more professional look */
+.burn-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+/* Different gradients for different tabs */
+.burn-title.burnXEN,
+.burn-title.burnXBURN,
+.burn-title.swapBurn,
+.burn-title.swap {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.reward-value,
+.base-result,
+.formula-result {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--burn-color);
+}
+
+.total-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--burn-color);
+  text-align: center;
+}
+
+/* Swap & Burn Tab Styling */
+.progress-container {
+  background: var(--surface-2); /* Use dark surface */
+  border-radius: 12px;
+  padding: 20px;
+  margin: var(--space-md) 0 20px 0; /* Add top margin */
+  border: 1px solid var(--border-color); /* Use brand border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.progress-section-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary); /* Change to primary white text */
+  margin: 0;
+}
+
+.progress-bar {
+  height: 24px;
+  background-color: var(--surface-3); /* Darker surface */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color); /* Use brand border */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-brand); /* Use Sinopia -> Blood Red gradient */
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-percent {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-accent-primary); /* Use Persimmon for better readability */
+}
+
+.accumulation-status svg {
+  color: var(--color-accent-primary); /* Use Persimmon */
+  animation: spin 2s linear infinite;
+}
+
+.estimated-completion .ready {
+  color: var(--color-success); /* Keep green for ready */
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.swap-burn-button-container {
+  margin: 30px 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.swap-burn-button {
+  composes: base-button; /* Inherit base styles */
+  width: auto; /* Allow button to size naturally or set min-width */
+  min-width: 200px;
+  background: var(--gradient-button); /* Use Persimmon -> Gold gradient */
+  color: var(--surface-0) !important; /* Dark text */
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(232, 93, 4, 0.4); /* Persimmon shadow */
+  z-index: 1;
+}
+
+.swap-burn-button:hover:not(:disabled) {
+  background: var(--gradient-button-hover); /* Gold -> Lighter Gold */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 213, 0, 0.4); /* Gold shadow */
+}
+
+.swap-burn-button:active:not(:disabled) {
+  background: var(--gradient-button-active);
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(232, 93, 4, 0.3);
+}
+
+.swap-burn-button:disabled {
+  background: var(--surface-4) !important; /* Match other disabled buttons */
+  color: var(--text-disabled) !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  transform: none !important;
+  opacity: 0.5 !important;
+}
+
+.accumulation-details {
+  background: transparent; /* Keep transparent */
+  border-radius: 10px;
+  padding: 15px 0; /* Adjust padding */
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accumulation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.accumulation-row:last-child {
+  border-bottom: none;
+}
+
+.accumulation-label {
+  color: var(--text-secondary); /* Keep labels slightly dimmer */
+  font-size: 14px;
+}
+
+.accumulation-value {
+  font-weight: 500;
+  color: var(--text-primary); /* Change value color to primary white */
+}
+
+/* Make sure inputs maintain dark background when focused or active */
+.input-field input:focus,
+.input-field input:active {
+  background: transparent !important; /* Override browser default */
+  outline: none;
+  color: var(--text-primary);
+  box-shadow: none;
+  -webkit-appearance: none;
+}
+
+/* Button styling - Based on User Example */
+.button-container {
+  display: flex;
+  flex-direction: row; /* Explicitly set direction */
+  gap: 10px; 
+  margin: 15px 0; 
+  width: 100%;
+  justify-content: center; 
+  align-items: stretch; /* Ensure wrappers stretch if needed */
+}
+
+/* Ensure wrappers behave correctly in flex */
+.button-wrapper {
+  flex: 1; /* Allow wrappers to share space */
+  display: flex; /* Ensure button inside fills wrapper */
+}
+
+/* Make sure hidden class doesn't break layout */
+.button-wrapper.hidden {
+  display: none; /* Use display: none to completely remove from layout */
+}
+
+/* Targeting buttons specifically within the tab content */
+.tab-content .approve-button,
+.tab-content .burn-button {
+  width: 100%; /* Ensure button fills its wrapper */
+  flex: 1; 
+  color: white !important; 
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px; 
+  font-weight: 600;
+  font-size: 14px; 
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; 
+}
+
+/* Approve button active state */
+.tab-content .approve-button {
+  background: var(--gradient-button); /* Orange Gradient */
+  box-shadow: 0 4px 12px rgba(232, 93, 4, 0.3); /* Persimmon shadow */
+}
+
+.tab-content .approve-button:hover:not(:disabled) {
+  background: var(--gradient-button-hover);
+  opacity: 0.9; 
+  transform: translateY(-2px); /* Added back hover effect */
+  box-shadow: 0 6px 16px rgba(244, 140, 6, 0.3); /* Added back shadow */
+}
+
+/* Burn button active state */
+.tab-content .burn-button {
+  background: var(--gradient-button); /* Orange Gradient */
+  box-shadow: 0 0 15px rgba(255, 68, 0, 0.5); /* Example shadow */
+}
+
+.tab-content .burn-button:hover:not(:disabled) {
+  background: var(--gradient-button-hover);
+  opacity: 0.9;
+  transform: translateY(-2px); /* Added back hover effect */
+  box-shadow: 0 6px 16px rgba(244, 140, 6, 0.3); /* Added back shadow */
+}
+
+/* Disabled state for BOTH buttons */
+.tab-content .approve-button:disabled,
+.tab-content .burn-button:disabled,
+/* Also target attribute selector for robustness */
+.tab-content .approve-button[disabled],
+.tab-content .burn-button[disabled] {
+  background: var(--surface-4) !important; /* Dark surface */
+  color: var(--text-disabled) !important; /* Disabled text color */
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  opacity: 0.6 !important; 
+  transform: none !important;
+}
+
+/* Explicit DISABLED state (using attribute selector) */
+.approve-button[disabled],
+.burn-button[disabled] {
+  background: var(--surface-4) !important; 
+  color: var(--text-disabled) !important; 
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.6 !important; 
+}
+
+/* Specific style for the Swap & Burn button when active */
+.swap-burn-button-container .burn-button:not([disabled]) {
+  background: var(--gradient-brand) !important; /* Sinopia -> Blood Red */
+  box-shadow: 0 4px 12px rgba(220, 47, 2, 0.3) !important; /* Sinopia shadow */
+}
+
+.swap-burn-button-container .burn-button:not([disabled]):hover {
+  background: linear-gradient(135deg, #e85d04, #9d0208) !important; /* Persimmon -> Blood Red on hover */
+  box-shadow: 0 6px 16px rgba(220, 47, 2, 0.4) !important; /* Sinopia shadow */
+} 

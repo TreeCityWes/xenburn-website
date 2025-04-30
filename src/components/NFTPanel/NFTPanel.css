@@ -1,0 +1,613 @@
+/* NFT Panel Container */
+.nft-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--surface-1);
+  border-radius: 12px;
+  border: 1px solid var(--border-color-accent);
+  box-shadow: var(--shadow-lg), var(--shadow-accent-sm);
+  max-width: 800px;
+  margin: var(--space-lg) auto;
+}
+
+.nft-panel h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  text-align: center;
+  margin: 0 0 5px 0;
+}
+
+.nft-panel .subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+/* NFT Selector */
+.nft-selector-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: var(--surface-2);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-3);
+}
+
+.nft-selector-container label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: fit-content;
+}
+
+.nft-selector {
+  flex: 1;
+  background: var(--surface-3);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-4);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FAA307%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px top 50%;
+  background-size: 12px auto;
+  transition: all 0.2s;
+}
+
+.nft-selector:hover {
+  border-color: var(--color-accent-secondary);
+}
+
+.nft-selector:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px rgba(232, 93, 4, 0.2);
+}
+
+/* NFT Details Container */
+.nft-details-container {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: var(--space-lg);
+  border: 1px solid var(--surface-3);
+  margin-bottom: var(--space-lg);
+}
+
+.nft-details-container h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  margin: 0 0 var(--space-md) 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-color-accent);
+  text-align: center;
+}
+
+/* NFT Image Container */
+.nft-image-container {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto var(--space-lg);
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-3);
+  border: 1px solid var(--surface-4);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure the div added by dangerouslySetInnerHTML fills container */
+.nft-image-container > div {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Target the SVG element itself */
+.nft-image-container svg {
+  display: block; 
+  max-width: 100%; 
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0;
+}
+
+.nft-placeholder-image {
+  color: var(--text-secondary);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* NFT Details Table */
+.nft-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-xxs) 0;
+  border-bottom: 1px solid var(--surface-3);
+}
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-right: var(--space-md);
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* Status colors */
+.status-claimed { color: var(--color-success); }
+.status-locked { color: var(--color-warning); }
+.status-ready-to-claim { color: var(--color-success); }
+.status-unknown { color: var(--text-tertiary); }
+
+/* Time Remaining */
+.time-remaining {
+  background: var(--surface-3);
+  border-radius: 8px;
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  border: 1px solid var(--surface-4);
+}
+
+.time-remaining h3 {
+  margin: 0 0 var(--space-md) 0;
+  font-size: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.countdown {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.countdown-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface-2);
+  border-radius: 6px;
+  padding: 10px 8px;
+}
+
+.countdown-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-accent-secondary);
+  margin-bottom: 4px;
+}
+
+.countdown-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* NFT Action Buttons */
+.nft-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+/* Use standard button styles */
+.claim-button,
+.emergency-end-button {
+  height: 44px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  padding: 0 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.claim-button {
+  background: var(--gradient-button) !important;
+  color: var(--surface-0) !important;
+  box-shadow: var(--shadow-accent-sm);
+}
+
+.claim-button:hover:not(:disabled) {
+  background: var(--gradient-button-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-accent-md);
+}
+
+.emergency-end-button {
+  background: var(--surface-4);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.emergency-end-button:hover:not(:disabled) {
+  background: rgba(220, 47, 2, 0.1);
+  border-color: rgba(220, 47, 2, 0.5);
+  color: var(--color-error);
+}
+
+/* Disabled state */
+.claim-button:disabled,
+.emergency-end-button:disabled {
+  background: var(--surface-4) !important;
+  opacity: 0.6 !important;
+  color: var(--text-disabled) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Confirmation Modal */
+.confirmation-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  backdrop-filter: blur(5px);
+}
+
+.confirmation-modal-content {
+  background: var(--surface-1);
+  padding: var(--space-xl);
+  border-radius: 12px;
+  max-width: 450px;
+  width: 90%;
+  border: 1px solid var(--surface-3);
+  box-shadow: var(--shadow-xl);
+}
+
+.confirmation-modal-content h3 {
+  margin: 0 0 var(--space-md) 0;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.confirmation-modal-content p {
+  margin: var(--space-sm) 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.confirmation-modal-content .warning-text {
+  color: var(--color-warning);
+  font-weight: 500;
+  font-size: 13px;
+  background: rgba(250, 163, 7, 0.1);
+  padding: var(--space-xs);
+  border-radius: 4px;
+  border-left: 3px solid var(--color-warning);
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.confirm-yes,
+.confirm-no {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.confirm-no {
+  background: var(--surface-3);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-4);
+}
+.confirm-no:hover {
+  background: var(--surface-4);
+}
+
+.confirm-yes {
+  background: var(--color-error);
+  color: white;
+}
+.confirm-yes:hover {
+  filter: brightness(1.1);
+}
+
+/* NFT Grid Layout */
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+/* NFT Card Styling */
+.nft-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--surface-2), var(--surface-1));
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nft-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* NFT Image Container */
+.nft-image-container:hover {
+  transform: scale(1.02);
+}
+
+.nft-image-container::after {
+  content: 'View on Blockscout';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.2s;
+}
+
+.nft-image-container:hover::after {
+  transform: translateY(0);
+}
+
+.nft-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* NFT Data Section */
+.nft-data {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.nft-data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.data-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-value {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.retry-button {
+  background: var(--surface-4);
+  color: var(--text-primary);
+}
+
+.retry-button:hover {
+  background: var(--surface-5);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Messages */
+.nft-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  background: var(--surface-2);
+  border-radius: 12px;
+  border: 1px solid var(--surface-3);
+  margin-top: var(--space-lg);
+}
+
+.no-nfts {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  background: var(--surface-2);
+  border-radius: 12px;
+  border: 1px solid var(--surface-3);
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.no-nfts::before {
+  content: '🚫';
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.no-nfts p:first-child {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+}
+
+.no-nfts p:last-child {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 80%;
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+  font-size: 1.125rem;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  padding: 4rem 2rem;
+  background: var(--surface-2);
+  border-radius: 16px;
+  border: 1px solid var(--surface-3);
+  margin: var(--space-lg) auto;
+  min-height: 300px;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: var(--shadow-lg);
+}
+
+.loading-spinner {
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-top: 5px solid var(--color-accent-primary);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  animation: pulse-text 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse-text {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.pagination button {
+  background: var(--surface-3);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-4);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--surface-4);
+  color: var(--text-primary);
+  border-color: var(--surface-5);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--surface-2);
+  border-color: var(--surface-3);
+  color: var(--text-disabled);
+}
+
+.pagination span {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Selected NFT Highlight */
+.nft-card.selected {
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* External Link Icon */
+.external-link-icon {
+  display: inline-block;
+  margin-left: 0.25rem;
+  opacity: 0.7;
+} 

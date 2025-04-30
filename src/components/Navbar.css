@@ -1,0 +1,426 @@
+.navbar {
+  background: var(--surface-0);
+  border-bottom: 1px solid rgba(220, 47, 2, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--header-height);
+  box-shadow: 0 0 30px rgba(255, 68, 0, 0.1);
+  overflow: hidden;
+}
+
+.navbar-content {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  color: var(--text-primary);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-brand {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.5px;
+}
+
+.nav-dot {
+  color: var(--text-tertiary);
+  font-size: 16px;
+  margin: 0 8px;
+}
+
+.nav-text, .nav-link {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--text-link-hover);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.wallet-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-balances {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-secondary);
+}
+
+.balance-item {
+  color: var(--text-secondary);
+  font-size: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.balance-value {
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  font-size: 1.05em;
+}
+
+.balance-item span:not(.balance-value) {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+.wallet-address {
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 6px 12px;
+  background: var(--surface-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.wallet-address:hover {
+  background: var(--surface-5);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.wallet-address:hover:after {
+  content: "Disconnect";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(208, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  font-size: 12px;
+}
+
+.connect-wallet {
+  background: var(--gradient-button);
+  color: var(--surface-0) !important;
+  border: none;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+  text-align: center;
+}
+
+.connect-wallet:hover:not(:disabled) {
+  background: var(--gradient-button-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.connect-wallet:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.connect-wallet:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.connect-wallet.connecting {
+  background: var(--surface-4);
+  position: relative;
+}
+
+.connect-wallet.connecting:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1)
+  );
+  animation: connecting-pulse 1.2s infinite;
+}
+
+@keyframes connecting-pulse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-1);
+  border-radius: 50px;
+  padding: 4px;
+}
+
+.nav-tab {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-tab:hover {
+  background: var(--surface-3);
+  color: var(--text-primary);
+}
+
+.nav-tab.active {
+  background: var(--gradient-accent);
+  color: white !important;
+  box-shadow: var(--shadow-accent-md);
+  transform: scale(1.05);
+}
+
+/* Tab Navigation Styles for App.js */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 1rem;
+  position: relative;
+  z-index: 5;
+}
+
+.tab-button {
+  background-color: var(--surface-3);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 12px 24px;
+  margin: 0 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tab-button:hover {
+  color: var(--text-primary);
+  border-color: var(--color-accent-primary);
+  background-color: var(--surface-4);
+}
+
+.tab-button.active {
+  background: var(--gradient-button);
+  border-color: var(--color-accent-secondary);
+  color: white !important;
+  box-shadow: var(--shadow-accent-sm);
+}
+
+@media (max-width: 992px) {
+  .nav-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-tabs {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 0 12px;
+  }
+
+  .nav-left {
+    gap: 4px;
+  }
+
+  .nav-brand {
+    font-size: 18px;
+  }
+
+  .nav-dot {
+    margin: 0 4px;
+  }
+  
+  .nav-text, .nav-link {
+    font-size: 14px;
+  }
+  
+  .balance-item {
+    font-size: 14px;
+    gap: 2px;
+    margin-right: 8px;
+  }
+  
+  .wallet-address {
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+  
+  .nav-balances {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .connect-wallet {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .tab-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 576px) {
+  .navbar-content {
+    flex-direction: column;
+    height: auto;
+    padding: 8px 12px;
+  }
+  
+  .navbar {
+    height: auto;
+    min-height: 48px;
+  }
+  
+  .nav-left, .nav-right {
+    width: 100%;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  
+  .nav-balances {
+    overflow-x: auto;
+    max-width: 100%;
+    justify-content: flex-start;
+    padding: 0 8px;
+  }
+}
+
+/* Balance loading indicator and refresh button */
+.balances-loading .balance-value {
+  opacity: 0.6;
+  animation: pulse 1.5s infinite;
+}
+
+.refresh-balance-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.refresh-balance-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transform: rotate(30deg);
+}
+
+.refresh-balance-btn:active {
+  transform: rotate(360deg);
+}
+
+.refresh-balance-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.refresh-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--text-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
+} 

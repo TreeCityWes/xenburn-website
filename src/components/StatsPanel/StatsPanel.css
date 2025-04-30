@@ -1,0 +1,319 @@
+/* Remove or comment out old .stats-panel, .stats-grid, .stat-boxes, .stat-box styles */
+/* 
+.stats-panel { ... } 
+.stats-grid { ... } 
+.stat-boxes { ... } 
+.stat-box { ... } 
+.stat-box.xen { ... } 
+// etc...
+*/
+
+/* NEW Styles for Redesigned Panel */
+.stats-panel-container-redesigned {
+  width: 100%;
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+.stats-panel-card {
+  position: relative;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Darker background */
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(255, 87, 34, 0.25), 0 0 10px rgba(255, 87, 34, 0.1) inset;
+  border: 1px solid rgba(255, 87, 34, 0.4); /* Slightly stronger border */
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Ensure particles are behind content */
+.stats-panel-card .fire-particles-container {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0; 
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.stats-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #ff5722, #ffb74d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 8px rgba(255, 87, 34, 0.4);
+  letter-spacing: 1px;
+}
+
+.stats-header .stats-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stats-content-area {
+  position: relative; /* Ensure content is above particles */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Space between sections */
+}
+
+.stats-section {
+  background: rgba(30, 31, 41, 0.6); /* Section background */
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ff8a65; /* Lighter orange for section titles */
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 138, 101, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-content {
+  display: grid;
+  /* Default to 3 columns */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 15px;
+}
+
+/* REMOVED Specific override for User Wallet section */
+/* 
+.stats-section:has(.section-title:contains('User Wallet')) .section-content {
+  grid-template-columns: repeat(2, 1fr);
+}
+*/
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.03); /* Subtle default background */
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Default subtle gray border */
+  transition: background 0.2s, border-color 0.2s;
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Stack label and value */
+  justify-content: flex-end; /* Align items (label, value) to the bottom */
+  min-height: 90px; /* Ensure a minimum height */
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem; /* Larger value */
+  font-weight: 600;
+  color: #eee;
+  word-break: break-word;
+}
+
+/* New styles for vertical stacking */
+.stat-pair-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between the paired items */
+}
+
+/* Ensure stat items within the pair container take full width */
+.stat-pair-container .stat-item {
+  width: 100%;
+  margin-bottom: 0; /* Remove default bottom margin if any */
+}
+
+/* Specific styling for highlighted burn stats - Toned down */
+.stat-item.highlight-burn {
+  border-color: rgba(255, 87, 34, 0.3); /* Subtler border */
+  background: rgba(255, 87, 34, 0.05); /* Very subtle background tint */
+}
+
+.stat-item.highlight-burn .stat-label {
+  color: #ff8a65;
+}
+
+.stat-item.highlight-burn .stat-value {
+  color: #ff6e40; /* Slightly less intense orange */
+  font-weight: 600; /* Slightly less bold */
+  text-shadow: 0 0 5px rgba(255, 87, 34, 0.3); /* Subtler shadow */
+}
+
+/* New styles for Green Value Highlight */
+.stat-item.highlight-value-green {
+  border-color: rgba(0, 255, 65, 0.3); /* Neon green border */
+  background: rgba(0, 255, 65, 0.05); /* Subtle green background tint */
+}
+
+.stat-item.highlight-value-green .stat-label {
+  color: #4CAF50; /* A slightly less intense green for label */
+}
+
+.stat-item.highlight-value-green .stat-value {
+  color: #00FF41; /* Neon green value */
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.4); /* Green glow */
+}
+
+/* Make contract link distinct */
+.stat-item .stat-value a {
+  color: #64b5f6; /* Light blue */
+  text-decoration: none;
+  font-size: 1.4rem; /* Slightly smaller if needed */
+}
+
+.stat-item .stat-value a:hover {
+  text-decoration: underline;
+  color: #90caf9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats-panel-card {
+    padding: 20px;
+  }
+  .section-content {
+     /* Use 2 columns on smaller screens */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  /* REMOVED Specific override for User Wallet */
+  /* 
+  .stats-section:has(.section-title:contains('User Wallet')) .section-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  */
+  .stat-value {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+   .section-content {
+    /* Stack items on very small screens */
+    grid-template-columns: 1fr; 
+    gap: 8px;
+  }
+   /* REMOVED Specific override for User Wallet */
+   /*
+   .stats-section:has(.section-title:contains('User Wallet')) .section-content {
+    grid-template-columns: 1fr;
+  }
+  */
+   .stat-item {
+    padding: 10px;
+  }
+   .stat-value {
+    font-size: 1.4rem; /* Slightly larger again for clarity */
+  }
+}
+
+/* Style for Last Updated Timestamp */
+.last-updated-timestamp {
+  text-align: center;
+  margin-top: 25px; /* Space above timestamp */
+  font-size: 0.8rem;
+  color: #888; /* Gray color */
+  position: relative; /* Keep above particles if necessary */
+  z-index: 1;
+}
+
+/* NEW Styles for Loading and Error Messages */
+.stats-loading-indicator {
+  font-size: 14px;
+  color: #ff8a65;
+  margin-top: 10px;
+  text-align: center;
+  animation: pulse 1.5s infinite;
+}
+
+.stats-error-message {
+  font-size: 14px;
+  color: #ff5252;
+  margin-top: 10px;
+  text-align: center;
+  padding: 8px 16px;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.stats-refresh-button {
+  border: none;
+  background: linear-gradient(45deg, #ff5722, #ff8c44);
+  color: white;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 15px;
+  box-shadow: 0 2px 5px rgba(255, 87, 34, 0.3);
+}
+
+.stats-refresh-button:hover {
+  background: linear-gradient(45deg, #ff6a33, #ff9a55);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(255, 87, 34, 0.4);
+}
+
+.stats-refresh-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 3px rgba(255, 87, 34, 0.3);
+}
+
+.stats-refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Style for the warning subheading */
+.stats-warning-subheading {
+  font-size: 0.8rem; /* Smaller font size */
+  font-weight: 400; /* Normal weight */
+  color: var(--color-error); /* Use error color (Sinopia Red) */
+  margin: 5px 0 0 0; /* Add small top margin, remove others */
+  padding: 0;
+  text-align: left; /* Align with heading */
+  letter-spacing: normal; /* Reset letter spacing */
+  text-shadow: none; /* Remove text shadow */
+}
+
+.stats-header .stats-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+} 

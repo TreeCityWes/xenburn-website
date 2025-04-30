@@ -1,0 +1,34 @@
+/* Coolors Exported Palette - https://coolors.co/060000-ae0913-e87a00-f5d551 */
+
+- Tailwind
+
+{ 'black': { DEFAULT: '#060000', 100: '#010000', 200: '#020000', 300: '#030000', 400: '#040000', 500: '#060000', 600: '#6a0000', 700: '#cf0000', 800: '#ff3535', 900: '#ff9a9a' }, 'cornell_red': { DEFAULT: '#AE0913', 100: '#230204', 200: '#460408', 300: '#69060c', 400: '#8c0710', 500: '#ae0913', 600: '#ec0c1b', 700: '#f54551', 800: '#f8838b', 900: '#fcc1c5' }, 'tangerine': { DEFAULT: '#E87A00', 100: '#2e1800', 200: '#5c3100', 300: '#8a4900', 400: '#b86200', 500: '#e87a00', 600: '#ff961f', 700: '#ffb057', 800: '#ffcb8f', 900: '#ffe5c7' }, 'naples_yellow': { DEFAULT: '#F5D551', 100: '#3e3204', 200: '#7b6407', 300: '#b9960b', 400: '#f1c514', 500: '#f5d551', 600: '#f7dd74', 700: '#f9e597', 800: '#fbeeba', 900: '#fdf6dc' } }
+
+- CSV
+
+060000,AE0913,E87A00,F5D551
+
+- With #
+
+#060000, #AE0913, #E87A00, #F5D551
+
+- Array
+
+["060000","AE0913","E87A00","F5D551"]
+
+- Object
+
+{"Black":"060000","Cornell red":"AE0913","Tangerine":"E87A00","Naples yellow":"F5D551"}
+
+- Extended Array
+
+[{"name":"Black","hex":"060000","rgb":[6,0,0],"cmyk":[0,100,100,98],"hsb":[0,100,2],"hsl":[0,100,1],"lab":[0,2,1]},{"name":"Cornell red","hex":"AE0913","rgb":[174,9,19],"cmyk":[0,95,89,32],"hsb":[356,95,68],"hsl":[356,90,36],"lab":[36,59,43]},{"name":"Tangerine","hex":"E87A00","rgb":[232,122,0],"cmyk":[0,47,100,9],"hsb":[32,100,91],"hsl":[32,100,45],"lab":[63,37,70]},{"name":"Naples yellow","hex":"F5D551","rgb":[245,213,81],"cmyk":[0,13,67,4],"hsb":[48,67,96],"hsl":[48,89,64],"lab":[86,-3,67]}]
+
+- XML
+
+<palette>
+  <color name="Black" hex="060000" r="6" g="0" b="0" />
+  <color name="Cornell red" hex="AE0913" r="174" g="9" b="19" />
+  <color name="Tangerine" hex="E87A00" r="232" g="122" b="0" />
+  <color name="Naples yellow" hex="F5D551" r="245" g="213" b="81" />
+</palette>

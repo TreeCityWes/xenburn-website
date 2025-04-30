@@ -1,0 +1,58 @@
+// Define chain configurations
+
+// Helper function to define chain objects consistently
+const defineChain = (id, name, rpcUrls, blockExplorerUrls, nativeCurrency, logoUrl) => ({
+  id,
+  name,
+  // Use lowercase name for most networks as default network value
+  network: name.toLowerCase().replace(/ /g, '-'), 
+  nativeCurrency,
+  rpcUrls: {
+    public: { http: rpcUrls },
+    default: { http: rpcUrls },
+  },
+  blockExplorers: {
+    etherscan: { name: `${name}scan`, url: blockExplorerUrls },
+    default: { name: `${name}scan`, url: blockExplorerUrls },
+  },
+  logoUrl, 
+});
+
+// Base Mainnet
+export const base = defineChain(
+  8453,
+  'Base',
+  ['https://mainnet.base.org'], // Primary RPC
+  'https://basescan.org',
+  { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  '/logos/cbxen.png' // Base Logo Path
+);
+
+// Explicitly set the network property for Base to 'base' (this is critical for DexScreener API)
+base.network = 'base';
+
+// Optimism Mainnet
+export const optimism = defineChain(
+  10,
+  'Optimism',
+  ['https://mainnet.optimism.io'], // Primary RPC
+  'https://optimistic.etherscan.io',
+  { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  '/logos/opxen.png' // Updated Optimism Logo Path
+);
+
+// Sepolia Testnet
+export const sepolia = defineChain(
+  11155111,
+  'Sepolia',
+  ['https://rpc.sepolia.org'], // Using public RPC endpoint
+  'https://sepolia.etherscan.io',
+  { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+  '/logos/xen.png' // Updated Sepolia Logo Path
+);
+
+// Array of all supported chains
+export const supportedChains = [base, optimism, sepolia];
+
+// Function to get chain info by ID
+export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 

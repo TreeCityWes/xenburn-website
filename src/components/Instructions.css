@@ -1,0 +1,103 @@
+.instructions {
+  margin: 24px auto;
+  padding: 20px;
+  background: var(--surface-2); /* Standard dark surface */
+  border-radius: 12px; /* Consistent radius */
+  border: 1px solid var(--border-color-accent); /* Use accent border */
+  box-shadow: var(--shadow-lg), var(--shadow-brand-sm); /* Consistent shadows */
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  display: block !important; /* Force display */
+  visibility: visible !important; /* Ensure visibility */
+  opacity: 1 !important; /* Ensure opacity */
+}
+
+.instructions h3 {
+  font-size: 18px; /* Consistent title size */
+  font-weight: 600; /* Consistent title weight */
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--color-accent-primary); /* Use Persimmon */
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--surface-3); /* Darker step background */
+  border-radius: 12px;
+  border: 1px solid var(--surface-4); /* Subtle border */
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--gradient-accent); /* Use Orange/Yellow Gradient */
+  border-radius: 50%;
+  font-weight: 600;
+  color: var(--surface-0); /* Dark text */
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text-primary); /* Bright text */
+}
+
+.step-content a {
+  color: var(--text-link); /* Use link color */
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.step-content a:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .instructions {
+    padding: 16px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .instructions h3 {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .step {
+    padding: 12px;
+  }
+  
+  .step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  .step-content p {
+    font-size: 13px;
+  }
+} 

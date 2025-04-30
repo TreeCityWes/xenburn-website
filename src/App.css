@@ -1,0 +1,540 @@
+:root {
+  /*
+  * REVISED COLOR SYSTEM - More Orange
+  * Palette: Black, Blood Red, Sinopia, Oranges, Gold
+  */
+
+  /* Dark Surfaces (Night) - Using #09090a base */
+  --surface-0: #09090a;
+  --surface-1: #0d0d0e;
+  --surface-2: #111112;
+  --surface-3: #1a1a1b;
+  --surface-4: #212122;
+  --surface-5: #2b2b2d;
+
+  /* Primary/Brand Colors (Reds) */
+  --rosewood-500: #6a040f; 
+  --penn-red-500: #6e0000; /* Blood Red */
+  --engineering-orange-500: #d00000; 
+  --sinopia-500: #dc2f02; /* Sinopia */
+  --persimmon-500: #e85d04; /* Persimmon */
+
+  /* Accent Colors (Oranges/Yellows) - Prioritize Orange */
+  --princeton-orange-500: #f48c06; /* Princeton Orange */
+  --orange-web-500: #faa307; /* Orange Web */
+  --selective-yellow-500: #ffba08; /* Selective Yellow - Use sparingly */
+  --gold-500: #ffd500; /* Gold - Reserved for specific highlights */
+
+  /* Status Colors */
+  --color-success: #4CAF50; 
+  --color-warning: var(--orange-web-500); /* Use Orange Web for warning */
+  --color-error: var(--sinopia-500); /* Use Sinopia for error */
+  --color-info: #2196F3; 
+
+  /* Text Colors - Bright on dark */
+  --text-primary: rgba(255, 255, 255, 0.9); 
+  --text-secondary: rgba(255, 255, 255, 0.7); 
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-disabled: rgba(255, 255, 255, 0.3);
+  --text-link: var(--persimmon-500); /* Persimmon for links */
+  --text-link-hover: var(--princeton-orange-500); /* Princeton Orange for hover */
+
+  /* Accent/Brand Color Aliases - Orange Focused */
+  --color-accent-primary: var(--persimmon-500); /* Persimmon */
+  --color-accent-secondary: var(--princeton-orange-500); /* Princeton Orange */
+  --color-accent-tertiary: var(--gold-500); /* Gold - Reserved */
+  --color-brand-primary: var(--sinopia-500); /* Sinopia */
+  --color-brand-secondary: var(--penn-red-500); /* Blood Red */
+  
+  /* Border Colors */
+  --border-color: rgba(220, 47, 2, 0.2); /* Sinopia based border */
+  --border-color-accent: rgba(232, 93, 4, 0.3); /* Persimmon based border */
+
+  /* Gradients - Orange Focused */
+  --gradient-brand: linear-gradient(135deg, var(--sinopia-500), var(--penn-red-500)); /* Sinopia -> Blood Red */
+  --gradient-accent: linear-gradient(135deg, var(--persimmon-500), var(--princeton-orange-500)); /* Persimmon -> Princeton Orange (More Orange) */
+  --gradient-dark: linear-gradient(135deg, var(--surface-0), var(--surface-1)); 
+  --gradient-glass: linear-gradient(135deg, rgba(232, 93, 4, 0.05), rgba(244, 140, 6, 0.02)); /* Subtle Orange Glow */
+
+  /* Button Gradients - Orange Focused */
+  --gradient-button: linear-gradient(135deg, var(--persimmon-500), var(--princeton-orange-500)); /* Persimmon -> Princeton Orange */
+  --gradient-button-hover: linear-gradient(135deg, var(--princeton-orange-500), var(--orange-web-500)); /* Princeton Orange -> Orange Web */
+  --gradient-button-active: linear-gradient(135deg, var(--orange-web-500), var(--persimmon-500));
+  /* Gold Gradient - For specific secondary buttons */
+  --gradient-gold-button: linear-gradient(135deg, var(--orange-web-500), var(--gold-500)); /* Orange Web -> Gold */
+  --gradient-gold-button-hover: linear-gradient(135deg, var(--gold-500), #ffe666); /* Gold -> Lighter Gold */
+  
+  /* Legacy Mapping - Updated */
+  --primary-color: var(--sinopia-500);
+  --primary-light: var(--persimmon-500);
+  --primary-dark: var(--penn-red-500);
+  --bg-dark: var(--surface-1);
+  --bg-card: var(--surface-2);
+  --bg-card-lighter: var(--surface-3);
+  --text-light: var(--text-primary);
+  --text-muted: var(--text-secondary);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Colored shadows for fire effect */
+  --shadow-brand-sm: 0 0 15px rgba(220, 47, 2, 0.2); /* Sinopia */
+  --shadow-brand-md: 0 0 25px rgba(220, 47, 2, 0.25);
+  --shadow-brand-lg: 0 0 35px rgba(220, 47, 2, 0.3);
+
+  --shadow-accent-sm: 0 0 15px rgba(250, 163, 7, 0.2); /* Orange Web */
+  --shadow-accent-md: 0 0 25px rgba(250, 163, 7, 0.25);
+  --shadow-accent-lg: 0 0 35px rgba(250, 163, 7, 0.3);
+
+  /* TYPOGRAPHY SYSTEM */
+  /* Font sizes (in px) */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-normal: 1.5;
+  --leading-loose: 1.8;
+  
+  /* Letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  
+  /* SPACING SYSTEM (in px) */
+  --space-xxxs: 2px;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 40px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  
+  /* BORDER RADIUS */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+  
+  /* SHADOWS */
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* ANIMATIONS & TRANSITIONS */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --transition-bounce: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  
+  /* Z-INDEX LAYERS */
+  --z-below: -1;
+  --z-normal: 1;
+  --z-above: 10;
+  --z-modal: 100;
+  --z-overlay: 200;
+  --z-max: 999;
+  
+  /* LAYOUT UTILS */
+  --container-width: 680px;
+  --header-height: 60px; /* Adjust if necessary */
+  --footer-height: 80px; /* Adjust if necessary */
+  --wrapper-padding: 16px;
+}
+
+.App {
+  background: var(--surface-1); /* Use Near Black/Maroon for main app area */
+  min-height: 100vh;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+  font-family: 'Inter', 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding-top: var(--header-height); /* Add padding for fixed header */
+  padding-bottom: var(--footer-height); /* Add padding for fixed footer */
+}
+
+/* Remove pseudo-elements adding extra gradients/overlays */
+.App::before,
+.App::after {
+  display: none;
+}
+
+.app-content-container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--wrapper-padding); /* Use variable */
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  overflow: visible; /* Allow shadows/glows */
+  flex-grow: 1; /* Ensure it takes available space */
+}
+
+.main-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-lg) 0; /* Adjust padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* min-height removed, handled by App padding + flex-grow */
+  box-sizing: border-box;
+}
+
+/* Set box-sizing for all elements to prevent overflow issues */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Show stats container properly */
+.stats-container {
+  display: block !important;
+}
+
+/* Hide these containers since they're integrated in BurnPanel */
+.info-cards-container,
+.social-links-container {
+  display: none;
+}
+
+/* Set burn panel width consistently */
+.burn-container {
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: none; /* Remove excess shadow */
+}
+
+/* Logo container styles with improved animation */
+.logo-container {
+  width: 100%;
+  margin: 40px auto 30px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.logo-container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-width: 320px;
+  filter: drop-shadow(0 0 25px rgba(250, 163, 7, 0.3)); /* Use accent Orange Web */
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.logo-container img:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 30px rgba(250, 163, 7, 0.4)); /* Use accent Orange Web */
+}
+
+/* Footer styles - Fixed Footer */
+.footer {
+  background: var(--surface-0); /* Use pure black */
+  color: var(--text-secondary);
+  padding: var(--space-md) 0; /* Adjust padding */
+  border-top: 1px solid rgba(220, 47, 2, 0.2); /* Sinopia border */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50; /* Ensure it's above content */
+  min-height: var(--footer-height);
+  box-sizing: border-box;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(250, 163, 7, 0.4); /* Use accent Orange Web */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 163, 7, 0.6);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(250, 163, 7, 0.4) var(--surface-0); /* Use accent Orange Web */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tab Navigation Styles with improved glassmorphism */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 30px;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.tab-button {
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  padding: 12px 26px;
+  margin: 0 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  letter-spacing: var(--tracking-wide);
+  box-shadow: var(--shadow-md);
+}
+
+.tab-button:hover {
+  background: var(--surface-3);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #ff4400, #ff8800); /* Fire gradient */
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 68, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 68, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Media queries with refined responsive behavior */
+@media (max-width: 768px) {
+  .app-content-container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+  
+  .logo-container {
+    margin: 30px auto 24px;
+  }
+  
+  .logo-container img {
+    max-width: 260px;
+  }
+  
+  .tab-button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  
+  .tab-navigation {
+    margin: 0 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-content-container {
+    padding: 0 12px;
+  }
+  
+  .logo-container {
+    margin: 24px auto 20px;
+  }
+  
+  .logo-container img {
+    max-width: 220px;
+  }
+  
+  .tab-navigation {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 0 20px;
+  }
+  
+  .tab-button {
+    font-size: 13px;
+    padding: 8px 16px;
+    margin: 4px;
+    flex: 0 0 auto;
+  }
+  
+  .main-content {
+    padding: 0 0 40px;
+  }
+}
+
+/* App background with fire particles */
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Add subtle glow effect to buttons and inputs on hover/focus */
+button:hover:not(:disabled),
+input[type="text"]:hover:not(:disabled),
+input[type="number"]:hover:not(:disabled),
+input[type="text"]:focus:not(:disabled),
+input[type="number"]:focus:not(:disabled) {
+  box-shadow: 0 0 12px var(--shadow-accent-sm), 0 0 4px var(--shadow-accent-md); /* Use Accent Princeton Orange shadows */
+  /* Ensure transition is applied for smoothness */
+  transition: box-shadow var(--transition-normal), transform var(--transition-fast), background var(--transition-normal);
+}
+
+/* Ensure primary buttons also get the effect */
+.connect-wallet:hover:not(:disabled),
+.primary-button:hover:not(:disabled) { /* Assuming a .primary-button class exists or might be added */
+  box-shadow: 0 0 15px var(--shadow-accent-md), 0 0 5px var(--shadow-accent-lg); /* Use Accent Princeton Orange shadows */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fix for network switching - Navbar is now fixed */
+.navbar {
+  position: fixed; /* Make navbar fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background: var(--surface-0); /* Use pure black */
+  z-index: 100; /* High z-index */
+  border-bottom: 1px solid rgba(220, 47, 2, 0.2); /* Sinopia border */
+  display: flex; /* Add flex for alignment */
+  align-items: center; /* Center items vertically */
+  padding: 0 var(--space-lg); /* Add padding */
+  box-sizing: border-box;
+}
+
+.network-switcher {
+  /* Styles for the switcher itself within the fixed navbar */
+  position: relative; /* Keep relative for dropdown */
+  z-index: 110; /* Above navbar */
+}
+
+.network-switcher-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height var(--transition-normal), opacity var(--transition-normal);
+  z-index: 120; /* Above switcher */
+}
+
+.network-switcher-dropdown.open {
+  max-height: 300px;
+  opacity: 1;
+}
+
+/* Ensure chain logos don't cause overlap */
+.chain-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: var(--surface-3);
+  position: relative;
+  z-index: 1;
+}
+
+/* Prevent wallet info from causing layout shifts during transitions */
+.wallet-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  overflow: visible;
+}
+
+/* Ensure any dropdown or popup from wallet connections appears above other elements */
+.wallet-dropdown,
+.wallet-popup,
+.chain-selector {
+  z-index: 80;
+  position: relative;
+}
+
+/* Prevent chain switching animations from causing overlaps */
+.chain-switch-animation {
+  position: absolute;
+  z-index: 45;
+  pointer-events: none;
+}
+
+/* Add proper layers for screenshots that may appear during network transitions */
+.screenshot-container {
+  position: relative;
+  z-index: 40;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+}
+
+/* Ensure the screenshot doesn't overflow its container */
+.screenshot-container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Fix layout shift during network transitions */
+.app-content-container {
+  position: relative;
+  z-index: 2;
+  transition: opacity var(--transition-normal);
+}
+
+.app-content-loading {
+  opacity: 0.6;
+}
+
+/* Ensure navigation elements stay visible during transitions */
+.App .navbar button {
+  z-index: 55;
+  position: relative;
+}
