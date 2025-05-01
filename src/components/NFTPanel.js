@@ -369,26 +369,28 @@ export const NFTPanel = () => {
           </div>
         </div>
         
-        {!claimed && isMatured && (
-          <button 
-            className="claim-button"
-            onClick={() => handleClaimNFT(selectedNFT.tokenId)}
-            disabled={claiming}
-            style={{ background: "#ff5722", color: "white" }}
-          >
-            {claiming ? 'Claiming...' : 'Claim Rewards'}
-          </button>
-        )}
-        
-        {!claimed && !isMatured && (
-          <button 
-            className="emergency-end-button"
-            onClick={() => handleEmergencyEnd(selectedNFT.tokenId)}
-            disabled={emergencyEnding}
-          >
-            {emergencyEnding ? 'Processing...' : 'Emergency End (Forfeit Rewards)'}
-          </button>
-        )}
+        <div className="action-wrapper">
+          {!claimed && isMatured && (
+            <button 
+              className="claim-button"
+              onClick={() => handleClaimNFT(selectedNFT.tokenId)}
+              disabled={claiming}
+              style={{ background: "#ff5722", color: "white" }}
+            >
+              {claiming ? 'Claiming...' : 'Claim Rewards'}
+            </button>
+          )}
+          
+          {!claimed && !isMatured && (
+            <button 
+              className="emergency-end-button"
+              onClick={() => handleEmergencyEnd(selectedNFT.tokenId)}
+              disabled={emergencyEnding}
+            >
+              {emergencyEnding ? 'Processing...' : 'Emergency End (Forfeit Rewards)'}
+            </button>
+          )}
+        </div>
       </div>
     );
   };
