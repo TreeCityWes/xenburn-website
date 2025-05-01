@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { DEFAULT_AMP_START, DEFAULT_AMP_SNAPSHOT } from '../../utils/constants';
 
 /**
@@ -22,6 +22,21 @@ export const BurnPanelProvider = ({ children }) => {
     console.log(`BurnPanelContext: Changing tab to ${tabId}`);
     setActiveTabState(tabId);
   }, []);
+  
+  // Make the activeTab and setActiveTab available on the window object for mobile menu
+  useEffect(() => {
+    // Expose the current activeTab value to window
+    window.burnActiveTab = activeTab;
+    
+    // Expose the setActiveTab function to window
+    window.setActiveBurnTab = setActiveTab;
+    
+    // Clean up when component unmounts
+    return () => {
+      delete window.burnActiveTab;
+      delete window.setActiveBurnTab;
+    };
+  }, [activeTab, setActiveTab]);
   
   const contextValue = {
     ampStart: DEFAULT_AMP_START,

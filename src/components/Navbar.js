@@ -143,29 +143,68 @@ export const Navbar = ({ onTabChange, activeTab }) => {
         </div>
       </nav>
       
-      {/* Mobile-only navigation links - always visible on mobile */}
-      <div className="mobile-nav-links">
-        <a 
-          href="#" 
-          className={`mobile-nav-link ${activeTab === 'burn' ? 'active' : ''}`}
-          onClick={(e) => { e.preventDefault(); onTabChange('burn'); }}
-        >
-          BURN
-        </a>
-        <a 
-          href="#" 
-          className={`mobile-nav-link ${activeTab === 'nfts' ? 'active' : ''}`}
-          onClick={(e) => { e.preventDefault(); onTabChange('nfts'); }}
-        >
-          XLOCK NFT
-        </a>
-        <a 
-          href="#" 
-          className={`mobile-nav-link ${activeTab === 'stats' ? 'active' : ''}`}
-          onClick={(e) => { e.preventDefault(); onTabChange('stats'); }}
-        >
-          STATS
-        </a>
+      {/* Mobile-only navigation container with two rows */}
+      <div className="mobile-nav-container">
+        {/* First row: Main navigation */}
+        <div className="mobile-nav-links">
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'burn' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('burn'); }}
+          >
+            BURN
+          </a>
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'nfts' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('nfts'); }}
+          >
+            XLOCK NFT
+          </a>
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'stats' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('stats'); }}
+          >
+            STATS
+          </a>
+        </div>
+        
+        {/* Second row: Burn tabs (only show on burn tab) */}
+        {activeTab === 'burn' && (
+          <div className="mobile-tab-links">
+            <a 
+              href="#" 
+              className={`mobile-tab-link ${activeTab === 'burn' && window.burnActiveTab === 'burnXEN' ? 'active' : ''}`}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                if (window.setActiveBurnTab) window.setActiveBurnTab('burnXEN');
+              }}
+            >
+              Burn XEN
+            </a>
+            <a 
+              href="#" 
+              className={`mobile-tab-link ${activeTab === 'burn' && window.burnActiveTab === 'burnXBURN' ? 'active' : ''}`}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                if (window.setActiveBurnTab) window.setActiveBurnTab('burnXBURN');
+              }}
+            >
+              Burn XBURN
+            </a>
+            <a 
+              href="#" 
+              className={`mobile-tab-link ${activeTab === 'burn' && window.burnActiveTab === 'swapBurn' ? 'active' : ''}`}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                if (window.setActiveBurnTab) window.setActiveBurnTab('swapBurn');
+              }}
+            >
+              Swap & Burn
+            </a>
+          </div>
+        )}
       </div>
     </>
   );

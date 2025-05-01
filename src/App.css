@@ -396,9 +396,9 @@
     padding: 0 0 40px;
   }
   
-  /* Add padding for mobile navigation */
+  /* Additional padding for the two-row mobile menu at the bottom */
   .App {
-    padding-bottom: calc(var(--footer-height) + 50px);
+    padding-bottom: calc(var(--footer-height) + 100px);
   }
   
   /* Adjust footer to allow room for mobile nav */

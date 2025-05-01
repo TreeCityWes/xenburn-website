@@ -1262,12 +1262,10 @@
 @media (max-width: 480px) {
   /* Tab view - make vertical on small mobile */
   .tab-view {
-    flex-direction: column;
-    overflow-x: visible;
-    width: 100%;
-    padding-bottom: 0;
+    display: none; /* Hide tabs on mobile - they'll be in the bottom nav */
   }
 
+  /* Hide the tab buttons on mobile - kept for reference
   .tab-button {
     width: 100%;
     min-width: 100%;
@@ -1283,4 +1281,5 @@
     font-size: 14px;
     white-space: normal;
   }
+  */
 } 
