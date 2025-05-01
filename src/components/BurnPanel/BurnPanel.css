@@ -1160,4 +1160,84 @@
 .swap-burn-button-container .burn-button:not([disabled]):hover {
   background: linear-gradient(135deg, #e85d04, #9d0208) !important; /* Persimmon -> Blood Red on hover */
   box-shadow: 0 6px 16px rgba(220, 47, 2, 0.4) !important; /* Sinopia shadow */
+}
+
+/* Add Mobile Styles */
+@media (max-width: 576px) {
+  /* Input Token Container Adjustments */
+  .input-token-header {
+    flex-direction: column; /* Stack vertically */
+    align-items: stretch; /* Stretch items */
+    padding: 12px; /* Adjust padding */
+    gap: 8px; /* Add gap */
+  }
+  
+  .input-token-header .token-info {
+    width: 100%; /* Full width */
+    justify-content: center; /* Center token info */
+    margin-bottom: 8px; /* Space below token info */
+  }
+  
+  .input-field {
+    width: 100%; /* Full width */
+    margin: 0 0 8px 0; /* Adjust margins */
+  }
+
+  .input-field input {
+    text-align: center !important; /* Center text on mobile */
+  }
+  
+  .input-token-header .max-button {
+    width: 100%; /* Full width MAX button */
+    margin-left: 0; /* Remove left margin */
+    padding: 8px 10px !important; /* Adjust padding */
+    font-size: 14px !important; /* Slightly larger font */
+  }
+  
+  .token-details {
+    flex-direction: column; /* Stack balance/approved */
+    align-items: center; /* Center align */
+    gap: 4px;
+    padding: 10px;
+  }
+  
+  /* Term Input Container Adjustments */
+  .term-input-container {
+    flex-direction: column; /* Stack vertically */
+    align-items: stretch; /* Stretch items */
+    gap: 10px; 
+  }
+  
+  .term-input-label {
+     justify-content: center; /* Center label */
+     white-space: normal; /* Allow wrapping if needed */
+  }
+
+  .term-input-field {
+     width: 100%; /* Full width */
+     align-items: center; /* Keep centered */
+  }
+
+  .term-input {
+     max-width: 150px; /* Limit width */
+  }
+
+  .term-input-note {
+     width: auto; /* Allow natural width */
+  }
+  
+  /* Button container - already stacks */
+  .button-container {
+     flex-direction: column; /* Ensure stacking */
+     align-items: stretch; /* Stretch buttons full width */
+     gap: 12px;
+  }
+  
+  .approve-button,
+  .burn-button,
+  .single-button-container button {
+     min-width: unset; /* Remove min-width */
+     flex: unset; /* Remove flex grow */
+     width: 100%; /* Full width */
+  }
 } 

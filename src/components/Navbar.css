@@ -134,34 +134,41 @@
 }
 
 .connect-wallet {
-  background: var(--gradient-button);
-  color: var(--surface-0) !important;
+  background: var(--gradient-brand);
+  color: var(--text-primary) !important;
   border: none;
   padding: 8px 20px;
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
   min-width: 150px;
   text-align: center;
+  box-shadow: var(--shadow-brand-sm);
 }
 
 .connect-wallet:hover:not(:disabled) {
-  background: var(--gradient-button-hover);
+  filter: brightness(1.15);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-brand-md);
 }
 
 .connect-wallet:active:not(:disabled) {
   transform: translateY(0);
+  filter: brightness(0.95);
+  box-shadow: var(--shadow-brand-sm);
 }
 
 .connect-wallet:disabled {
-  opacity: 0.7;
+  background: var(--surface-4) !important;
+  opacity: 0.6;
   cursor: not-allowed;
+  color: var(--text-disabled) !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .connect-wallet.connecting {
@@ -269,6 +276,7 @@
   box-shadow: var(--shadow-accent-sm);
 }
 
+/* Medium screens */
 @media (max-width: 992px) {
   .nav-actions {
     flex-direction: column;
@@ -278,8 +286,15 @@
   .nav-tabs {
     margin-bottom: 0.5rem;
   }
+
+  /* Hide secondary links on medium screens and below */
+  .nav-left .nav-dot,
+  .nav-left .nav-link:not(.external-link) { /* Keep audit link maybe? Adjust if needed */
+     /* display: none; */ /* Let's hide them on smaller screens instead */
+  }
 }
 
+/* Small screens */
 @media (max-width: 768px) {
   .navbar-content {
     padding: 0 12px;
@@ -289,16 +304,18 @@
     gap: 4px;
   }
 
-  .nav-brand {
-    font-size: 18px;
+  /* Hide secondary links and dots definitely */
+  .nav-left .nav-dot,
+  .nav-left > a.nav-link { /* Target direct children links */
+     display: none; 
+  }
+  /* Keep brand visible */
+  .nav-left .nav-brand { 
+    display: block; /* Ensure it stays visible */
   }
 
-  .nav-dot {
-    margin: 0 4px;
-  }
-  
-  .nav-text, .nav-link {
-    font-size: 14px;
+  .nav-brand {
+    font-size: 18px;
   }
   
   .balance-item {
@@ -322,37 +339,48 @@
     font-size: 14px;
     padding: 6px 12px;
   }
-
-  .tab-button {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
 }
 
 /* Extra small screens */
 @media (max-width: 576px) {
   .navbar-content {
-    flex-direction: column;
+    flex-direction: row; /* Keep as row, but allow wrapping */
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-between; /* Space out logo/wallet */
     height: auto;
     padding: 8px 12px;
   }
   
   .navbar {
-    height: auto;
-    min-height: 48px;
+    height: auto; 
+    min-height: var(--header-height); /* Keep min height */
   }
   
-  .nav-left, .nav-right {
-    width: 100%;
-    justify-content: center;
+  /* Center items vertically within their containers */
+  .nav-left, .wallet-section {
+    width: auto; /* Allow natural width */
     padding: 4px 0;
+    align-items: center; 
   }
   
+  .nav-right { /* Hide nav-right container which holds actions/tabs */
+     display: none; 
+  }
+
+  /* Hide the navbar tabs specifically */
+  .nav-tabs {
+    display: none;
+  }
+
   .nav-balances {
-    overflow-x: auto;
-    max-width: 100%;
-    justify-content: flex-start;
-    padding: 0 8px;
+     /* Keep existing styles or adjust if needed */
+     flex-direction: row; /* Maybe row is better if space allows */
+     gap: 10px; /* Adjust gap */
+     overflow-x: auto; 
+     max-width: 100%;
+     justify-content: flex-end; /* Align balances right */
+     padding: 0;
+     margin-left: auto; /* Push balances right */
   }
 }
 
