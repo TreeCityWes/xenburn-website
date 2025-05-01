@@ -56,13 +56,6 @@ const NFTCard = ({
     return nftContract.address.toLowerCase() === currentAddresses.XBURN_NFT_ADDRESS.toLowerCase();
   }, [nftContract, currentAddresses]);
 
-  // Generate explorer link dynamically
-  const blockscoutUrl = useMemo(() => {
-      if (!explorerUrl || !nftAddress || !nft?.tokenId || nftAddress.includes('PLACEHOLDER')) return '#';
-      const baseUrl = explorerUrl.endsWith('/') ? explorerUrl : `${explorerUrl}/`;
-      return `${baseUrl}token/${nftAddress}?a=${nft.tokenId}`; // Adjusted for token ID query
-  }, [explorerUrl, nftAddress, nft?.tokenId]);
-
   // Load SVG for NFT
   useEffect(() => {
     const fetchNftSvg = async () => {
@@ -106,21 +99,11 @@ const NFTCard = ({
 
   return (
     <div className={`nft-card ${selected ? 'selected' : ''}`} onClick={() => onSelect(nft)}>
-      {/* Use dynamic blockscoutUrl */}
-      <a 
-        href={blockscoutUrl} 
-        target="_blank"
-        rel="noopener noreferrer"
-        className="blockscout-link"
-        onClick={(e) => e.stopPropagation()} // Prevent card selection when clicking link
-        title={`View NFT #${nft.tokenId} on ${currentChain?.name} Explorer`}
+      {/* Image container - REMOVE onClick and data-explorer-url */}
+      <div 
+        className="nft-image-container"
+        title={`NFT #${nft.tokenId}`} /* Simplified title */
       >
-        View Details
-        <ExternalLinkIcon />
-      </a>
-      
-      {/* Image container - Removed blockscout link here as it's above */}
-      <div className="nft-image-container">
          {nft.image ? (
             <img src={nft.image} alt={`NFT #${nft.tokenId}`} className="nft-image" />
          ) : loadingSvg ? (

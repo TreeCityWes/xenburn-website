@@ -1,10 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import { useWallet } from '../../context/WalletContext';
 import { useGlobalData } from '../../context/GlobalDataContext';
 import { formatDecimals } from '../../utils/tokenUtils';
+import { getChainById } from '../../constants/chains';
 import './NFTPanel.css';
+
+// Add the missing ExternalLinkIcon component definition
+const ExternalLinkIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 20 20" 
+    fill="currentColor" 
+    className="external-link-icon"
+    style={{ width: '1em', height: '1em', display: 'inline-block', verticalAlign: 'middle'}} // Basic inline styles
+  >
+    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+  </svg>
+);
 
 export const NFTPanel = () => {
   const { account, isConnected, nftContract: walletNftContract, getCurrentAddresses, selectedChainId } = useWallet();
@@ -17,6 +32,19 @@ export const NFTPanel = () => {
   const [loadingSelectedDetails, setLoadingSelectedDetails] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Derive chain and address info needed for the link
+  const currentAddresses = getCurrentAddresses();
+  const currentChain = getChainById(selectedChainId);
+  const explorerUrl = currentChain?.blockExplorers?.default?.url;
+  const nftAddress = currentAddresses?.XBURN_NFT_ADDRESS;
+
+  // Generate explorer link dynamically for the SELECTED NFT
+  const blockscoutUrl = useMemo(() => {
+      if (!explorerUrl || !nftAddress || !selectedNFT?.tokenId || nftAddress.includes('PLACEHOLDER')) return '#'; 
+      const baseUrl = explorerUrl.endsWith('/') ? explorerUrl : `${explorerUrl}/`;
+      return `${baseUrl}token/${nftAddress}/instance/${selectedNFT.tokenId}`; 
+  }, [explorerUrl, nftAddress, selectedNFT?.tokenId]);
 
   const fetchNftSvg = useCallback(async (tokenId) => {
     if (!tokenId || !walletNftContract || !getCurrentAddresses) return;
@@ -281,6 +309,17 @@ export const NFTPanel = () => {
                   </div>
              </div>
            </div>
+
+           <div className="detail-row explorer-link-row">
+             <span className="detail-label">Explorer Link</span>
+             <span className="detail-value">
+               <a href={blockscoutUrl} target="_blank" rel="noopener noreferrer" className="explorer-link-value">
+                   View on {currentChain?.name || 'Explorer'} 
+                   <ExternalLinkIcon />
+               </a>
+             </span>
+           </div>
+
             <div className="nft-actions">
                 <button
                     className="claim-button"
