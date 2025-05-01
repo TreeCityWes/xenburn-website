@@ -1164,80 +1164,97 @@
 
 /* Add Mobile Styles */
 @media (max-width: 576px) {
-  /* Input Token Container Adjustments */
   .input-token-header {
-    flex-direction: column; /* Stack vertically */
-    align-items: stretch; /* Stretch items */
-    padding: 12px; /* Adjust padding */
-    gap: 8px; /* Add gap */
+    flex-direction: column; 
+    align-items: flex-start;
+    padding: 12px;
+    gap: 10px;
   }
   
   .input-token-header .token-info {
-    width: 100%; /* Full width */
-    justify-content: center; /* Center token info */
-    margin-bottom: 8px; /* Space below token info */
+    margin-bottom: 5px;
+    margin-right: auto;
   }
   
   .input-field {
-    width: 100%; /* Full width */
-    margin: 0 0 8px 0; /* Adjust margins */
+    width: 100%;
+    margin: 0;
   }
-
+  
   .input-field input {
-    text-align: center !important; /* Center text on mobile */
+    font-size: 16px;
   }
   
   .input-token-header .max-button {
-    width: 100%; /* Full width MAX button */
-    margin-left: 0; /* Remove left margin */
-    padding: 8px 10px !important; /* Adjust padding */
-    font-size: 14px !important; /* Slightly larger font */
+    margin-left: 0;
+    align-self: flex-end;
+    position: absolute;
+    top: 12px;
+    right: 12px;
   }
   
   .token-details {
-    flex-direction: column; /* Stack balance/approved */
-    align-items: center; /* Center align */
-    gap: 4px;
-    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px 12px;
   }
   
-  /* Term Input Container Adjustments */
   .term-input-container {
-    flex-direction: column; /* Stack vertically */
-    align-items: stretch; /* Stretch items */
-    gap: 10px; 
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    gap: 10px;
   }
   
   .term-input-label {
-     justify-content: center; /* Center label */
-     white-space: normal; /* Allow wrapping if needed */
-  }
-
-  .term-input-field {
-     width: 100%; /* Full width */
-     align-items: center; /* Keep centered */
-  }
-
-  .term-input {
-     max-width: 150px; /* Limit width */
-  }
-
-  .term-input-note {
-     width: auto; /* Allow natural width */
+    width: 100%;
+    margin-bottom: 5px;
   }
   
-  /* Button container - already stacks */
+  .term-input-field {
+    width: 100%;
+  }
+  
+  .term-input {
+    width: 100%;
+  }
+  
+  .term-input-note {
+    text-align: left;
+  }
+  
   .button-container {
-     flex-direction: column; /* Ensure stacking */
-     align-items: stretch; /* Stretch buttons full width */
-     gap: 12px;
+    flex-direction: column;
+    gap: 10px;
   }
   
   .approve-button,
-  .burn-button,
-  .single-button-container button {
-     min-width: unset; /* Remove min-width */
-     flex: unset; /* Remove flex grow */
-     width: 100%; /* Full width */
+  .burn-button {
+    width: 100%;
+  }
+  
+  /* Tab navigation for mobile */
+  .tab-view {
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    margin-bottom: 16px;
+  }
+  
+  .tab-view::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari/Opera */
+  }
+  
+  .tab-button {
+    padding: 8px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+    min-width: 100px; /* Set minimum width */
+    max-width: 33%; /* Ensure they don't get too large */
+    flex: 1 0 auto; /* Don't shrink, grow from auto basis */
   }
 } 

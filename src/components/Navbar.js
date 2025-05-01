@@ -71,75 +71,104 @@ export const Navbar = ({ onTabChange, activeTab }) => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-content">
-        <div className="nav-left">
-          <span className="nav-brand">XBURN</span>
-          <span className="nav-dot">·</span>
-          <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">@BurnMoreXen</a>
-          <span className="nav-dot">·</span>
-          <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">Telegram</a>
-          <span className="nav-dot">·</span>
-          <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
-          <span className="nav-dot">·</span>
-          <a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer" className="nav-link">Audit</a>
-        </div>
+    <>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <div className="nav-left">
+            <span className="nav-brand">XBURN</span>
+            <span className="nav-dot">·</span>
+            <a href="https://x.com/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">@BurnMoreXen</a>
+            <span className="nav-dot">·</span>
+            <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">Telegram</a>
+            <span className="nav-dot">·</span>
+            <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
+            <span className="nav-dot">·</span>
+            <a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer" className="nav-link">Audit</a>
+          </div>
 
-        {isConnected && account ? (
-          <>
-            <div className={`nav-balances ${!balances ? 'balances-loading' : ''}`}>
-              <span className="network-indicator" title={chainName}>
-                {chainIcon && <img src={chainIcon} alt={chainName} className="chain-icon" />}
-              </span>
-              <span className="balance-item" title={balances?.eth || '0'}>
-                <span className="balance-value">{formatBalance(balances?.eth, 'ETH')}</span> ETH
-              </span>
-              <span className="balance-item" title={balances?.xen || '0'}>
-                <span className="balance-value">{formatBalance(balances?.xen, 'XEN')}</span> XEN
-              </span>
-              <span className="balance-item" title={balances?.xburn || '0'}>
-                <span className="balance-value">{formatBalance(balances?.xburn, 'XBURN')}</span> XBURN
-              </span>
-            </div>
-            <div className="nav-actions">
-              <div className="nav-tabs">
-                <button 
-                  className={`nav-tab ${activeTab === 'burn' ? 'active' : ''}`}
-                  onClick={() => onTabChange('burn')}
-                >
-                  Burn
-                </button>
-                <button 
-                  className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
-                  onClick={() => onTabChange('nfts')}
-                >
-                  XLOCK NFTs
-                </button>
-                <button 
-                  className={`nav-tab ${activeTab === 'stats' ? 'active' : ''}`}
-                  onClick={() => onTabChange('stats')}
-                >
-                  Stats
+          {isConnected && account ? (
+            <>
+              <div className={`nav-balances ${!balances ? 'balances-loading' : ''}`}>
+                <span className="network-indicator" title={chainName}>
+                  {chainIcon && <img src={chainIcon} alt={chainName} className="chain-icon" />}
+                </span>
+                <span className="balance-item" title={balances?.eth || '0'}>
+                  <span className="balance-value">{formatBalance(balances?.eth, 'ETH')}</span> ETH
+                </span>
+                <span className="balance-item" title={balances?.xen || '0'}>
+                  <span className="balance-value">{formatBalance(balances?.xen, 'XEN')}</span> XEN
+                </span>
+                <span className="balance-item" title={balances?.xburn || '0'}>
+                  <span className="balance-value">{formatBalance(balances?.xburn, 'XBURN')}</span> XBURN
+                </span>
+              </div>
+              <div className="nav-actions">
+                <div className="nav-tabs">
+                  <button 
+                    className={`nav-tab ${activeTab === 'burn' ? 'active' : ''}`}
+                    onClick={() => onTabChange('burn')}
+                  >
+                    Burn
+                  </button>
+                  <button 
+                    className={`nav-tab ${activeTab === 'nfts' ? 'active' : ''}`}
+                    onClick={() => onTabChange('nfts')}
+                  >
+                    XLOCK NFTs
+                  </button>
+                  <button 
+                    className={`nav-tab ${activeTab === 'stats' ? 'active' : ''}`}
+                    onClick={() => onTabChange('stats')}
+                  >
+                    Stats
+                  </button>
+                </div>
+                <NetworkSwitcher />
+                <button className="wallet-address" onClick={handleDisconnect} title="Click to disconnect">
+                  {account.slice(0, 6)}...{account.slice(-4)}
                 </button>
               </div>
-              <NetworkSwitcher />
-              <button className="wallet-address" onClick={handleDisconnect} title="Click to disconnect">
-                {account.slice(0, 6)}...{account.slice(-4)}
-              </button>
-            </div>
-          </>
-        ) : (
-          <button 
-            className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
-            onClick={handleConnect}
-            disabled={connecting || !isLaunchReady}
+            </>
+          ) : (
+            <button 
+              className={`connect-wallet ${connecting ? 'connecting' : ''}`} 
+              onClick={handleConnect}
+              disabled={connecting || !isLaunchReady}
+            >
+              {isLaunchReady 
+                ? (connecting ? 'Connecting...' : 'Connect Wallet') 
+                : 'Launching 4/20/25'}
+            </button>
+          )}
+        </div>
+      </nav>
+      
+      {/* Mobile-only navigation links */}
+      {isConnected && account && (
+        <div className="mobile-nav-links">
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'burn' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('burn'); }}
           >
-            {isLaunchReady 
-              ? (connecting ? 'Connecting...' : 'Connect Wallet') 
-              : 'Launching 4/20/25'}
-          </button>
-        )}
-      </div>
-    </nav>
+            BURN
+          </a>
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'nfts' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('nfts'); }}
+          >
+            XLOCK NFT
+          </a>
+          <a 
+            href="#" 
+            className={`mobile-nav-link ${activeTab === 'stats' ? 'active' : ''}`}
+            onClick={(e) => { e.preventDefault(); onTabChange('stats'); }}
+          >
+            STATS
+          </a>
+        </div>
+      )}
+    </>
   );
 }; 

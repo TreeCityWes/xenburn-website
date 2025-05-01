@@ -395,6 +395,16 @@
   .main-content {
     padding: 0 0 40px;
   }
+  
+  /* Add padding for mobile navigation */
+  .App {
+    padding-bottom: calc(var(--footer-height) + 40px); /* Add extra padding for mobile nav */
+  }
+  
+  /* Make room for mobile nav menu */
+  .footer {
+    z-index: 100; /* Ensure it's above the mobile nav */
+  }
 }
 
 /* App background with fire particles */

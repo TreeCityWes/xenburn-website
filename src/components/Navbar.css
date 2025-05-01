@@ -276,6 +276,11 @@
   box-shadow: var(--shadow-accent-sm);
 }
 
+/* Mobile Navigation Styles */
+.mobile-nav-links {
+  display: none; /* Hidden by default on desktop */
+}
+
 /* Medium screens */
 @media (max-width: 992px) {
   .nav-actions {
@@ -339,6 +344,58 @@
     font-size: 14px;
     padding: 6px 12px;
   }
+  
+  /* Make nav tabs smaller on mobile */
+  .nav-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    padding: 2px;
+  }
+  
+  .nav-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari/Opera */
+  }
+  
+  .nav-tab {
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    min-width: auto;
+  }
+  
+  /* Show mobile navigation links */
+  .mobile-nav-links {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+    width: 100%;
+    background: var(--surface-0);
+    position: fixed;
+    bottom: var(--footer-height);
+    left: 0;
+    z-index: 90;
+    border-top: 1px solid rgba(220, 47, 2, 0.2);
+  }
+  
+  .mobile-nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    background: var(--surface-1);
+    margin: 0 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    background: var(--gradient-accent);
+    color: white;
+  }
 }
 
 /* Extra small screens */
@@ -363,24 +420,30 @@
     align-items: center; 
   }
   
-  .nav-right { /* Hide nav-right container which holds actions/tabs */
-     display: none; 
-  }
-
-  /* Hide the navbar tabs specifically */
+  /* Don't completely hide nav-tabs, but make them fit properly */
   .nav-tabs {
-    display: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .nav-tab {
+    font-size: 11px;
+    padding: 3px 6px;
+    flex: 1;
+    max-width: 90px; /* Limit maximum width */
+    text-align: center;
   }
 
   .nav-balances {
-     /* Keep existing styles or adjust if needed */
-     flex-direction: row; /* Maybe row is better if space allows */
-     gap: 10px; /* Adjust gap */
-     overflow-x: auto; 
-     max-width: 100%;
-     justify-content: flex-end; /* Align balances right */
-     padding: 0;
-     margin-left: auto; /* Push balances right */
+    flex-direction: row; /* Maybe row is better if space allows */
+    gap: 10px; /* Adjust gap */
+    overflow-x: auto; 
+    max-width: 100%;
+    justify-content: flex-end; /* Align balances right */
+    padding: 0;
+    margin-left: auto; /* Push balances right */
   }
 }
 
