@@ -1257,4 +1257,30 @@
     max-width: 33%; /* Ensure they don't get too large */
     flex: 1 0 auto; /* Don't shrink, grow from auto basis */
   }
+}
+
+@media (max-width: 480px) {
+  /* Tab view - make vertical on small mobile */
+  .tab-view {
+    flex-direction: column;
+    overflow-x: visible;
+    width: 100%;
+    padding-bottom: 0;
+  }
+
+  .tab-button {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 14px 10px;
+    margin-bottom: 8px;
+    text-align: center;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 14px;
+    white-space: normal;
+  }
 } 

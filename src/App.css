@@ -398,12 +398,12 @@
   
   /* Add padding for mobile navigation */
   .App {
-    padding-bottom: calc(var(--footer-height) + 40px); /* Add extra padding for mobile nav */
+    padding-bottom: calc(var(--footer-height) + 50px);
   }
   
-  /* Make room for mobile nav menu */
+  /* Adjust footer to allow room for mobile nav */
   .footer {
-    z-index: 100; /* Ensure it's above the mobile nav */
+    padding-bottom: calc(var(--space-md) + 40px);
   }
 }
 

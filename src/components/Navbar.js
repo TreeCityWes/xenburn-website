@@ -143,32 +143,30 @@ export const Navbar = ({ onTabChange, activeTab }) => {
         </div>
       </nav>
       
-      {/* Mobile-only navigation links */}
-      {isConnected && account && (
-        <div className="mobile-nav-links">
-          <a 
-            href="#" 
-            className={`mobile-nav-link ${activeTab === 'burn' ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onTabChange('burn'); }}
-          >
-            BURN
-          </a>
-          <a 
-            href="#" 
-            className={`mobile-nav-link ${activeTab === 'nfts' ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onTabChange('nfts'); }}
-          >
-            XLOCK NFT
-          </a>
-          <a 
-            href="#" 
-            className={`mobile-nav-link ${activeTab === 'stats' ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); onTabChange('stats'); }}
-          >
-            STATS
-          </a>
-        </div>
-      )}
+      {/* Mobile-only navigation links - always visible on mobile */}
+      <div className="mobile-nav-links">
+        <a 
+          href="#" 
+          className={`mobile-nav-link ${activeTab === 'burn' ? 'active' : ''}`}
+          onClick={(e) => { e.preventDefault(); onTabChange('burn'); }}
+        >
+          BURN
+        </a>
+        <a 
+          href="#" 
+          className={`mobile-nav-link ${activeTab === 'nfts' ? 'active' : ''}`}
+          onClick={(e) => { e.preventDefault(); onTabChange('nfts'); }}
+        >
+          XLOCK NFT
+        </a>
+        <a 
+          href="#" 
+          className={`mobile-nav-link ${activeTab === 'stats' ? 'active' : ''}`}
+          onClick={(e) => { e.preventDefault(); onTabChange('stats'); }}
+        >
+          STATS
+        </a>
+      </div>
     </>
   );
 }; 
