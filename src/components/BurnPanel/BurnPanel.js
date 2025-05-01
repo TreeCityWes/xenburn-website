@@ -310,6 +310,7 @@ const BurnPanel = () => {
       const gasPrice = await provider.getGasPrice();
       const adjustedGasPrice = gasPrice.mul(120).div(100);
       
+      // Call the contract's burnXburn function instead of transferring to a dead wallet
       const tx = await xburnMinterWithSigner.burnXburn(amountWei, {
         gasLimit: 1000000,
         gasPrice: adjustedGasPrice
