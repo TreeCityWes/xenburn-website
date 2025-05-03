@@ -6,7 +6,8 @@ export const IntroBanner = () => {
     <div className="intro-banner">
       <div className="sparx-banner">
         <p>
-          <span>🔥 $SPARX now live on XenFerno Farms (Sepolia)</span>
+          <img src="/sparx-circle-logo.png" alt="SPARX" className="sparx-logo" />
+          <span>$SPARX now live on XenFerno Farms (Sepolia)</span>
           <span className="separator">•</span>
           <a href="https://sparx.burnxen.com" target="_blank" rel="noopener noreferrer">Visit Website</a>
           <span className="separator">•</span>

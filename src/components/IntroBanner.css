@@ -6,19 +6,19 @@
 }
 
 .sparx-banner {
-  background-color: rgba(51, 48, 36, 0.95); /* Darker background for better contrast */
+  background-color: rgba(255, 107, 0, 0.9); /* Orange background */
   padding: 10px 15px;
   border-radius: 4px;
   text-align: center;
   margin: 0 auto;
   max-width: 1000px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  border-left: 3px solid #FF6B00;
+  border-left: 3px solid #000000; /* Black border for contrast */
 }
 
 .sparx-logo {
-  width: 24px;
-  height: 24px;
+  width: 30px; /* Increased size but not too large for the banner */
+  height: 30px;
   margin-right: 8px;
   vertical-align: middle;
   border-radius: 50%;
@@ -37,13 +37,13 @@
 }
 
 .sparx-banner .separator {
-  color: #FF9D4D; /* Brighter color for separators */
+  color: #000000; /* Black separators for contrast */
   font-size: 12px;
   margin: 0 2px;
 }
 
 .sparx-banner a {
-  color: #FF9D4D; /* Brighter orange for links */
+  color: #000000; /* Black links for better contrast on orange */
   text-decoration: none;
   white-space: nowrap;
   font-weight: 600;
@@ -52,7 +52,7 @@
 
 .sparx-banner a:hover {
   text-decoration: underline;
-  color: #FFC107; /* Brighter yellow on hover */
+  color: #FFFFFF; /* White on hover */
 }
 
 /* Improve mobile responsiveness */
@@ -61,12 +61,12 @@
     padding: 8px 10px;
     border-radius: 0;
     border-left: none;
-    border-bottom: 2px solid #FF6B00;
+    border-bottom: 2px solid #000000;
   }
   
   .sparx-logo {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     margin-right: 6px;
   }
   
