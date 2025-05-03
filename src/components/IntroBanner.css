@@ -6,73 +6,87 @@
 }
 
 .sparx-banner {
-  background-color: #FF6600; /* Darker orange matching the screenshot */
-  padding: 12px 20px;
-  border-radius: 6px;
+  background-color: #FF6600;
+  padding: 14px 20px;
+  border-radius: 4px;
   text-align: center;
   margin: 0 auto;
   max-width: 1000px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  border-left: 3px solid #000000; /* Black border for contrast */
+}
+
+.banner-content {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
+}
+
+.banner-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
 }
 
 .sparx-logo {
-  width: 32px; /* Adjusted to match the screenshot */
-  height: 32px;
-  margin-right: 14px;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
   vertical-align: middle;
   border-radius: 50%;
 }
 
-.sparx-banner p {
-  margin: 0;
-  color: #FFFFFF; /* White text for better readability */
-  font-size: 15px;
+.banner-line span {
+  color: #FFFFFF;
+  font-size: 16px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
+  white-space: nowrap;
 }
 
-.sparx-banner span {
-  white-space: nowrap;
+.sparx-banner .separator {
+  color: #FFFFFF;
+  margin: 0 6px;
 }
 
 .sparx-banner a {
-  color: #FFFFFF; /* White links to match screenshot */
-  text-decoration: underline; /* Underlined links matching screenshot */
+  color: #FFFFFF;
+  text-decoration: underline;
   white-space: nowrap;
+  font-size: 16px;
   font-weight: 500;
   transition: all 0.2s ease;
+  padding: 0 4px;
 }
 
 .sparx-banner a:hover {
-  color: #FFF8E0; /* Light yellow on hover */
+  color: #FFF8E0;
   text-decoration: underline;
 }
 
 /* Improve mobile responsiveness */
 @media (max-width: 768px) {
   .sparx-banner {
-    padding: 10px 12px;
-    border-radius: 4px;
-    border-left: 2px solid #000000;
+    padding: 12px;
+  }
+  
+  .banner-content {
+    gap: 8px;
   }
   
   .sparx-logo {
     width: 24px;
     height: 24px;
-    margin-right: 8px;
+    margin-right: 6px;
   }
   
-  .sparx-banner p {
-    font-size: 13px;
-    justify-content: center;
-    gap: 4px;
+  .banner-line span, 
+  .sparx-banner a {
+    font-size: 14px;
+  }
+  
+  .banner-line {
+    gap: 6px;
   }
 } 
