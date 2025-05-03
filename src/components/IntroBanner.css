@@ -6,13 +6,14 @@
 }
 
 .sparx-banner {
-  background-color: #FFEB99;
-  padding: 8px 15px;
+  background-color: rgba(255, 235, 153, 0.3); /* Even more subtle yellow */
+  padding: 10px 15px;
   border-radius: 4px;
   text-align: center;
   margin: 0 auto;
   max-width: 1000px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border-left: 3px solid #FF6B00;
 }
 
 .sparx-banner p {
@@ -20,16 +21,48 @@
   color: #664B00;
   font-size: 14px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sparx-banner .separator {
+  color: #BB9955;
+  font-size: 12px;
+  margin: 0 2px;
 }
 
 .sparx-banner a {
   color: #FF6B00;
   text-decoration: none;
-  margin: 0 3px;
+  white-space: nowrap;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .sparx-banner a:hover {
   text-decoration: underline;
   color: #B84A00;
+}
+
+/* Improve mobile responsiveness */
+@media (max-width: 768px) {
+  .sparx-banner {
+    padding: 8px 10px;
+    border-radius: 0;
+    border-left: none;
+    border-bottom: 2px solid #FF6B00;
+  }
+  
+  .sparx-banner p {
+    font-size: 13px;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .sparx-banner .separator {
+    display: none; /* Hide separators on small screens */
+  }
 } 

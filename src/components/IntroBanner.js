@@ -6,9 +6,11 @@ export const IntroBanner = () => {
     <div className="intro-banner">
       <div className="sparx-banner">
         <p>
-          🔥 Now Live: $SPARX The Fire Dog on XenFerno LP Farms (Sepolia) • 
-          <a href="https://sparx.burnxen.com" target="_blank" rel="noopener noreferrer">Visit sparx.burnxen.com</a> • 
-          <a href="https://xenburner.gitbook.io/sparx" target="_blank" rel="noopener noreferrer">Read the docs</a>
+          <span>🔥 $SPARX now live on XenFerno Farms (Sepolia)</span>
+          <span className="separator">•</span>
+          <a href="https://sparx.burnxen.com" target="_blank" rel="noopener noreferrer">Visit Website</a>
+          <span className="separator">•</span>
+          <a href="https://xenburner.gitbook.io/sparx" target="_blank" rel="noopener noreferrer">Read Docs</a>
         </p>
       </div>
     </div>
