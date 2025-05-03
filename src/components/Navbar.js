@@ -81,7 +81,7 @@ export const Navbar = ({ onTabChange, activeTab }) => {
             <span className="nav-dot">·</span>
             <a href="https://t.me/BurnMoreXen" target="_blank" rel="noopener noreferrer" className="nav-link">Telegram</a>
             <span className="nav-dot">·</span>
-            <a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
+            <a href="https://burnxen.gitbook.io/burnmorexen" target="_blank" rel="noopener noreferrer" className="nav-link">GitBook</a>
             <span className="nav-dot">·</span>
             <a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer" className="nav-link">Audit</a>
           </div>

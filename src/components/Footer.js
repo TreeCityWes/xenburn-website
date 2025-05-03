@@ -36,7 +36,7 @@ export function Footer() {
           <div className="footer-section">
             <h3>Resources</h3>
             <ul>
-              <li><a href="https://xenburner.gitbook.io/xenburner" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+              <li><a href="https://burnxen.gitbook.io/burnmorexen" target="_blank" rel="noopener noreferrer">Documentation</a></li>
               <li><a href="/XBurnAudit-April2025.pdf" target="_blank" rel="noopener noreferrer">Audit Report</a></li>
               <li><a href="/XBurnAudit-Response.pdf" target="_blank" rel="noopener noreferrer">Audit Response</a></li>
               <li><a href="https://github.com/TreeCityWes/xenburn-sepolia" target="_blank" rel="noopener noreferrer">GitHub</a></li>
