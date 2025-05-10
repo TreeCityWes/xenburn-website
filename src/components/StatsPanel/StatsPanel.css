@@ -304,7 +304,7 @@
 .stats-warning-subheading {
   font-size: 0.8rem; /* Smaller font size */
   font-weight: 400; /* Normal weight */
-  color: var(--color-error); /* Use error color (Sinopia Red) */
+  color: #ffcc00; /* Changed from var(--color-error) to yellow */
   margin: 5px 0 0 0; /* Add small top margin, remove others */
   padding: 0;
   text-align: left; /* Align with heading */

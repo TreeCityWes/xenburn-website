@@ -96,13 +96,10 @@ const formatSmallPrice = (price, significantDigits = 4, maxTotalDecimals = 10) =
   }
 
   const zeroCount = firstDigitIndex;
-  const significantPart = decimalPart.substring(firstDigitIndex, firstDigitIndex + significantDigits);
+  // Use same number of significant digits for both XEN and XBURN
+  const significantPart = decimalPart.substring(firstDigitIndex, firstDigitIndex + 3);
 
-  // Ensure the total decimal places (zeros + significant digits) don't exceed the max
-  const allowedSignificantDigits = Math.max(1, maxTotalDecimals - zeroCount);
-  const finalSignificantPart = significantPart.substring(0, allowedSignificantDigits);
-
-  return `$0.0(${zeroCount})${finalSignificantPart}`;
+  return `$0.0(${zeroCount})${significantPart}`;
 };
 
 const StatsPanel = () => {
@@ -118,7 +115,8 @@ const StatsPanel = () => {
       error: fetchError,
       loadStats,
       fetchDexScreenerData,
-      fetchExternalStats
+      fetchExternalStats,
+      selectedChainId // Add selectedChainId to access current chain
   } = useGlobalData();
 
   // Simplify state access and add logging
@@ -219,6 +217,12 @@ const StatsPanel = () => {
     return '0.000000';
   };
 
+  // Determine max decimal values based on chain ID (Polygon needs fewer decimals)
+  const getXenPriceMaxDecimals = () => {
+    // If on Polygon chain (id: 137), use fewer decimals
+    return selectedChainId === 137 ? 8 : 13;
+  };
+
   return (
     <div className="stats-panel-container-redesigned">
       <div className="stats-panel-card">
@@ -262,8 +266,8 @@ const StatsPanel = () => {
           {renderSection("Token & Pool Info", (
             <>
               {/* Top Row */}
-              {renderStatItem("XEN Price", formatSmallPrice(xenPrice, 6, 13))} {/* Keep custom format */}
-              {renderStatItem("XBURN Price", formatSmallPrice(xburnPrice, 6, 13))} {/* Keep custom format */}
+              {renderStatItem("XEN Price", formatSmallPrice(xenPrice, 6, getXenPriceMaxDecimals()))} {/* Dynamic max decimals */}
+              {renderStatItem("XBURN Price", formatSmallPrice(xburnPrice, 6, getXenPriceMaxDecimals()))} {/* Match XEN decimals */}
               {renderStatItem("XEN per XBURN", formatNumber(calculateRatio() || '0', { maxDecimals: 2 }))}
               
               {/* Middle Row */}

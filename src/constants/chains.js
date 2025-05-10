@@ -51,8 +51,18 @@ export const sepolia = defineChain(
   '/logos/xen.png' // Updated Sepolia Logo Path
 );
 
+// Polygon Mainnet
+export const polygon = defineChain(
+  137,
+  'Polygon',
+  ['https://rpc-mainnet.matic.quiknode.pro'], // Using the provided RPC
+  'https://polygonscan.com',
+  { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+  '/logos/polyxen.png' // Using the Polygon-specific logo
+);
+
 // Array of all supported chains
-export const supportedChains = [base, optimism, sepolia];
+export const supportedChains = [base, optimism, sepolia, polygon];
 
 // Function to get chain info by ID
 export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 
