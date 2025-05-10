@@ -61,8 +61,18 @@ export const polygon = defineChain(
   '/logos/polyxen.png' // Using the Polygon-specific logo
 );
 
+// PulseChain Mainnet
+export const pulsechain = defineChain(
+  369, // Standard PulseChain Chain ID
+  'PulseChain',
+  ['https://rpc.pulsechain.com'], 
+  'https://scan.pulsechain.com', // Official block explorer
+  { name: 'Pulse', symbol: 'PLS', decimals: 18 },
+  '/logos/pulsexen.png' // Using the PulseChain-specific logo
+);
+
 // Array of all supported chains
-export const supportedChains = [base, optimism, sepolia, polygon];
+export const supportedChains = [base, optimism, sepolia, polygon, pulsechain];
 
 // Function to get chain info by ID
 export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 
