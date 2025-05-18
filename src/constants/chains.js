@@ -71,6 +71,19 @@ export const pulsechain = defineChain(
   '/logos/pulsexen.png' // Using the PulseChain-specific logo
 );
 
+// Avalanche Mainnet
+export const avalanche = defineChain(
+  43114, // Avalanche C-Chain ID
+  'Avalanche',
+  ['https://api.avax.network/ext/bc/C/rpc'], // Primary RPC
+  'https://snowtrace.io',
+  { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+  '/logos/axen.png' // Avalanche-specific logo
+);
+
+// Explicitly set the network property for Avalanche to 'avalanche' (critical for DexScreener API)
+avalanche.network = 'avalanche';
+
 // BSC (Binance Smart Chain) Mainnet
 export const bsc = defineChain(
   56,
@@ -85,7 +98,7 @@ export const bsc = defineChain(
 bsc.network = 'bsc';
 
 // Array of all supported chains
-export const supportedChains = [base, optimism, sepolia, polygon, pulsechain, bsc];
+export const supportedChains = [base, optimism, sepolia, polygon, pulsechain, avalanche, bsc];
 
 // Function to get chain info by ID
 export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 
