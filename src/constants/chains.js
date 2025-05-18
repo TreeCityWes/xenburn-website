@@ -71,8 +71,21 @@ export const pulsechain = defineChain(
   '/logos/pulsexen.png' // Using the PulseChain-specific logo
 );
 
+// BSC (Binance Smart Chain) Mainnet
+export const bsc = defineChain(
+  56,
+  'BNB Chain',
+  ['https://binance.llamarpc.com', 'https://bsc-dataseed.binance.org', 'https://bsc-dataseed1.defibit.io', 'https://bsc-dataseed1.ninicoin.io'],
+  'https://bscscan.com',
+  { name: 'BNB', symbol: 'BNB', decimals: 18 },
+  '/logos/bxen.png' // BSC Logo Path
+);
+
+// Explicitly set the network property for BSC to 'bsc' (critical for DexScreener API)
+bsc.network = 'bsc';
+
 // Array of all supported chains
-export const supportedChains = [base, optimism, sepolia, polygon, pulsechain];
+export const supportedChains = [base, optimism, sepolia, polygon, pulsechain, bsc];
 
 // Function to get chain info by ID
 export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 

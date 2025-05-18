@@ -5,7 +5,7 @@
 import xenAbi from '../contracts/xen.json';
 import xenBurnerAbi from '../contracts/XBurnMinter.json';
 import xburnNftAbi from '../contracts/XBurnNFT.json';
-import { base, optimism, sepolia, polygon, pulsechain } from './chains'; 
+import { base, optimism, sepolia, polygon, pulsechain, bsc } from './chains'; 
 
 export const addresses = {
   [base.id]: {
@@ -61,6 +61,17 @@ export const addresses = {
     XBURN_XEN_LP_ADDRESS: '0x81744a6f2644D9E2057F14EDc5eD741461e9fC6C',
     WETH_ADDRESS: '0xA1077a294dDE1B09bB078844df40758a5D0f9a27',
     XEN_BASE_PAIR_ADDRESS: '0x61C8D2DeE20F8e303B999D485cFa577054196B40',
+  },
+  [bsc.id]: {
+    XEN_ADDRESS: '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e',
+    XBURN_MINTER_ADDRESS: '0x12cf65e044a59e85f38497c413f24de6d33250ba',
+    XENBURNER_ADDRESS: '0x12cf65e044a59e85f38497c413f24de6d33250ba',
+    XBURN_TOKEN_ADDRESS: '0x12cf65e044a59e85f38497c413f24de6d33250ba',
+    XBURN_NFT_ADDRESS: '0xf0ca18f2462936df8332f88c4cf27a03d829dbb2',
+    UNISWAP_ROUTER_ADDRESS: '0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24',
+    XBURN_XEN_LP_ADDRESS: '0x2a31534Eb7C5405c60Ee6290A5c4EdD1162C9812',
+    WETH_ADDRESS: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', // WBNB on BSC
+    XEN_BASE_PAIR_ADDRESS: '0x9F8ca02962dE84a7094c381d66efD46e01c2b8f0',
   },
 };
 
