@@ -667,9 +667,9 @@ export const GlobalDataProvider = ({ children }) => {
       console.log(`GlobalData: Wallet connected & contracts ready on chain ${selectedChainId}. Triggering initial data load...`);
       // Add explicit balance fetch first
       fetchBalances(true);
-      // REMOVED: loadStats();  
-      // REMOVED: fetchDexScreenerData();
-      // REMOVED: fetchExternalStats(); 
+      loadStats();  
+      fetchDexScreenerData();
+      fetchExternalStats(); 
       // Load only NFTs initially or on connection/network changes
       loadNFTs(); 
     } else {
@@ -691,9 +691,8 @@ export const GlobalDataProvider = ({ children }) => {
       // clearInterval(priceIntervalId);
       // clearInterval(externalStatsIntervalId);
     };
-  // REMOVED stats/price/external loading functions from dependencies
   }, [isConnected, account, provider, selectedChainId, isLoadingContracts, 
-      loadNFTs, fetchBalances]);
+      loadNFTs, fetchBalances, loadStats, fetchDexScreenerData, fetchExternalStats]);
 
   // Claim NFT function - Use WalletContext contract instance
   const claimNFT = useCallback(async (tokenId) => {
