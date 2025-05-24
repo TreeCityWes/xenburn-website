@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 // Removed unused ethers import
 // import { ethers } from 'ethers';
 // Removed unused import
@@ -119,38 +119,56 @@ const StatsPanel = () => {
       selectedChainId // Add selectedChainId to access current chain
   } = useGlobalData();
 
+  // Add refs to prevent infinite loops
+  const lastStatsRefresh = useRef(0);
+  const lastPriceRefresh = useRef(0);
+
   // Simplify state access and add logging
   const stats = globalStatsData?.data || {};
   const extStats = externalStats?.data || {};
   
   // Add automatic refresh when pricing data changes but we have no stats data
+  // Remove function dependencies to prevent infinite loops
   useEffect(() => {
+    const now = Date.now();
+    // Prevent calling too frequently (minimum 5 seconds between calls)
+    if (now - lastStatsRefresh.current < 5000) return;
+    
     // If we have price data but no stats data, refresh stats
     if ((xenPrice !== '0' || xburnPrice !== '0') && (!stats.totalXenBurned || stats.totalXenBurned === '0')) {
       console.log('StatsPanel: Price data available but no stats data. Auto-refreshing stats...');
-      if (loadStats) loadStats(true);
+      if (loadStats) {
+        loadStats(true);
+        lastStatsRefresh.current = now;
+      }
     }
-  }, [xenPrice, xburnPrice, stats.totalXenBurned, loadStats]);
+  }, [xenPrice, xburnPrice, stats.totalXenBurned]); // Removed loadStats dependency
   
   // Add effect to force DexScreener refresh when prices are zero but should be loaded
+  // Remove function dependencies to prevent infinite loops
   useEffect(() => {
+    const now = Date.now();
+    // Prevent calling too frequently (minimum 10 seconds between calls)
+    if (now - lastPriceRefresh.current < 10000) return;
+    
     // If we're not loading and prices are both zero and we're not showing any error,
     // it's likely the price data didn't update properly - so force a refresh
     if (!isLoading && xenPrice === '0' && xburnPrice === '0' && !fetchError) {
       console.log('StatsPanel: Prices are zero without errors. Auto-refreshing DexScreener data...');
       if (fetchDexScreenerData) {
         fetchDexScreenerData(undefined, true); // Force refresh
+        lastPriceRefresh.current = now;
       }
     }
-  }, [isLoading, xenPrice, xburnPrice, fetchError, fetchDexScreenerData]);
+  }, [isLoading, xenPrice, xburnPrice, fetchError]); // Removed fetchDexScreenerData dependency
   
-  // Handle stats refresh
+  // Handle stats refresh - remove dependencies to prevent infinite loops
   const handleRefreshStats = useCallback(() => {
     console.log("Manually refreshing stats...");
     if (loadStats) loadStats();
     if (fetchDexScreenerData) fetchDexScreenerData();
     if (fetchExternalStats) fetchExternalStats();
-  }, [loadStats, fetchDexScreenerData, fetchExternalStats]);
+  }, []); // Remove dependencies to prevent recreations
 
   // Add debug logging
   console.log("StatsPanel: Retrieved stats data:", {
