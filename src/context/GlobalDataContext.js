@@ -551,6 +551,9 @@ export const GlobalDataProvider = ({ children }) => {
       // --- Process XBURN/XEN Pair --- 
       if (xburnXenResponse.ok) {
           const xburnXenData = await xburnXenResponse.json();
+          // ADD DETAILED LOGGING HERE
+          console.log(`DexScreener: Raw xburnXenData for pair ${xburnXenLpAddr} on chain ${chainId}:`, JSON.stringify(xburnXenData));
+
           if (xburnXenData.pair) {
               // Log token addresses for debugging
               console.log(`DexScreener: XBURN/XEN pair token addresses - Base: ${xburnXenData.pair.baseToken?.address}, Quote: ${xburnXenData.pair.quoteToken?.address}`);
