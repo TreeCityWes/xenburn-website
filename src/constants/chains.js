@@ -18,6 +18,16 @@ const defineChain = (id, name, rpcUrls, blockExplorerUrls, nativeCurrency, logoU
   logoUrl, 
 });
 
+// Ethereum Mainnet
+export const ethereum = defineChain(
+  1,
+  'Ethereum',
+  ['https://eth.llamarpc.com', 'https://ethereum.publicnode.com'], // Public RPC endpoints
+  'https://etherscan.io',
+  { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  '/logos/xen.png' // Ethereum Logo Path
+);
+
 // Base Mainnet
 export const base = defineChain(
   8453,
@@ -98,7 +108,7 @@ export const bsc = defineChain(
 bsc.network = 'bsc';
 
 // Array of all supported chains
-export const supportedChains = [base, optimism, sepolia, polygon, pulsechain, avalanche, bsc];
+export const supportedChains = [ethereum, base, optimism, sepolia, polygon, pulsechain, avalanche, bsc];
 
 // Function to get chain info by ID
 export const getChainById = (chainId) => supportedChains.find(chain => chain.id === chainId); 
