@@ -328,6 +328,9 @@ export const GlobalDataProvider = ({ children }) => {
       try {
         // Fetch global stats
         const result = await minterContract.getGlobalStats(); 
+        if (selectedChainId === 1) { // Specifically log for Ethereum, using selectedChainId
+            console.log("ETHEREUM DEBUG: Raw getGlobalStats() result:", result);
+        }
         if (result && result.length >= 5) {
           globalStatsResult = result;
           console.log("Successfully fetched global stats:", result);
