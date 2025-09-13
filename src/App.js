@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import './App.css';
 import BurnPanel from './components/BurnPanel';
 import { NFTPanel } from './components/NFTPanel';
@@ -9,6 +9,14 @@ import { useGlobalData } from './context/GlobalDataContext';
 import { Footer } from './components/Footer';
 import { IntroBanner } from './components/IntroBanner';
 
+// Memoize components to prevent unnecessary re-renders
+const MemoizedBurnPanel = React.memo(BurnPanel);
+const MemoizedNFTPanel = React.memo(NFTPanel);
+const MemoizedStatsPanel = React.memo(StatsPanel);
+const MemoizedNavbar = React.memo(Navbar);
+const MemoizedFooter = React.memo(Footer);
+const MemoizedIntroBanner = React.memo(IntroBanner);
+
 function App() {
   const { isConnected, selectedChainId, isConnecting, isLoadingContracts } = useWallet();
   const { 
@@ -17,8 +25,8 @@ function App() {
     loadNFTs
   } = useGlobalData();
   
-  // Handle tab changes
-  const handleTabChange = (tab) => {
+  // Handle tab changes - memoized to prevent unnecessary re-renders
+  const handleTabChange = useCallback((tab) => {
     console.log(`App: Tab changed to ${tab}`);
     setActiveTab(tab);
     localStorage.setItem('activeTab', tab);
@@ -28,46 +36,48 @@ function App() {
       console.log('App: Triggering NFT load for NFT tab.');
       loadNFTs(true);
     }
-  };
+  }, [setActiveTab, isConnected, loadNFTs]);
   
   // On initial load
   useEffect(() => {
     console.log(`App: Initial load or network change, active tab: ${activeTab}, chain: ${selectedChainId}`);
   }, [activeTab, selectedChainId]);
   
-  // Determine loading state for transitions
-  const isAppLoading = isConnecting || isLoadingContracts;
+  // Determine loading state for transitions - memoized
+  const isAppLoading = useMemo(() => {
+    return isConnecting || isLoadingContracts;
+  }, [isConnecting, isLoadingContracts]);
   
-  // Render app content based on selected tab
-  const renderContent = () => {
+  // Render app content based on selected tab - memoized to prevent unnecessary renders
+  const renderContent = useMemo(() => {
     switch (activeTab) {
       case 'nfts':
-        return <NFTPanel />;
+        return <MemoizedNFTPanel />;
       case 'stats':
-        return <StatsPanel />;
+        return <MemoizedStatsPanel />;
       case 'burn':
       default:
-        return <BurnPanel />;
+        return <MemoizedBurnPanel />;
     }
-  };
+  }, [activeTab]);
 
   return (
     <div className="App">
-      <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
+      <MemoizedNavbar activeTab={activeTab} onTabChange={handleTabChange} />
       
       <div className={`app-content-container ${isAppLoading ? 'app-content-loading' : ''}`}>
         {/* Logo and Banner */}
         <div className="logo-container">
           <img src="/xenburn.png" alt="XENBURNER" />
         </div>
-        <IntroBanner />
+        <MemoizedIntroBanner />
 
         <div className="main-content">
-          {renderContent()}
+          {renderContent}
         </div>
       </div>
       
-      <Footer />
+      <MemoizedFooter />
     </div>
   );
 }

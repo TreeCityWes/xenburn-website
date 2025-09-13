@@ -396,32 +396,7 @@ const BurnPanel = () => {
   // Only log rendering once, not for every re-render
   console.log(`BurnPanel: Rendering tab content for ${activeTab}`);
 
-  // Calculate which panel to display - using memoized calculation
-  const activePanel = useMemo(() => {
-    switch (activeTab) {
-      case 'nfts':
-        return <MemoizedBurnXENTab 
-                  xenBalance={xenBalance}
-                  ampStart={2397}
-                  ampSnapshot={parseInt(globalStatsData?.data?.currentAMP || DEFAULT_AMP_START.toString())}
-                  daysSinceLaunch={parseInt(globalStatsData?.data?.daysSinceLaunch || '0')}
-                  totalBurnedXEN={globalStatsData?.data?.totalXenBurned || '0'}
-                  totalMintedXBURN={globalStatsData?.data?.totalXburnMinted || '0'}
-               />;
-      case 'stats':
-        return null;
-      case 'burn':
-      default:
-        return <MemoizedBurnXENTab 
-                  xenBalance={xenBalance}
-                  ampStart={2397}
-                  ampSnapshot={parseInt(globalStatsData?.data?.currentAMP || DEFAULT_AMP_START.toString())}
-                  daysSinceLaunch={parseInt(globalStatsData?.data?.daysSinceLaunch || '0')}
-                  totalBurnedXEN={globalStatsData?.data?.totalXenBurned || '0'}
-                  totalMintedXBURN={globalStatsData?.data?.totalXburnMinted || '0'}
-               />;
-    }
-  }, [activeTab, xenBalance, globalStatsData?.data]);
+  // Remove unused activePanel variable - we render components directly in JSX
 
   return (
     <div className="burn-content">

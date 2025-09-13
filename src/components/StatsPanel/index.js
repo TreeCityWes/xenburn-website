@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 // Removed unused ethers import
 // import { ethers } from 'ethers';
 // Removed unused import
@@ -144,8 +144,8 @@ const StatsPanel = () => {
     xburnPrice
   });
 
-  // --- Calculate Derived Stats ---
-  const parseAndMultiply = (val1, val2) => {
+  // --- Calculate Derived Stats - Memoized for performance ---
+  const parseAndMultiply = useCallback((val1, val2) => {
     try {
       const num1 = parseFloat(String(val1 || '0').replace(/,/g, '') || '0');
       const num2 = parseFloat(String(val2 || '0').replace(/,/g, '') || '0');
@@ -155,46 +155,51 @@ const StatsPanel = () => {
       console.error("Error in parseAndMultiply:", error, { val1, val2 });
       return 0;
     }
-  };
+  }, []);
 
-  const usdValueXenBurned = parseAndMultiply(stats.totalXenBurned, xenPrice);
-  const usdValueXburnBurned = parseAndMultiply(stats.totalXburnBurned, xburnPrice);
-  const xburnMarketCap = parseAndMultiply(stats.totalXburnMinted, xburnPrice);
+  // Memoize expensive calculations
+  const derivedStats = useMemo(() => {
+    const usdValueXenBurned = parseAndMultiply(stats.totalXenBurned, xenPrice);
+    const usdValueXburnBurned = parseAndMultiply(stats.totalXburnBurned, xburnPrice);
+    const xburnMarketCap = parseAndMultiply(stats.totalXburnMinted, xburnPrice);
+    
+    return {
+      usdValueXenBurned,
+      usdValueXburnBurned,
+      xburnMarketCap
+    };
+  }, [stats.totalXenBurned, stats.totalXburnBurned, stats.totalXburnMinted, xenPrice, xburnPrice, parseAndMultiply]);
   
   // Log derived values
-  console.log("StatsPanel: Calculated values:", {
-    usdValueXenBurned,
-    usdValueXburnBurned,
-    xburnMarketCap
-  });
+  console.log("StatsPanel: Calculated values:", derivedStats);
 
-  // Helper to render a single stat item - Pass maxDecimals option
-  const renderStatItem = (label, value, className = '', maxDecimals = 2) => (
+  // Helper to render a single stat item - Memoized
+  const renderStatItem = useCallback((label, value, className = '', maxDecimals = 2) => (
     <div className={`stat-item ${className}`}>
       <span className="stat-label">{label}</span>
       <span className="stat-value">{value}</span>
     </div>
-  );
+  ), []);
 
-  // Helper to render a section - Reinstated
-  const renderSection = (title, children) => (
+  // Helper to render a section - Memoized
+  const renderSection = useCallback((title, children) => (
     <div className="stats-section">
       <h4 className="section-title">{title}</h4>
       <div className="section-content">
         {children}
       </div>
     </div>
-  );
+  ), []);
 
-  // Calculate ratio
-  const calculateRatio = () => {
+  // Calculate ratio - Memoized
+  const poolRatio = useMemo(() => {
     const xen = parseFloat(stats.xenInPool?.replace(/,/g, '') || '0');
     const xburn = parseFloat(stats.xburnInPool?.replace(/,/g, '') || '0');
     if (xen > 0 && xburn > 0) {
       return (xen / xburn).toFixed(6);
     }
     return '0.000000';
-  };
+  }, [stats.xenInPool, stats.xburnInPool]);
 
   // Determine max decimal values based on chain ID (Polygon needs fewer decimals)
   const getXenPriceMaxDecimals = () => {
@@ -247,7 +252,7 @@ const StatsPanel = () => {
               {/* Top Row */}
               {renderStatItem("XEN Price", formatSmallPrice(xenPrice, 6, getXenPriceMaxDecimals()))} {/* Dynamic max decimals */}
               {renderStatItem("XBURN Price", formatSmallPrice(xburnPrice, 6, getXenPriceMaxDecimals()))} {/* Match XEN decimals */}
-              {renderStatItem("XEN per XBURN", formatNumber(calculateRatio() || '0', { maxDecimals: 2 }))}
+              {renderStatItem("XEN per XBURN", formatNumber(poolRatio || '0', { maxDecimals: 2 }))}
               
               {/* Middle Row */}
               {renderStatItem("XEN LP", formatNumber(stats.xenInPool || '0', { maxDecimals: 2 }))} 
@@ -265,15 +270,15 @@ const StatsPanel = () => {
             <>
               <div className="stat-pair-container">
                 {renderStatItem("Total XEN Burned", formatNumber(stats.totalXenBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
-                {renderStatItem("Value XEN Burned", `$${parseFloat(usdValueXenBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+                {renderStatItem("Value XEN Burned", `$${parseFloat(derivedStats.usdValueXenBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
               </div>
               <div className="stat-pair-container">
                 {renderStatItem("Total XBURN Burned", formatNumber(stats.totalXburnBurned || '0', { maxDecimals: 2 }), 'highlight-burn')}
-                {renderStatItem("Value XBURN Burned", `$${parseFloat(usdValueXburnBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+                {renderStatItem("Value XBURN Burned", `$${parseFloat(derivedStats.usdValueXburnBurned || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
               </div>
               <div className="stat-pair-container">
                 {renderStatItem("XBURN Circulating", formatNumber(stats.totalXburnMinted || '0', { maxDecimals: 2 }))}
-                {renderStatItem("XBURN Market Cap", `$${parseFloat(xburnMarketCap || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
+                {renderStatItem("XBURN Market Cap", `$${parseFloat(derivedStats.xburnMarketCap || '0').toLocaleString(undefined, {maximumFractionDigits: 0})}`, 'highlight-value-green')}
               </div>
             </>
           ))}
@@ -283,5 +288,8 @@ const StatsPanel = () => {
   );
 };
 
-export { StatsPanel };
-export default StatsPanel; 
+// Memoize StatsPanel to prevent unnecessary re-renders
+const MemoizedStatsPanel = React.memo(StatsPanel);
+
+export { MemoizedStatsPanel as StatsPanel };
+export default MemoizedStatsPanel; 

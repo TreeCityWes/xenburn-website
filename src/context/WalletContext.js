@@ -30,7 +30,7 @@ let userManuallyDisconnected = false;
 
 // Global flags to prevent duplicate fetches
 let lastBalanceFetchTime = 0;
-const MIN_BALANCE_FETCH_INTERVAL = 5000; // Reduced from 60000ms to 5000ms (5 seconds)
+const MIN_BALANCE_FETCH_INTERVAL = 30000; // Increased to 30 seconds to reduce load
 
 // Track if a network switch is in progress to prevent loops
 let networkSwitchInProgress = false;
@@ -749,16 +749,18 @@ export function WalletProvider({ children }) {
       
       // Check dependencies including contract readiness
       if (account && provider && selectedChainId && !isLoadingContracts && xenContract && xburnTokenContract) { 
-          console.log(`WalletContext: Contracts ready, setting up balance polling for chain ${selectedChainId}`);
+          // Reduced logging for better performance
+          // console.log(`WalletContext: Contracts ready, setting up balance polling for chain ${selectedChainId}`);
           // Clear previous interval just in case
           if (intervalId) clearInterval(intervalId);
           
           // Initial fetch right away when all dependencies are met
           fetchBalances(true); 
-          // Setup interval
-          intervalId = setInterval(() => fetchBalances(false), MIN_BALANCE_FETCH_INTERVAL * 3); 
+          // Setup interval - reduced frequency to save resources
+          intervalId = setInterval(() => fetchBalances(false), MIN_BALANCE_FETCH_INTERVAL * 2); // 60 seconds 
       } else {
-          console.log("WalletContext: Clearing balance polling (dependencies not met or contracts loading).");
+          // Reduced logging for better performance
+          // console.log("WalletContext: Clearing balance polling (dependencies not met or contracts loading).");
           if (intervalId) {
               clearInterval(intervalId);
           }

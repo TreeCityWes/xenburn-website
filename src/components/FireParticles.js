@@ -3,13 +3,20 @@ import React, { useEffect, useRef } from 'react';
 
 const FireParticles = ({ width, height, intensity = 1, isBackground = false, type = "xburn" }) => {
   const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const lastFrameTime = useRef(0);
+  const particlesRef = useRef([]);
   
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    const particles = [];
+    const particles = particlesRef.current;
+    
+    // Performance: Limit frame rate to 30 FPS
+    const TARGET_FPS = 30;
+    const FRAME_DURATION = 1000 / TARGET_FPS;
     
     // Parse dimensions to ensure they're valid numbers
     const canvasWidth = typeof width === 'string' ? 
@@ -53,28 +60,42 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false, typ
     
     ctx.globalCompositeOperation = isBackground ? 'soft-light' : 'screen';
     
+    // Performance: Limit max particles to prevent memory leaks
+    const MAX_PARTICLES = isBackground ? 50 : 30;
+    
     function createParticles() {
+      // Only create particles if we're under the limit
+      if (particles.length >= MAX_PARTICLES) return;
+      
       const particlesPerFrame = isBackground ? 1 : 2;
       const baseY = isBackground ? canvasHeight : canvasHeight;
       const spread = isBackground ? canvasWidth : canvasWidth / 4;
       
-      for (let i = 0; i < particlesPerFrame; i++) {
+      for (let i = 0; i < particlesPerFrame && particles.length < MAX_PARTICLES; i++) {
         const x = isBackground ? Math.random() * canvasWidth : canvasWidth/2 + (Math.random() - 0.5) * spread;
         const particle = new Particle(x, baseY);
         particles.push(particle);
       }
     }
     
-    function updateParticles() {
+    function updateParticles(currentTime) {
+      // Performance: Frame rate limiting
+      if (currentTime - lastFrameTime.current < FRAME_DURATION) {
+        animationRef.current = requestAnimationFrame(updateParticles);
+        return;
+      }
+      lastFrameTime.current = currentTime;
+      
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       
       createParticles();
       
+      // Performance: Clean up dead particles more efficiently
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.update();
         
-        if (p.life > p.maxLife) {
+        if (p.life > p.maxLife || p.size < 0.5) {
           particles.splice(i, 1);
           continue;
         }
@@ -111,14 +132,19 @@ const FireParticles = ({ width, height, intensity = 1, isBackground = false, typ
         }
       }
       
-      requestAnimationFrame(updateParticles);
+      animationRef.current = requestAnimationFrame(updateParticles);
     }
     
-    let animationFrame = requestAnimationFrame(updateParticles);
+    // Start animation
+    animationRef.current = requestAnimationFrame(updateParticles);
     
     return () => {
-      cancelAnimationFrame(animationFrame);
-      particles.length = 0;
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      // Clear particles array
+      particlesRef.current.length = 0;
     };
   }, [width, height, intensity, isBackground, type]);
 

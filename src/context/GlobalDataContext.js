@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from './WalletContext';
 // Removed unused ABIs
@@ -76,14 +76,14 @@ export const GlobalDataProvider = ({ children }) => {
     lastFetched: 0
   });
 
-  // --- Debounce Timestamps (removed unused external stats time) ---
+  // --- Debounce Timestamps - Increased intervals for better performance ---
   const lastNftFetchTime = useRef(0);
-  const MIN_NFT_FETCH_INTERVAL = 1000;
+  const MIN_NFT_FETCH_INTERVAL = 5000; // Increased from 1000ms to 5000ms
   const lastStatsFetchTime = useRef(0);
-  const MIN_STATS_FETCH_INTERVAL = 3000;
+  const MIN_STATS_FETCH_INTERVAL = 10000; // Increased from 3000ms to 10000ms
   const lastPriceFetchTime = useRef(0);
-  const MIN_PRICE_FETCH_INTERVAL = 10000;
-  const MIN_EXTERNAL_STATS_FETCH_INTERVAL = 30000;
+  const MIN_PRICE_FETCH_INTERVAL = 60000; // Increased to 1 minute
+  const MIN_EXTERNAL_STATS_FETCH_INTERVAL = 120000; // Increased to 2 minutes
 
   // --- Remove Contract Instance Getters --- 
   // We now get network-aware instances directly from useWallet()
@@ -670,7 +670,8 @@ export const GlobalDataProvider = ({ children }) => {
   // Main Data Loading Effect - Waits for connection AND contracts to be ready
   useEffect(() => {
     if (isConnected && account && provider && selectedChainId && !isLoadingContracts) { 
-      console.log(`GlobalData: Wallet connected & contracts ready on chain ${selectedChainId}. Triggering initial data load...`);
+      // Reduced logging for better performance
+      // console.log(`GlobalData: Wallet connected & contracts ready on chain ${selectedChainId}. Triggering initial data load...`);
       // Add explicit balance fetch first
       fetchBalances(true);
       loadStats();  
@@ -679,7 +680,8 @@ export const GlobalDataProvider = ({ children }) => {
       // Load only NFTs initially or on connection/network changes
       loadNFTs(); 
     } else {
-       console.log(`GlobalData: Not ready for loading. Clearing data. isConnected: ${isConnected}, account: ${!!account}, provider: ${!!provider}, chainId: ${selectedChainId}, contractsLoading: ${isLoadingContracts}`);
+       // Reduced logging for better performance
+       // console.log(`GlobalData: Not ready for loading. Clearing data. isConnected: ${isConnected}, account: ${!!account}, provider: ${!!provider}, chainId: ${selectedChainId}, contractsLoading: ${isLoadingContracts}`);
        // Clear data if not ready
        setNfts([]);
        setTotalNFTs(0);
@@ -751,8 +753,8 @@ export const GlobalDataProvider = ({ children }) => {
     return storedTab || 'burn'; // Default to burn tab
   });
 
-  // Create context value - provide WalletContext balances directly
-  const value = {
+  // Create context value - Memoize to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     nfts,
     loadingNFTs,
     nftError,
@@ -790,7 +792,13 @@ export const GlobalDataProvider = ({ children }) => {
     fetchExternalStats, // Expose external stats fetch function
     activeTab,
     setActiveTab
-  };
+  }), [
+    nfts, loadingNFTs, nftError, loadNFTs, loadNFTById, claimNFT, emergencyEndNFT,
+    currentPage, totalPages, setCurrentPage, totalNFTs, ethBalance, xenBalance, xburnBalance,
+    xenBalanceRaw, xburnBalanceRaw, xenApprovalRaw, xburnApprovalRaw, stats, loadStats,
+    loadingPrices, priceError, xenPrice, xburnPrice, poolTvl, fetchDexScreenerData,
+    externalStats, fetchExternalStats, activeTab, setActiveTab
+  ]);
 
   // Add retry logic for failed network requests
   const retryOperation = useCallback(async (operation, maxRetries = 3, initialDelay = 200) => {
@@ -918,12 +926,12 @@ export const GlobalDataProvider = ({ children }) => {
       console.error("Failed initial DexScreener fetch:", error)
     );
     
-    // Set up interval for regular polling
+    // Set up interval for regular polling - reduced frequency
     const dexScreenerInterval = setInterval(() => {
       fetchDexScreenerData(selectedChainId).catch(error => 
         console.error("Failed DexScreener polling fetch:", error)
       );
-    }, 30000); // Poll every 30 seconds
+    }, 120000); // Poll every 2 minutes instead of 30 seconds
     
     return () => {
       console.log("Clearing DexScreener polling interval");
