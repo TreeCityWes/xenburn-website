@@ -1,0 +1,21 @@
+{
+  "name": "XBURN",
+  "symbol": "XBURN",
+  "description": "XBURN is the cross-chain bridge token for the XEN ecosystem. Burn XBURN on EVM chains and receive XBURN on X1.",
+  "image": "https://burnxen.com/xenburn.png",
+  "external_url": "https://burnxen.com",
+  "attributes": [
+    {
+      "trait_type": "Token Type",
+      "value": "Bridge Token"
+    },
+    {
+      "trait_type": "Source Chains",
+      "value": "Ethereum, Base, Polygon, Optimism, BSC, Avalanche, PulseChain"
+    },
+    {
+      "trait_type": "Destination Chain",
+      "value": "X1"
+    }
+  ]
+}
