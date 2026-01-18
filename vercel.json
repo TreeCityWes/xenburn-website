@@ -1,12 +1,15 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/x1-metadata.json",
-      "destination": "/x1-metadata.json"
+      "src": "/x1-metadata.json",
+      "dest": "/x1-metadata.json"
     },
     {
-      "source": "/((?!.*\\.).*)",
-      "destination": "/index.html"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
